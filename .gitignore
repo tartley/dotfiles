@@ -1,0 +1,7 @@
+*
+
+!.gitignore
+!.git-completion
+!.gitconfig
+!.gitconfig.private
+!.gitk

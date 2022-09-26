@@ -1,0 +1,109 @@
+[include]
+  # For username / creds / etc
+  path = ~/.gitconfig.private
+
+[user]
+    name = Jonathan Hartley
+    email = tartley@tartley.com
+
+[alias]
+    pushfl = push --force-with-lease
+
+[gui]
+    warndetachedcommit = true
+    fontui = -family Ubuntu -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+    gcwarning = false
+    diffcontext = 1
+    fontdiff = -family \"DejaVu Sans Mono\" -size 8 -weight normal -slant roman -underline 0 -overstrike 0
+
+[color]
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
+    ui = true
+
+[color "branch"]
+    current = bold cyan
+    local = green
+
+[color "decorate"]
+    HEAD = bold cyan
+    branch = green
+    remoteBranch = red
+    tag = 226 # bright yellow
+    stash = bold magenta
+
+[color "diff"]
+    meta = reverse bold cyan
+    frag = bold
+    new = green
+    plain = white
+    whitespace = reverse
+
+[color "status"]
+    untracked = dim white
+    added = green
+    changed = 226 # bright yellow
+    branch = green
+
+[core]
+    editor = nis
+    pager = less -FRSX
+    excludesfile = ~/.gitignore
+    trustctime = false
+    attributesfile = /home/jhartley/.gitattributes
+
+# Recommented by @glyph. TBH I don't understand why.
+[protocol "http"]
+    allow = never
+[protocol "git"]
+    allow = never
+[fetch]
+    fsckObjects = true
+[transfer]
+    fsckObjects = true
+[receive]
+    fsckObjects = true
+
+[push]
+    default = current
+
+[pull]
+    ff = only
+
+[log]
+    decorate = short
+
+[diff]
+    tool = meld
+
+[difftool]
+    prompt = false
+
+[difftool "meld"]
+    cmd = meld "$LOCAL" "$REMOTE"
+
+[merge]
+    tool = meld
+
+[mergetool]
+    prompt = false
+
+[mergetool "meld"]
+    # Choose one of these 2 lines, not both:
+    # Middle pane starts with git's attempt to merge.
+    cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+    # Middle pane starts with the common ancestor.
+    # cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+
+[gitreview]
+    remote = origin
+    username = Jonathan.Hartley
+
+[url "git+ssh://tartley@git.launchpad.net/"]
+    insteadof = lp:
+
+[init]
+    defaultBranch = main
+
