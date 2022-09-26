@@ -1,7 +1,11 @@
 *
 
-!.gitignore
+!.config/
+!.config/bat/
+!.config/bat/config
 !.git-completion
 !.gitconfig
 !.gitconfig.private
+!.gitignore
 !.gitk
+
