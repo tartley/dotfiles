@@ -8,4 +8,6 @@
 !.gitconfig.private
 !.gitignore
 !.gitk
+!.ssh/
+!.ssh/config
 
