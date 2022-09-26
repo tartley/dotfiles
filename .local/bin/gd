@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+git --no-pager diff -U0 --no-prefix --color=always "$@" || true | grep -v -E '^\[[^m]+m---|^\[[^m]+mindex|^\[[^m]+mdiff --git '
+

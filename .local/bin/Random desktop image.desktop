@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=Gnome random wallpaper
+Type=Application
+Terminal=false
+Icon[en_GB]=desktop
+Exec=/home/jhartley/bin/gnome-random-wallpaper.py
+Name[en_GB]=Gnome random wallpaper
+Comment[en_GB]=Select a new random desktop background image
+Comment=Select a new random desktop background image
+Icon=desktop
+GenericName[en_GB]=Gnome random wallpaper

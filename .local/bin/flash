@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Flashes terminal inverse briefly
+
+function clean { printf "\\e[?5l"; unset clean; }
+trap clean EXIT
+printf "\\e[?5h"
+sleep 0.2
+

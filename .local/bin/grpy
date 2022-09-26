@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# recursive search in Python source files
+. grp "$@" --include='*.py'
+

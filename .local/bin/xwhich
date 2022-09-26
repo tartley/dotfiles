@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+xprop _NET_WM_PID | cut -d' ' -f3 | xargs ps -f --pid
+

@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""
+USAGE: json2py [-iINDENT|-u|--unsorted]
+
+Reads JSON on stdin.
+Pretty prints it as a Python structure on stdout.
+Defaults to sorted keys (disable with -u).
+INDENT defaults to 4. No space allowed between -i and INDENT.
+Intended to be used as a filter within Vim.
+"""
+import json
+import pprint
+import sys
+
+# Default config.
+indent = 4
+sort = True
+
+# Process command line args
+for arg in sys.argv[1:]:
+    if arg in {"-u", "--unsorted"}:
+        sort = False
+    elif arg.startswith("-i"):
+        indent = int(arg[2:])
+    else:
+        print(__doc__)
+        sys.exit(2)
+
+pprint.pprint(
+    json.loads(sys.stdin.read()),
+    indent=indent,
+    sort_dicts=sort,
+)
+

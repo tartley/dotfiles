@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+"""
+Reads (a superset of) JSON from stdin,
+reformats it to be human readable, outputs on stdout.
+
+The 'superset' is because it accepts valid Python, not valid Javascript,
+so, for example, double or single quotes are acceptable.
+"""
+import json
+import sys
+
+lines = sys.stdin.readlines()
+text = ''.join(lines)
+data = eval(text)
+print(json.dumps(data, indent=4, sort_keys=True))
+

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo -ne "  primary: "
+xsel -p
+echo -ne "\nsecondary: "
+xsel -s
+echo -ne "\nclipboard: "
+xsel -b
+echo
+

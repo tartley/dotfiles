@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# TODO:
+
+mon1=eDP1  # 1 built-in  1920x1080
+mon2=HDMI2 # 2 Asus      1920x1080 Main gaming monitor, shared with Win10 PC
+mon3=HDMI1 # 3 HP LP2065 1600x1200
+
+function usage {
+    echo "Shortcut commands to switch my monitors between work and play."
+    echo "Hardcoded to my personal home monitor setup. Will not work elsewhere."
+    echo "Usage: mon SUBCOMMAND"
+    echo "Sub-commands:"
+    echo "  off   : central monitor off, move rightmost adjacent to leftmost."
+    echo "  on    : central monitor on, move rightmost adjacent to it."
+    echo "  toggle: toggle central monitor on/off, moving rightmost."
+    echo "  hi    : rightmost monitor to native resolution."
+    echo "  lo    : rightmost monitor to half native resolution."
+}
+
+function off {
+    xrandr \
+        --output $mon2 --off \
+        --output $mon3 --right-of $mon1
+}
+
+function on {
+    xrandr \
+        --output $mon2 --auto --right-of $mon1 \
+        --output $mon3 --right-of $mon2
+}
+
+function toggle {
+    # toggle central monitor on/off
+    num_active_displays=$(xrandr | grep -E '\*' -c)
+    if [ $num_active_displays == 3 ]; then
+        off
+    elif [ $num_active_displays == 2 ] ; then
+        on
+    else
+        echo "unexpected number of displays: $num_active_displays" >&2
+        exit 2
+    fi
+}
+
+function hi-res {
+    xrandr --output $mon3 --mode 1600x1200
+}
+
+function lo-res {
+    xrandr --output $mon3 --mode 800x600
+}
+
+case "$1" in
+    off) off ;;
+    on) on ;;
+    toggle) toggle ;;
+    hi) hi-res ;;
+    lo) lo-res ;;
+    help) usage ;;
+    *) echo "unrecogized: $1" >&2 ; usage ; exit 1
+esac
+

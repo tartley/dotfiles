@@ -1,0 +1,21 @@
+#!/bin/sh
+
+PYTHONHOME=$SYSTEMDRIVE\\Python26
+newargs=
+while [ $# -ne 0 ]; do
+	arg=$1
+	index=`expr index "$arg" '/' | tr -d '\n'`
+	if [ "$index" -ne "0" ]; then
+		# convert to windows path
+		newarg=`cygpath -w "$arg" | tr -d '\n'`
+		newargs="$newargs \"$newarg\""
+	else
+		newargs="$newargs \"$arg\""
+	fi
+	shift
+done
+
+
+command="cmd /c \"$PYTHONHOME\\python.exe\" $newargs"
+eval $command
+

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Delete local git branches that are merged to master.
+
+# Exit on error
+set -eu -o pipefail
+
+git checkout master
+
+for branch in $(git branch --format='%(refname:short)' --merged | grep -v '^master$'); do
+    echo $branch ; git branch -d "$branch"
+done
+

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+echo "Ctrl-C to exit"
+gnome-terminal \
+    --geometry=1x1+2850+400 \
+    --full-screen \
+    --profile=transparent \
+    -- cbeams \
+    >/dev/null \
+    2>/dev/null
+

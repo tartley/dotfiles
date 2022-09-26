@@ -1,0 +1,2 @@
+python $HOME/docs/bin/imageresize.py $*
+

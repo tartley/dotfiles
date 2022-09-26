@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+clear
+# clear the scrollback buffer, too
+printf '\033[3J'
+

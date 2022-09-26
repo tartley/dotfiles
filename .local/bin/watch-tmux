@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+echo "Sessions"
+tmux list-sessions
+echo ""
+
+echo "Clients"
+tmux list-clients
+echo ""
+
+echo "Windows"
+tmux list-windows -a
+echo ""
+
+echo "Panes"
+tmux list-panes -a
+

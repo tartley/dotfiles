@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+grep -v "error when flushing the buffer" | colout '(time="[^"]*")|(FAIL|panic)|(PASS)|msg="([^"]*)"|msg=([^" ]*) |(^===.*$)|(^---)|(level=warning)|(level=error)' black,red,green,cyan,cyan,white,white,yellow,red normal
+

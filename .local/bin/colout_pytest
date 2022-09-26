@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+grep -v 'The psycopg2 wheel package\|^  """)\|UserWarning' | humanize | colout '(OK)|(FAILED|FAIL)|(ERROR)|(^=+$|^-+$)|(^test_[a-zA-Z0-9_]+) (\(.+\))$|^  (File ".+", line \d+)' green,red,magenta,black,cyan,black,blue normal,normal,normal,normal,bold,normal
+

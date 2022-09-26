@@ -1,0 +1,15 @@
+#!/bin/sh
+
+DISPLAY=":0"
+
+if [ -z "$1" ]; then
+echo "Usage: nonXgl <command>"
+exit 1
+fi
+
+isdisplay=0; isauth=0; for test in $(ps ax | grep "$DISPLAY" | grep Xorg ); do if [ $isauth -eq 1 ]; then export XAUTHORITY="$test"; isauth=0; fi; if [ "$test" = "-auth" ]; then isauth=1; fi; done;
+
+
+sudo /usr/bin/Xorgallowlocal "$XAUTHORITY" "$DISPLAY"
+
+exec $@ 

@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+
+# Outputs all files that have changed since master. Hence, includes:
+# * Committed diffs on our branch but not on master
+#   (but does not include diffs from master which are not on our branch)
+# * Files that have diffs which are staged (in the index)
+# * Files that have uncommitted diffs
+# * Untracked files
+
+# For example, pipe the output of this into lint to do a quick lint check
+# on just the files you have messed with, rather than on all files in the repo.
+
+function changed_files_with_dupes
+{
+    # committed files changed in our branch since we diverged from master
+    git diff --name-only master...
+    # plus files that have uncommitted diffs, are indexed, or are untracked
+    git status --short | cut -c 4-
+}
+
+# output changed files, sorted and with dupes stripped:
+changed_files_with_dupes | sort -u
+

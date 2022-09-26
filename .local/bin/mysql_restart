@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sudo /Library/StartupItems/MySQLCOM/MySQLCOM restart

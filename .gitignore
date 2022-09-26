@@ -3,6 +3,10 @@
 !.config/
 !.config/bat/
 !.config/bat/config
+!.local/
+!.local/bin/
+!.local/bin/*
+!.local/bin/*/*
 !.git-completion
 !.gitconfig
 !.gitconfig.private

@@ -1,0 +1,71 @@
+#!/bin/bash
+
+USAGE="
+USAGE:
+  highcol COLNUM [DELIMITER]
+  highcol [--help|-h]"
+
+HELP="
+hicol - Highlight column.
+Requires 'colout' to be installed.
+http://nojhan.github.io/colout/
+
+Echoes stdin to stdout, highlighting column number COLNUM in each line.
+Columns are delimited by DELIMITER (defaults to tab) and are zero indexed.
+
+Since this uses regexes to detect column delimiter characters, it isn't going
+to work on CSV files with quoted strings containing commas.
+
+e.g:
+To highlight column 1 (the 'b'):
+  echo 'a<tab>b<tab>c' | hicol 1
+Specifying a comma delimiter:
+  echo 'a,b,c' | hicol 1 ,
+Specifying a pipe delimiter from Bash requires three slashes:
+  echo 'a|b|c' | hicol 1 \\\\\|
+or quotes and escaping:
+  echo 'a|b|c' | hicol 1 '\|'"
+
+# command line options
+
+ARGS=$(getopt -o h -l "help" -n "hicol" -- "$@");
+
+if [ $? -ne 0 ];
+then
+    echo "$USAGE"
+    exit 1
+fi
+
+eval set -- "$ARGS";
+while true; do
+    case "$1" in
+        -h|--help)
+            echo "$USAGE"
+            echo "$HELP"
+            exit 1
+            ;;
+        --)
+            shift
+            break
+            ;;
+    esac
+done
+
+if (( $# < 1 ));
+then
+    echo "COLNUM param missing"
+    echo "$USAGE"
+    exit
+fi
+
+COL=$1
+DELIM=${2:-'\t'}
+
+# matches:
+#   * Non capturing group (to prevent colout highlighting it) of the first N
+#     columns, (i.e. Everything up to the next delimiter, followed by the next
+#     delimiter, all repeated 'COL' times.
+#   * Group (highlighted) of column N+1. (i.e. everything up to the next
+#     delimiter, or implicit end of line.)
+colout "^(?:[^$DELIM]*$DELIM){$COL}([^$DELIM]*)" green <&0
+

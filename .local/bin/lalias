@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+# Define lxc container name aliases.
+declare -A laliases
+laliases[auth]=siab-focal
+laliases[charm-migration]=charm-migration-focal
+laliases[charmstore-migration]=charm-migration-focal
+laliases[client]=siab-focal
+laliases[deltas]=siab-focal
+laliases[devicegw]=siab-focal
+laliases[find]=siab-focal
+laliases[ident]=siab-focal
+laliases[migrate]=charm-migration-focal
+laliases[migration]=charm-migration-focal
+laliases[models]=siab-focal
+laliases[packagereview]=siab-bionic
+laliases[pubgw]=siab-focal
+laliases[publishergw]=siab-focal
+laliases[revs]=siab-focal
+laliases[sca]=sca-focal
+laliases[schemas]=siab-bionic
+laliases[service]=siab-focal
+laliases[software-center-agent]=siab-focal
+laliases[stats]=siab-focal
+laliases[storage]=storage-focal
+laliases[snapauth]=siab-focal
+laliases[snapdeltas]=siab-focal
+laliases[snapdevicegw]=siab-focal
+laliases[snapfind]=siab-focal
+laliases[snapident]=siab-focal
+laliases[snapmodels]=siab-focal
+laliases[snaprevs]=siab-focal
+laliases[snapschemas]=siab-bionic
+laliases[snapservice]=siab-focal
+laliases[snapstats]=siab-focal
+laliases[snapstorage]=storage-focal
+laliases[snapstore-client]=siab-focal
+
+# Given a project name or container alias,
+# echo the actual hosting container name.
+alias="$1"
+
+# some things should not be run on containers, they have no alias
+if [ "$alias" = "goodyear" ] || [ "$alias" = "ols-goodyear" ]; then
+    echo "'goodyear' should be run on your host." >&2
+    exit 2
+fi
+
+# If an alias was given, return (ie echo) the corresponding container name.
+if [ -n "$alias" ]; then
+    # If the given alias is recognized, return the corresponding container
+    container="${laliases[$alias]}"
+    if [ -n "$container" ]; then
+        echo "$container"
+        exit 0
+    else
+        # Look for the alias in container names.
+        for container in $(lxcls); do
+            if [ "$container" = "$alias" ]; then
+                echo "$container"
+                exit 0
+            fi
+        done
+        # Alias not recognized.
+        echo "lalias: Alias '$alias' not recognized." >&2
+        exit 2
+    fi
+else
+    # No alias was given. Display all aliases.
+    containers=$(echo ${laliases[@]} | tr ' ' '\n' | sort -u)
+    for container in $containers; do
+        echo "$container"
+        for alias in ${!laliases[@]}; do
+            if [ ${laliases[$alias]} = $container ]; then
+                echo -e "\t$alias"
+            fi
+        done
+    done
+fi
+

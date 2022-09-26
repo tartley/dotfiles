@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+ctags -R --languages=python --exclude=.eggs --exclude=.git --exclude=.bzr --exclude=env "$@"
+

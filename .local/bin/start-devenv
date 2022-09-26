@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+gnome-terminal --geometry=80x12 -- lssh storage start-storage
+

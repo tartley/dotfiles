@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Run Bash in a new gnome-terminal, with no scrollbar.
+# In it, run nvim, asking it to adjust the terminal to 84 chars wide
+# (80 + 4 for line numbers)
+#
+# We want nvim's PWD to be the same as the $PWD of the invoker of 'ni',
+# so that relative filenames passed to nvim (using $@) are opened correctly.
+#
+# So we run 'cd $PWD' before invoking nvim. The $PWD is expanded
+# before we pass this command-line to the new bash process.
+#
+# An alternative method would be gnome-terminal's --working-directory option,
+# but this currently does not work for custom commands, see:
+# https://bugs.launchpad.net/ubuntu/+source/gnome-terminal/+bug/1587154
+
+gnome-terminal --window-with-profile=bitmap-noscroll -- bash -c "cd $PWD; nvim -c 'set columns=84' $@"
+

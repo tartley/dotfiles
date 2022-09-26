@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+function mkvenv {
+    python="$1"
+    neovim="$2"
+    ve="$HOME/.virtualenvs/$neovim"
+    "$python" -V
+    rm -rf "$ve"
+    if [ "$python" == "python2" ]; then
+        virtualenv -p "$python" "$ve"
+    else
+        "$python" -m venv "$ve"
+    fi
+    "$ve/bin/pip" install -U pip
+    "$ve/bin/pip" install -U "$neovim"
+}
+
+mkvenv python3 neovim
+mkvenv python2 neovim2
+
+
+# rm -rf "$ve"
+# python2 -m venv "$ve"
+# "$ve/bin/pip" install -U pip
+# "$ve/bin/pip" install neovim2
+

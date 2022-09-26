@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Open a new terminal in solarized profile,
+# and run neovim in it
+
+nohup gnome-terminal --profile editor-vector -- nvim "$@" >/dev/null 2>/dev/null &
+

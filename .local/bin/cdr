@@ -1,0 +1,34 @@
+#/usr/bin/env bash
+
+function usage {
+    echo "Usage: cdr [OPTIONS] [DIRNAME]"
+    echo ""
+    echo "  -h, --help  Displays this message."
+    echo "  DIRNAME     Defaults to the current directory."
+    echo ""
+    echo "Resolve any symlinks in DIRNAME, and cd to the underlying directory."
+    echo "This only has any effect if you source this script instead of executing it, eg:"
+    echo ""
+    echo "  . cdr"
+    echo ""
+}
+
+dirname="."
+
+while [[ $# -gt 0 ]]
+do
+  case "$1" in
+  -h|--help)
+    usage
+    # safely exit whether sourced or executed
+    return 2>/dev/null || exit
+    ;;
+  *)
+    dirname="$1"
+    ;;
+  esac
+  shift
+done
+
+cd $(readlink -e "$dirname")
+

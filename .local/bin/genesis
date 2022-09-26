@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -e
+
+# User should first copy the project template they want to use:
+#    cp -a ~/docs/code/templates/<template> <dest>
+# Then run genesis from within <dest>
+#    cd <dest>
+#    genesis <projname>
+# $1 is the name of the new Python project
+# Probaby <dest> and <projname> are the same word.
+
+# harcode a single directory rename.
+# TODO: iterate over files/dirs doing a mv using substitution expansion
+if [ -d PROJNAME ]; then
+    mv PROJNAME "$1"
+fi
+
+# replace instances of PROJNAME with our given target name
+find . -type f | while read filename; do
+    sed -i.backup s/PROJNAME/$1/g "$filename"
+done
+# tidy the backups sed made
+find . -name "*.backup" -exec rm {} \;
+

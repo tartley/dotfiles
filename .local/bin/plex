@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+xdg-open 'https://app.plex.tv/desktop/#!/media/ddb7dbe6d1570d130583fd23006aa5d1a28f6a67/com.plexapp.plugins.library?source=3'
+

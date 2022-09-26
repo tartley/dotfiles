@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# USAGE:
+#     font SIZE [NAME]
+#
+# NAME defaults to Dina
+#
+# Prints terminal control chars that, in urxvt at least, set the current
+# terminal's font and size.
+
+size=$1
+name=Dina
+if [ -n "$2" ]; then
+  name=$2
+fi
+printf '\33]50;%s%d\007' "xft:$name:size=" $size
+

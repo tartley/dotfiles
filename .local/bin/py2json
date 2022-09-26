@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""
+USAGE: py2json [-iINDENT|-o|--oneline|-u|--unsorted]
+
+Reads Python data structure on stdin.
+Prints it JSON encoded on stdout.
+Defaults to pretty-printed output (disable with -o).
+Defaults to sorted keys (disable with -u).
+INDENT defaults to 4. No space allowed between -i and INDENT.
+Intended to be used as a filter within Vim.
+"""
+import json
+import sys
+
+# Default config.
+sort = True
+pretty = True
+indent = 4
+
+# Process command line args
+for arg in sys.argv[1:]:
+    if arg in {'-u', '--unsorted'}:
+        sort = False
+    elif arg in {'-o', '--oneline'}:
+        pretty = False
+    elif arg.startswith('-i'):
+        indent = int(arg[2:])
+    else:
+        print(__doc__)
+        sys.exit(2)
+
+print(
+    json.dumps(
+        eval(sys.stdin.read()),
+        indent=indent if pretty else None,
+        sort_keys=sort,
+    )
+)
+

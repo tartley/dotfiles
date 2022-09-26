@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd ~/code/gargantua
+git gui &
+gnome-terminal --geometry=80x64-1600+000 -e 'bash -ic "workon gargantua && bash"'
+ni3
+gnome-terminal --geometry=80x64-4500+200 -e 'bash -ic "workon gargantua && bash"'
+gnome-terminal --geometry=80x64-3800+200 -e 'bash -ic "workon gargantua && vagup2 && vagssh"'
+

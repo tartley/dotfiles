@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+# 'quick lint' for automatedtests
+# Use 'changed' to figure all files that have changed since 'master' branch.
+# Run automatedtests' 'lint' command on just those files.
+
+changed_py_files="$(changed | grep '\.go$')"
+echo "$changed_py_files"
+echo "$changed_py_files" | xargs ./run_lint.sh --reports=n --score=n $@
+echo "done"
+

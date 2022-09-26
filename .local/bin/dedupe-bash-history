@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""
+Dedupe the ~/.bash_history file.
+
+Multi-line commands are delimited by timestamp lines:
+
+    #1234567890
+    mycommand
+    #1234567891
+    echo 'a multi
+    line
+    command'
+    #1234567892
+    ...
+
+We want to dedupe *commands*, not lines, keeping the most recent, retaining
+current order, retaining timestamps.
+"""
+import collections
+import re
+
+
+def join(parts):
+    return "\n".join(parts) if parts else ""
+
+
+def parse(lines):
+    timestamp = None
+    command = []
+    for line_nl in lines:
+        line = line_nl[:-1] if line_nl[-1] == "\n" else line_nl
+        match = re.match("^#([0-9]{10})$", line)
+        if match:
+            if timestamp:
+                yield timestamp, join(command)
+            command = []
+            timestamp = int(match[1])
+        else:
+            command.append(line)
+    yield timestamp, join(command)
+
+
+def dedupe(commands):
+    results = collections.OrderedDict()
+    for timestamp, command in commands:
+        results[command] = timestamp
+        results.move_to_end(command)
+    for command, timestamp in results.items():
+        yield timestamp, command
+
+
+def format_(commands):
+    for timestamp, command in commands:
+        yield f"#{timestamp:010}"
+        if command:
+            yield f"{command}"
+
+
+def process(filename):
+    with open(filename, encoding="utf-8") as handle:
+        for line in format_(dedupe(parse(handle))):
+            print(line)
+
+
+def main():
+    process("/home/jhartley/.bash_history")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -e # exit on error
+# set -x # debugging output
+set -u # exist on unset variables
+
+if [ "$#" -lt 1 ] ; then
+    echo "Usage: lssh <projectname>"
+    return
+fi
+alias="$1"
+shift
+if [ "$#" -eq 0 ] ; then
+    command="exec -l $SHELL"
+else
+    command="$SHELL --login -c \"$@\""
+fi
+container=$(lalias $alias)
+
+tname="$container"
+destdir="$PWD"
+if [ -d "$HOME/src/$alias" ]; then
+    tname="$alias on $container"
+    if [ "$PWD" = "$HOME" ]; then
+        destdir="$HOME/src/$alias"
+    fi
+fi
+termname "$tname"
+
+host="$container.lxd"
+# # Old old method, scraping IP from output of 'lxc list'
+# host=$(lxc list $container -c 4 | grep eth0 | cut -d' ' -f2)
+
+# ssh to container.
+# Requires containers to have IPv4 address,
+# and name resolution to be working.
+# -A: Forward ssh-agent. So we can, for example,
+#     hit github using passphrases cached by ssh-agent.
+# -t: Force pseudo-terminal allocation. (I forget why.)
+# See ~/docs/config/lxd.dns.md for DNS resolution of .lxd domain
+ssh -A -t "${host}" -- "cd $destdir; $command"
+
+# # Old method of connecting, for when container network is broken.
+# # exec a login session in the container, as jhartley.
+# # The extra nested bash invocation is to cd to the given directory.
+# # Is there an easier way to do that?
+# lxc exec "$container" -- \
+#     sudo --login --user $USER -- \
+#         bash -c "cd $PWD && exec $SHELL -l"
+
+termname "Terminal"
+

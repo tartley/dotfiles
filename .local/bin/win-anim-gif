@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Take screenshots as needed by clicking on a window
+for i in {01..20}.png
+do
+    scrot -s $i
+    echo $i
+done
+
+# turn them into an animated gif with half-second frame lengths.
+convert -delay 50 {01..20}.png -layers Optimize anim.gif
+

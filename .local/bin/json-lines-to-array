@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Exit on error
+set -eu -o pipefail
+
+function usage {
+    echo "Usage: json-lines-to-array [-h]"
+    echo ""
+    echo "Convert concatenated json objects into an array."
+    echo ""
+    echo "  -h, --help      Print this message."
+    echo ""
+    echo "Given a stream of json objects on stdin, one per line,"
+    echo "output on stdout is an array containing those objects."
+}
+
+# Command-line args
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        *) echo "Unrecognized arg $1" >&2; exit 1;;
+    esac
+    shift
+done
+
+echo "["
+sed '$!s/$/,/'
+echo "]"
+

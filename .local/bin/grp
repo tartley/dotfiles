@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# recursive search in text files
+grep \
+  -rI \
+  --color \
+  "$@" \
+  --exclude=.session.vim \
+  --exclude=tags \
+  --exclude-dir=\.bzr \
+  --exclude-dir=\.git \
+  --exclude-dir=\.hg \
+  --exclude-dir=\.pytest_cache \
+  --exclude-dir=\.svn \
+  --exclude-dir=\.testrepository \
+  --exclude-dir=\.tox \
+  --exclude-dir=*\.egg-info \
+  --exclude-dir=__pycache__ \
+  --exclude-dir=node_modules \
+  --exclude-dir=build \
+  --exclude-dir=dist \
+  --exclude-dir=env \
+  --exclude-dir=.venv \
+

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+killall conky
+conky -d
+sleep 5
+killall -SIGUSR1 conky
+

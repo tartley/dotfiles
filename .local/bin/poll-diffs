@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# USAGE: poll-diffs cmd arg arg arg
+
+# Calls 'cmd arg arg arg' every second,
+# outputting the diffs from each call to the previous call.
+# Separated by a colored timestamp to make reading easier
+
+C='\033[0;33m' # Yellow
+NC='\033[0m' # No Color
+
+echo "$@"
+
+rm -f /tmp/last
+touch /tmp/last
+
+while true; do
+
+    "$@" > /tmp/current
+    now="$(date -u +%Y%m%d-%H%M%S)"
+    colordiff --color=yes /tmp/last /tmp/current >"diff-$now"
+    printf "\n${C}${now}:${NC}\n"
+    cat "diff-$now"
+    mv /tmp/current /tmp/last
+    sleep 1
+
+done
+

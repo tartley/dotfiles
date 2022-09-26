@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+"/usr/bin/firefox" 'http://www.google.com/calendar/render'
+

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Given a single param, tests each element in PATH against it, and removes
+# matching elements of PATH. Outputs result to stdout.
+# Param might be either a whole path, or else include '*' as an any-length
+# wildcard.
+#
+# e.g. usage:
+#
+#     export PATH=`~/docs/bin/pathrm '*distcc*'`
+#
+
+PATTERN=$1
+
+# convert PATH to an array
+IFS=:
+t=($PATH)
+unset IFS
+
+# remove matching elements from the array
+t=(${t[@]%%$PATTERN})
+
+# output the new array
+IFS=:
+echo "${t[*]}"
+

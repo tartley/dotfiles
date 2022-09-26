@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+python F:\\Python25\\Scripts\\rst2s5.py $@

@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+# Works great on t460, but version of 'diff' on lxc xenial is too old
+# to support color.
+# bzr diff --diff-options=--color=always\ -U1\ --palette=hd=36\ "$@" ||:
+
+bzr diff "$@" | colordiff

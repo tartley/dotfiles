@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -e
+
+if $(tmux new -s world -d); then
+    echo "Using existing session"
+else
+    echo "Creating new session"
+fi
+
+tmux rename-window -t world world
+
+tmux split-window -h -t world
+
+tmux split-window -t world
+
+tmux split-window -t world
+
+tmux select-pane -t world -L
+
+tmux split-window -t world
+
+tmux send-keys -t world "lssh devicegw" C-m
+
+tmux select-pane -t world -U
+tmux send-keys -t world "lssh ident" C-m
+
+tmux select-pane -t world -R
+tmux send-keys -t world "lssh revs" C-m
+
+tmux select-pane -t world -D
+tmux send-keys -t world "lssh find" C-m
+
+tmux select-pane -t world -D
+tmux send-keys -t world "lssh storage" C-m
+
+tmux attach -t world
+

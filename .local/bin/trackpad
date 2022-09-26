@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Usage: trackpad on|off
+# Enables/disables the trackpad on my ASUS UX-32
+
+if [ "$1" == "on" ] ; then
+    state=1
+elif [ "$1" == "off" ] ; then
+    state=0
+else
+    echo "USAGE: trackpad on|off"
+    exit 1
+fi
+
+deviceid=$(xinput list | grep Touchpad | cut -d'=' -f2 | cut -d"	" -f1)
+xinput set-prop $deviceid "Device Enabled" $state
+

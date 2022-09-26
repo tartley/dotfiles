@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# cross mark (red) (&#x274C) to the clipboard primary selection
+echo -en '❌' | xsel -p
+echo -en '❌' | xsel -b
+

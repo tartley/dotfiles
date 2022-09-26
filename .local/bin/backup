@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# To retrieve:
+#
+#   cd ~/docs/config
+#   unzip -P 'B@ckth!S' backup.ssh.zip
+
+cd ~
+zip -r -P 'B@ckth!S' ~/docs/backups/backup.ssh.dotprivate.zip .ssh .dotprivate
+

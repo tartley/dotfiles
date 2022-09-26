@@ -1,0 +1,2 @@
+#!/bin/bash
+gnome-terminal --sm-disable --window-with-profile=nethack -x nethack

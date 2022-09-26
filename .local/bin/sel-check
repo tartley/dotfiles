@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# white heavy check mark (&#x2705) to the clipboard selection
+echo -en '✅'  | xsel -p
+echo -en '✅'  | xsel -b
+

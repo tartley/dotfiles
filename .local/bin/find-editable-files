@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# USAGE: find-editable-files [EXT]
+# EXT is the extension of files to list, without a period. eg: py
+# With no EXT, we list all files that pass the default filters.
+
+if [ -n "$1" ]; then
+    # Need an array. A string with spaces cannot be quoted correctly.
+    extra=("-name" "*.$1")
+fi
+
+find . \
+  -type d \( \
+    -name \*\.egg-info -o \
+    -name \.eggs -o \
+    -name \.git -o \
+    -name \.pytest_cache -o \
+    -name \.testrepository -o \
+    -name \.tox -o \
+    -name \.venv -o \
+    -name __pycache__ -o \
+    -name build -o \
+    -name dist -o \
+    -name env -o \
+    -name node_modules -o \
+    -name venv \
+  \) -prune -o \
+  -type f \
+  -not -name \*\.pyc \
+  "${extra[@]}" \
+  -print \
+  2>/dev/null
+

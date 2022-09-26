@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+xdg-open $(dirname -- "$1")
+

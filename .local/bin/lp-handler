@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Handler for launchpad 'lp:' links.
+# Just converts to https, which presumably will be opened in the browser.
+
+echo "$1"
+dest="https://code.launchpad.net/${1#lp:}"
+echo "$dest"
+xdg-open 2>/dev/null "$dest"
