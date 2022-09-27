@@ -1,0 +1,43 @@
+# See definitions and defaults at
+# https://www.gnu.org/software/bash/manual/html_node/Bindable-Readline-Commands.html
+
+# to show all characters like åäö
+set meta-flag On
+set input-meta On
+set output-meta On
+set convert-meta Off
+
+# tab-completion
+set completion-ignore-case off
+set mark-symlinked-directories On
+set show-all-if-ambiguous On
+
+TAB: menu-complete
+
+# Home
+"\e[7~": beginning-of-line
+# End
+"\e[8~": end-of-line
+
+# control-left, control-right ?
+"\e[1;5C": forward-word
+"\e[1;5D": backward-word
+"\e[5C": forward-word
+"\e[5D": backward-word
+"\e\e[C": forward-word
+"\e\e[D": backward-word
+
+# editing
+Control-k: kill-whole-line
+Control-w: backward-kill-word
+# Alt-d: kill-word
+# Meta-Del: backward-kill-word
+
+# paste with middle mouse button
+"\C-v": paste-from-clipboard
+
+# shift PageUp
+"\e[5~": history-search-backward
+# shift PageDown
+"\e[6~": history-search-forward
+

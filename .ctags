@@ -1,0 +1,9 @@
+--python-kinds=-i
+--exclude=.git
+--exclude=.svn
+--exclude=.tox
+--exclude=build
+--exclude=dist
+--exclude=node_modules
+--exclude=venv
+

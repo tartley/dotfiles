@@ -1,0 +1,228 @@
+# Nethack 3.6.2 options file
+# Used in gnome-terminal under Ubuntu
+# with character encoding set to Hebrew(IBM862)
+
+# We define some custom non-ascii characters for doors below
+# which requires this file to be saved in the correct encoding.
+# which I expected to be 'IBM862', but vim doesn't seem to like
+# converting the file that that, so I saved it as latin1 and that
+# worked. :-/
+# If you are using Vim, this will handle it:
+# vim: set fileencoding=latin1 :
+
+OPTIONS=!ascii_map
+OPTIONS=autodig
+OPTIONS=!autopickup
+OPTIONS=boulder:0
+OPTIONS=catname:Bella
+OPTIONS=cmdassist
+OPTIONS=color
+OPTIONS=dark_room
+OPTIONS=disclose:+i +a +v +g +c +o
+OPTIONS=dogname:Biggie
+OPTIONS=eight_bit_tty
+OPTIONS=extmenu
+OPTIONS=fruit:pineapple
+OPTIONS=hilite_pet
+OPTIONS=hilite_pile
+OPTIONS=horsename:Trotsky
+OPTIONS=!implicit_uncursed
+OPTIONS=lit_corridor
+OPTIONS=!mail
+OPTIONS=mention_walls
+
+OPTIONS=menucolors
+# MENUCOLOR="pattern"=color&attribute
+# Where:
+# * Pattern is a regular expression
+# * Allowed colors are black, red, green, brown, blue, magenta, cyan, gray,
+#   orange, light-green, yellow, light-blue, light-magenta, light-cyan, white.
+#   And no-color, the default foreground, not necessarily the same as anything.
+# * Allowed attributes are none, bold, dim, underline, blink, inverse.
+MENUCOLOR="."=white&dim
+MENUCOLOR=" cursed "=red
+MENUCOLOR=" unholy "=red
+MENUCOLOR=" named cur"=red
+MENUCOLOR=" gold pieces"=cyan
+MENUCOLOR=" uncursed "=cyan
+MENUCOLOR=" named unc"=cyan
+MENUCOLOR=" blessed "=green
+MENUCOLOR=" holy "=green
+MENUCOLOR=" named ble"=green
+MENUCOLOR=" \(unpaid "=yellow&inverse
+# Don't put these in a bag of holding.
+MENUCOLOR=" wands? .* (canc|vanish)"=white&bold
+MENUCOLOR=" uncursed wands? .* (canc|vanish)"=light-cyan
+MENUCOLOR=" cursed wands? .* (canc|vanish)"=orange
+MENUCOLOR=" blessed wands? .* (canc|vanish)"=light-green
+MENUCOLOR=" wands? .* (canc|vanish).* called unc"=light-cyan
+MENUCOLOR=" wands? .* (canc|vanish).* called ble"=orange
+MENUCOLOR=" wands? .* (canc|vanish).* called cur"=light-green
+MENUCOLOR=" bags? .* (holding|tricks)"=white&bold
+MENUCOLOR=" uncursed bags? .* (holding|tricks)"=light-cyan
+MENUCOLOR=" cursed bags? .* (holding|tricks)"=orange
+MENUCOLOR=" blessed bags? .* (holding|tricks)"=light-green
+MENUCOLOR=" bag .* (holding|tricks) named unc"=light-cyan
+MENUCOLOR=" bag .* (holding|tricks) named cur"=orange
+MENUCOLOR=" bag .* (holding|tricks) named ble"=light-green
+# Don't drop these needlessly.
+MENUCOLOR=" scrolls? (of|called) (scare monster|Elbereth)"=gray&underline
+MENUCOLOR=" uncursed scrolls? (of|called) (scare monster|Elbereth)"=green&underline
+MENUCOLOR=" blessed scrolls? (of|called) (scare monster|Elbereth)"=lightcyan&underline
+MENUCOLOR=" cursed scrolls? (of|called) (scare monster|Elbereth)"=orange&underline
+
+# MSGTYPE
+# Delayed instadeaths
+MSGTYPE=stop ".* swings itself around you!"
+MSGTYPE=stop "The python grabs you!"
+MSGTYPE=stop "You don't feel very well."
+MSGTYPE=stop "You are turning a little green."
+MSGTYPE=stop "Your limbs are getting oozy."
+MSGTYPE=stop "Your skin begins to peel away."
+MSGTYPE=stop "You are turning into a green slime."
+MSGTYPE=stop "You are slowing down."
+MSGTYPE=stop "Your limbs are stiffening."
+MSGTYPE=stop "It constricts your throat!"
+MSGTYPE=stop "You find it hard to breathe."
+MSGTYPE=stop "You're gasping for air."
+MSGTYPE=stop "Your blood is having trouble reaching your brain."
+MSGTYPE=stop "You can no longer breathe."
+MSGTYPE=stop "You're turning blue."
+MSGTYPE=stop "Your consciousness is fading."
+MSGTYPE=stop "You feel deathly sick."
+MSGTYPE=stop "You feel much worse."
+MSGTYPE=stop "You feel even worse."
+# Not dangerous by themselves but could kill you if you don't notice
+MSGTYPE=stop "You feel feverish."
+MSGTYPE=stop "You fail to cast the spell correctly."
+MSGTYPE=stop "You don't have enough energy to cast that spell."
+MSGTYPE=stop "You are beginning to feel weak."
+MSGTYPE=stop ".* needs food, badly!"
+MSGTYPE=stop "You hear the howling of the CwnAnnwn..."
+MSGTYPE=stop ".*, your life force is running out."
+MSGTYPE=stop ".*, all of your powers will be lost..."
+MSGTYPE=stop "You hear the wailing of the Banshee..."
+MSGTYPE=stop ".* is about to die."
+MSGTYPE=stop "trice corpse rots away."
+
+# traditional, combination, full or partial
+OPTIONS=menustyle:full
+
+OPTIONS=menu_select_all:=
+OPTIONS=menu_deselect_all:-
+OPTIONS=menu_select_page:+
+OPTIONS=menu_deselect_page:_
+OPTIONS=menu_invert_all:~
+OPTIONS=menu_search:\\
+
+OPTIONS=menu_first_page:<
+OPTIONS=menu_previous_page:{
+OPTIONS=menu_next_page:}
+OPTIONS=menu_last_page:>
+
+# Allowed: none, bold, dim, underline, blink, inverse
+OPTIONS=menu_headings=underline
+
+OPTIONS=menu_objsyms
+OPTIONS=msghistory:999
+OPTIONS=msg_window:f
+
+# mouse clicks only look, don't move
+OPTIONS=mouse_support
+OPTIONS=clicklook
+OPTIONS=!travel
+
+OPTIONS=name:Jonathan
+OPTIONS=perm_invent
+OPTIONS=pickup_burden:S
+OPTIONS=pickup_types:$!?"=/
+OPTIONS=pile_limit:50
+OPTIONS=!rest_on_space
+OPTIONS=runmode:walk
+OPTIONS=scores:3t 1a o
+OPTIONS=selectsaved
+OPTIONS=showexp
+OPTIONS=showrace
+OPTIONS=sortloot=loot
+OPTIONS=standout
+
+# statushilites
+# See https://nethackwiki.com/wiki/Status_hilites
+#
+# My old 3.6.0 config:
+#
+# OPTIONS=statushilites
+# OPTION=hilite_status:dexterity/updown/magenta/bright-cyan
+# OPTION=hilite_status:constitution/updown/magenta/bright-cyan
+# OPTION=hilite_status:intelligence/updown/magenta/bright-cyan
+# OPTION=hilite_status:wisdom/updown/magenta/bright-cyan
+# OPTION=hilite_status:charisma/updown/magenta/bright-cyan
+# OPTION=hilite_status:alignment/updown/magenta/bright-cyan
+# OPTION=hilite_status:score/updown/magenta/bright-cyan
+# OPTION=hilite_status:carrying-capacity/updown/magenta/bright-cyan
+# OPTION=hilite_status:gold/updown/magenta/bright-cyan
+# OPTION=hilite_status:power/updown/magenta/bright-cyan
+# OPTION=hilite_status:power-max/updown/magenta/bright-cyan
+# OPTION=hilite_status:experience-level/updown/magenta/bright-cyan
+# OPTION=hilite_status:armor-class/updown/bright-cyan/magenta
+# OPTION=hilite_status:HD/updown/magenta/bright-cyan
+# #OPTION=hilite_status:time/
+# OPTION=hilite_status:hunger/100%/orange/blue
+# OPTION=hilite_status:hitpoints/updown/red/green
+# OPTION=hilite_status:hitpoints-max/updown/magenta/bright-cyan
+# OPTION=hilite_status:dungeon-level/updown/magenta/bright-cyan
+# OPTION=hilite_status:experience/updown/magenta/bright-cyan
+# OPTION=hilite_status:condition/updown/yellow/brown
+#
+# Pasted from some kind guy on Reddit:
+#
+# Status highlights
+# =================
+OPTIONS=statushilites:1
+# Title
+OPTIONS=hilite_status:title/changed/white
+OPTIONS=hilite_status:alignment/changed/white
+# HP
+OPTIONS=hitpointbar
+OPTIONS=hilite_status:hitpoints/100%/grey
+OPTIONS=hilite_status:hitpoints/<100%/green
+OPTIONS=hilite_status:hitpoints/<50%/yellow
+OPTIONS=hilite_status:hitpoints/<33%/red&bold
+OPTIONS=hilite_status:hitpoints/<15%/red
+# Mana
+OPTIONS=hilite_status:power/100%/grey
+OPTIONS=hilite_status:power/<100%/cyan
+OPTIONS=hilite_status:power/<50%/magenta
+OPTIONS=hilite_status:power/<25%/red
+# Experience level
+OPTIONS=hilite_status:experience/down/red&bold
+OPTIONS=hilite_status:experience-level/up/cyan&bold/down/red&bold
+# Encumberance
+OPTIONS=hilite_status:cap/burdened/yellow/stressed/orange/strained/red/overtaxed/red/overloaded/red
+# Hunger
+OPTIONS=hilite_status:hunger/satiated/cyan&bold/hungry/yellow/weak/orange/fainting/red&inverse/fainted/red
+# Troubles
+OPTIONS=hilite_status:condition/hallu/yellow
+OPTIONS=hilite_status:condition/conf/magenta
+OPTIONS=hilite_status:condition/stun/red&bold
+OPTIONS=hilite_status:condition/major_troubles/red&inverse
+# Attributes
+OPTIONS=hilite_status:armor-class/down/green&bold/up/red&bold
+OPTIONS=hilite_status:characteristics/up/green&bold/down/red&bold
+OPTIONS=hilite_status:hitpoints-max/up/green&bold/down/red&bold
+OPTIONS=hilite_status:power-max/up/green&bold/down/red&bold
+# Gold
+OPTIONS=hilite_status: gold/up/yellow/down/brown
+
+OPTIONS=symset:IBMGraphics
+SYMBOLS=S_hcdoor:Í
+SYMBOLS=S_vcdoor:º
+SYMBOLS=S_hodoor:|
+SYMBOLS=S_vodoor:-
+SYMBOLS=S_grave:ñ
+
+OPTIONS=time
+OPTIONS=timed_delay
+
+OPTIONS=windowtype:curses
+
