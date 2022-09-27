@@ -12,6 +12,8 @@
 !.config/
 !.config/bat/
 !.config/bat/config
+!.config/conky/
+!.config/conky/conky.conf
 !.ctags
 !.dircolors
 !.gitattributes
