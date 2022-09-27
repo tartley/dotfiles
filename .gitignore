@@ -1,5 +1,8 @@
 *
 
+!.bashrc
+!.bashrc.canonical
+!.bashrc.osx
 !.config/
 !.config/bat/
 !.config/bat/config

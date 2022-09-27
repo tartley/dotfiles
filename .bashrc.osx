@@ -1,0 +1,24 @@
+
+# Only run this script on OSX
+if [[ $OSTYPE != darwin* ]]; then
+    return 0
+fi
+
+# Make old shitty 'ls' use color
+if ls --G >/dev/null 2>&1; then
+    LS_OPTIONS='-G'
+fi
+
+# Quit an application from the command line
+function quit () {
+    for app in $*; do
+        osascript -e 'quit app "'$app'"'
+    done
+}
+
+# Pass 0 or 1 to hide or show hidden files in Finder
+function showhidden() {
+    defaults write com.apple.Finder AppleShowAllFiles $1
+    killall Finder
+}
+
