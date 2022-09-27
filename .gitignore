@@ -6,6 +6,7 @@
 !.config/
 !.config/bat/
 !.config/bat/config
+!.dircolors
 !.local/
 !.local/bin/
 !.local/bin/*
@@ -15,6 +16,7 @@
 !.gitconfig.private
 !.gitignore
 !.gitk
+!.ps1_vcs
 !.ssh/
 !.ssh/config
 

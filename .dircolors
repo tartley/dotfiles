@@ -1,0 +1,71 @@
+# see man dircolors
+
+# Specify colors used by 'ls' as:
+#    FILETYPE ATTR[;ATTR...]
+
+# ATTRS
+#  0    restore default color
+#  1    brighter colors
+#  3    italic
+#  4    underlined text (sometimes dim foreground)
+#  7    reverse
+#
+# foregrounds:
+# 30    black
+# 31    red
+# 32    green
+# 33    yellow (or brown)
+# 34    blue
+# 35    purple
+# 36    cyan
+# 37    white (or gray)
+#
+# backgrounds:
+# 40    black
+# 41    red
+# 42    green
+# 43    yellow (or brown)
+# 44    blue
+# 45    purple
+# 46    cyan
+# 47    white (or gray)
+
+
+# FILETYPES:
+
+# NORMAL normal (non-filename) text. 
+NORMAL 00
+
+# FILE, a regular file. 
+
+# DIR, a directory
+DIR 36
+
+# LINK, a symbolic link. 
+#       Special value 'target' means same color as linked-to file
+LINK target
+LINK 3
+
+# ORPHAN, an orphaned symbolic link (one which points to a nonexistent file).
+#         defaults to LINK color
+ORPHAN 41;30
+
+# MISSING, a missing file (a nonexistent file pointed to by symbolid link)
+#          defaults to FILE color
+MISSING 41;37
+
+# FIFO, a FIFO (named pipe).
+
+# SOCK, a socket.
+
+# BLK, a block device special file.
+
+# CHR, a character device special file.
+
+# EXEC, a file with the executable attribute set.
+EXEC    38;5;118
+
+# *extension, Specifies the color used for any file that ends in extension.
+*pyc    90
+*pyo    90
+

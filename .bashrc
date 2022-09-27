@@ -46,10 +46,8 @@ case $- in
     user="${magenta}${user}${reset}"
   fi
   host="${HOSTNAME%%.*}"
-  if [ "$host" = "t460" ]; then
-    host="${green}t460${reset}"
-  elif [ "$host" = "asus" ]; then
-    host="${green}asus${reset}"
+  if [ "$host" = "pop-os" -o "$host" = "t460" -o "$host" = "asus" ]; then
+    host="${green}${host}${reset}"
   else
     host="${magenta}${host}${reset}"
   fi
