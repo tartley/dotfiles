@@ -3,6 +3,11 @@
 !.bashrc
 !.bashrc.canonical
 !.bashrc.osx
+!.bazaar/
+!.bazaar/authentication.conf
+!.bazaar/bazaar.conf
+!.bazaar/ignore
+!.bazaar/locations.conf
 !.colordiffrc
 !.config/
 !.config/bat/
