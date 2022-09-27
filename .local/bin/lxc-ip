@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+prog=$(basename $0)
+
+function usage {
+    echo "Usage: $prog CONTAINER" >&2
+    echo "Outputs IPv4 address of given CONTAINER." >&2
+}
+
+container=""
+
+while [[ $# -gt 0 ]]
+do
+  case "$1" in
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    if [ -z "$container" ]; then
+        container=$1
+    else
+        echo "$prog error: Not multiple CONTAINERs" >&2
+        usage
+        exit 1
+    fi
+    ;;
+  esac
+  shift
+done
+
+if [ -z "$container" ]; then
+    echo "$prog error: Must pass a CONTAINER" >&2
+    usage
+    exit 1
+fi
+
+table=$(lxc list -c ns4 -f csv)
+line=$(echo "$table" | grep "$container")
+if [ -z "$line" ]; then
+    echo "$prog error: Container '$container' not found. Existing containers are:" >&2
+    lxc list -c n -f compact >&2
+    exit 2
+fi
+
+if ! grep -qs RUNNING <<<"$line" ; then
+    echo "$prog error: Container is not running: $line" >&2
+    exit 3
+fi
+
+ipv4=$(echo "$line" | cut -d',' -f3 | cut -d' ' -f1)
+if [ -z "$ipv4" ]; then
+    echo "$prog error: Container has no IPv4: $line" >&2
+    exit 4
+fi
+
+echo "$ipv4"
+
