@@ -1,0 +1,7 @@
+VteTerminal,
+TerminalScreen,
+vte-terminal {
+    padding: 1px 1px 4px 4px;
+    -VteTerminal-inner-border: 1px 1px 4px 4px;
+}
+
