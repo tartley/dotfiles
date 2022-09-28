@@ -53,6 +53,9 @@
 !.tmux.conf
 !.toprc
 !.vimrc
+!bin/
+!bin/*
+!bin/*/*
 !VisualBoyAdvance.cfg
 !mame.ini
 

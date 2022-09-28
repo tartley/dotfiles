@@ -21,7 +21,7 @@ function lxcll {
 # TODO: convert the -W into a -F to get an up-to-date list on demand
 # See -F explaination at
 # https://unix.stackexchange.com/questions/250262/how-to-use-bashs-complete-or-compgen-c-command-option/250484#250484
-complete -W "$(lxcls 2>/dev/null) $($HOME/.local/bin/lalias)" lssh lxc
+complete -W "$(lxcls 2>/dev/null) $(lalias)" lssh lxc
 
 
 function populate-find-sections {

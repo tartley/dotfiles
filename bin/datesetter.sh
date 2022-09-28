@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 
 # touches each directory in . to give it the same datestamp as the files
 # within it. Because I often create / rename directories long after
