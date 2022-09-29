@@ -441,6 +441,7 @@ endfunction
 " call MaximizeVertical()
 
 let $codewidth=88
+set colorcolumn=89
 
 " single column
 noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+$codewidth<CR>
@@ -448,6 +449,7 @@ noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+$codewidth<CR
 noremap <silent> <Leader><f2> :only!<CR>:let &columns=&numberwidth*2+$codewidth*2+1<CR>:vsplit<CR>
 " TRIPLE COLUMN MADNESS!!!
 noremap <silent> <Leader><f3> :only!<CR>:let &columns=&numberwidth*3+$codewidth*3+2<CR>:vsplit<CR>:vsplit<CR>
+
 
 " show line numbers
 set number
