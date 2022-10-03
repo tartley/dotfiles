@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+declare -A monitors
+monitors[0]="eDP-1-1" # built-in left
+monitors[1]="DP-2"    # LG central
+monitors[2]="HDMI-0"  # ASUS right
+
+function usage {
+    echo "USAGE: ${prog} MONITOR" >&2
+    echo "Where: MONITOR is an integer 0,1,2." >&2
+}
+
+if [[ $# -ne 1 ]]; then
+    usage
+    exit 1
+fi
+
+monitor="${monitors[$1]}"
+
+if [[ -z "$monitor" ]]; then
+    usage
+    exit 1
+fi
+
+xrandr --output "$monitor" --primary
+
