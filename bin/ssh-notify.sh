@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 if command -v notify-send >/dev/null ; then
-	notify-send "ssh $*"
+	notify-send "$@"
 else
-	echo "ssh $*" >&2
+	echo -e "ssh $@" >&2
 fi
 
