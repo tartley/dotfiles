@@ -137,6 +137,39 @@ function pydirs {
     python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
 }
 
+function busyloop {
+  number=1 # how many busyloops to start. Each will occupy 1 CPU core
+
+  while [ $# -gt 0 ]; do
+      case "$1" in
+          *) number=$1
+      esac
+      shift
+  done
+
+  # validate args
+  re='^[0-9]+$'
+  if ! [[ $number =~ $re ]] ; then
+     echo "error: Not a number" >&2
+     return 1
+  fi
+
+  # Start $number busyloops
+  for (( job=0 ; job<$number; job++ ));
+  do
+    while true; do
+      :
+    done &
+  done
+}
+
+# for cleaning up busyloops from above
+function killalljobs {
+  for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
+    kill %$jid
+  done
+}
+
 # git stuff
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
