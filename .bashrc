@@ -130,8 +130,6 @@ function beep {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
 }
 
-# ctags files
-
 # Use 'pytags $(pydirs) .' to tag with all stdlib and venv symbols
 function pydirs {
     python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
@@ -168,6 +166,10 @@ function killalljobs {
   for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
     kill %$jid
   done
+}
+
+function workon {
+    . ~/.virtualenvs/$1/bin/activate
 }
 
 # git stuff
