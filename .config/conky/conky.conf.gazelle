@@ -17,12 +17,13 @@ conky.config = {
     pad_percents = 2,
     update_interval = 0.67,
     use_xft = true,
+    xinerama_head = 0,
 }
 
-conky.text = [[
+conky.text = [[\
 ${font DejaVu:pixelsize=18}${color grey}\
 CPU:$color $cpu%$alignr${hwmon 5 temp  1 1 -4}°C
-${voffset 8}\
+${voffset 4}\
 ${color dimgray}\
 ${font DejaVu:pixelsize=14}\
 ${alignc}Performance cores:
@@ -34,6 +35,7 @@ ${color darkgreen}${lua conky_pad ${cpu  cpu5}}${goto  40}$color${cpubar  cpu5 1
 ${color darkgreen}${lua conky_pad ${cpu  cpu7}}${goto  40}$color${cpubar  cpu7 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 14}°C${goto 120}$color${cpubar  cpu8 15,25}${goto 152}${color darkgreen}${cpu  cpu8}
 ${color darkgreen}${lua conky_pad ${cpu  cpu9}}${goto  40}$color${cpubar  cpu9 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 18}°C${goto 120}$color${cpubar cpu10 15,25}${goto 152}${color darkgreen}${cpu cpu10}
 ${color darkgreen}${lua conky_pad ${cpu cpu11}}${goto  40}$color${cpubar cpu11 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 22}°C${goto 120}$color${cpubar cpu12 15,25}${goto 152}${color darkgreen}${cpu cpu12}
+${voffset 6}\
 ${color dimgray}\
 ${font DejaVu:pixelsize=14}\
 ${alignc}Efficiency cores:
@@ -55,6 +57,10 @@ ${color white}      ${nvidiagauge membwutil}${alignr}${nvidiagauge pcieutil}
 ${voffset -8}\
 ${color dimgrey}    RAM b/w${alignr}PCIe b/w    
 ${alignc}${color dimgrey}Driver ${color gray}v${nvidia driverversion}
+
+used: ${nvidia memused}MB
+free: ${nvidia memfree}MB
+ max: ${nvidia memmax}MB
 
 ${font DejaVu:pixelsize=16}\
  ${color grey} ${goto 44}Down  ${goto 110}Up${color darkgreen}
