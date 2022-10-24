@@ -51,16 +51,13 @@ ${cpubar cpu19 15,28} \
 ${cpubar cpu20 15,28}
 
 ${font DejaVu:pixelsize=16}${color grey}\
-GPU: ${color}${nvidia gpuutil}%${alignr}${nvidia temp}/${nvidia threshold}°C
+GPU: ${color}${nvidia gpuutil}%${alignr}${nvidia temp}${color darkgreen}/${nvidia threshold}°C
 ${font DejaVu:pixelsize=14}${color dimgrey}\
 ${color white}      ${nvidiagauge membwutil}${alignr}${nvidiagauge pcieutil}      
 ${voffset -8}\
 ${color dimgrey}    RAM b/w${alignr}PCIe b/w    
+RAM: ${color gray}$alignr${nvidia memused}MB ${nvidiabar 10,60 memused}
 ${alignc}${color dimgrey}Driver ${color gray}v${nvidia driverversion}
-
-used: ${nvidia memused}MB
-free: ${nvidia memfree}MB
- max: ${nvidia memmax}MB
 
 ${font DejaVu:pixelsize=16}\
  ${color grey} ${goto 44}Down  ${goto 110}Up${color darkgreen}
