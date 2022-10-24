@@ -417,11 +417,15 @@ function historyc() {
 
 function history_backup () {
     (
-        # make a backup, overwriting other backups from today
-        cd ~/docs/config/bash_history/
-        \cp ~/.bash_history bash_history_$(date +%F)
-        # rm backups older than N days
-        ls -1 . | head -n -100 | xargs rm -f
+        if [ -d ~/docs/config/bash_history ] ; then
+            # make a backup, overwriting other backups from today
+            (
+            cd ~/docs/config/bash_history/
+            \cp ~/.bash_history bash_history_$(date +%F)
+            # rm backups older than N days
+            ls -1 . | head -n -100 | xargs rm -f
+            )
+        fi
     )
 }
 trap history_backup EXIT

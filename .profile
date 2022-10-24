@@ -3,22 +3,6 @@
 # environment vars, process limits
 # i.e. stuff inherited by child processes
 
-# RHEL runs .profile twice on login.
-# Once from GUI login shell. Once from an Xinit script.
-# This 'if' prevents a 2nd execution of .profile
-echo "$(date) .profile $PROFILE" >> ~/.profile.log
-export PROFILE="${PROFILE}1"
-# if [ "$PROFILE" != "1" ] ; then
-#     # This is 2nd (or greater) time of sourcing .profile.
-#     if [ -t 2 ] ; then
-#         # Stderr is connected to a terminal.
-#         # Presumably user is manually sourcing .profile. Warn them.
-#         echo ".profile: skipping. Unset \$PROFILE and try again." >&2
-#     fi
-#     # Don't execute remainder of script.
-#     return 0
-# fi
-
 # Prefix to PATH ###############################
 
 addpath() {
