@@ -1,26 +1,39 @@
 #!/usr/bin/env bash
 
-declare -A monitors
-monitors[0]="eDP-1-1" # built-in left
-monitors[1]="DP-2"    # LG central
-monitors[2]="HDMI-0"  # ASUS right
-
 function usage {
     echo "USAGE: ${prog} MONITOR" >&2
-    echo "Where: MONITOR is an integer 0,1,2." >&2
+    echo "Where: MONITOR is an integer specifying which monitor to make primary." >&2
+    echo "Integers are assigned starting with the leftmost monitor, working rightwards." >&2
+    echo "Issues xrandr command to make the given monitor the current primary." >&2
+    echo "Useful to make sure Steam launches games on the correct monitor." >&2
 }
 
-if [[ $# -ne 1 ]]; then
+# List the names of the connected monitors into an array,
+# sorted by their horizontal position relative to each other.
+readarray -t monitors < <(xrandr --listmonitors | tail -n+2 | sort -t+ -k3n | cut -d' ' -f6)
+
+if [[ $# -ne 1 ]] ; then
+    echo "ERROR: more than one arg given" >&2
+    usage
+    exit 1
+fi
+if [[ "$1" = "-h" || "$1" == "--help" ]] ; then
+    usage
+    exit 0
+fi
+re_int='^[0-9]+$'
+if ! [[ "$1" =~ $re_int ]] ; then
+    echo "ERROR: not an integer" >&2
+    usage
+    exit 1
+fi
+if ! [[ ( "$1" < "${#monitors[@]}" ) ]] ; then
+    echo "ERROR: integer not less than number of monitors (${#monitors[@]})" >&2
     usage
     exit 1
 fi
 
 monitor="${monitors[$1]}"
-
-if [[ -z "$monitor" ]]; then
-    usage
-    exit 1
-fi
 
 xrandr --output "$monitor" --primary
 
