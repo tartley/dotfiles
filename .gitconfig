@@ -7,6 +7,9 @@
     email = tartley@tartley.com
 
 [alias]
+    # Acts like '--force', if it is required, but refuses to force push if the remote
+    # repo is not in the state that we last fetched from it, i.e. refuses to force
+    # push over someone else's changes that we haven't seen yet.
     pushfl = push --force-with-lease
 
 [gui]
@@ -50,7 +53,6 @@
 [core]
     editor = nis
     pager = less -FRSX
-    excludesfile = ~/.gitignore
     trustctime = false
     attributesfile = /home/jhartley/.gitattributes
 
