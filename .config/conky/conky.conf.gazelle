@@ -30,11 +30,11 @@ ${alignc}Performance cores:
 ${voffset 2}\
 ${font UbuntuMono:pixelsize=19}\
 ${color darkgreen}${lua conky_pad ${cpu  cpu1}}${goto  40}$color${cpubar  cpu1 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  2}°C${goto 120}$color${cpubar  cpu2 15,25}${goto 152}${color darkgreen}${cpu  cpu2}
-${color darkgreen}${lua conky_pad ${cpu  cpu3}}${goto  40}$color${cpubar  cpu3 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  6}°C${goto 120}$color${cpubar  cpu4 15,25}${goto 152}${color darkgreen}${cpu  cpu4}
-${color darkgreen}${lua conky_pad ${cpu  cpu5}}${goto  40}$color${cpubar  cpu5 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 10}°C${goto 120}$color${cpubar  cpu6 15,25}${goto 152}${color darkgreen}${cpu  cpu6}
-${color darkgreen}${lua conky_pad ${cpu  cpu7}}${goto  40}$color${cpubar  cpu7 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 14}°C${goto 120}$color${cpubar  cpu8 15,25}${goto 152}${color darkgreen}${cpu  cpu8}
-${color darkgreen}${lua conky_pad ${cpu  cpu9}}${goto  40}$color${cpubar  cpu9 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 18}°C${goto 120}$color${cpubar cpu10 15,25}${goto 152}${color darkgreen}${cpu cpu10}
-${color darkgreen}${lua conky_pad ${cpu cpu11}}${goto  40}$color${cpubar cpu11 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp 22}°C${goto 120}$color${cpubar cpu12 15,25}${goto 152}${color darkgreen}${cpu cpu12}
+${color darkgreen}${lua conky_pad ${cpu  cpu3}}${goto  40}$color${cpubar  cpu3 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  3}°C${goto 120}$color${cpubar  cpu4 15,25}${goto 152}${color darkgreen}${cpu  cpu4}
+${color darkgreen}${lua conky_pad ${cpu  cpu5}}${goto  40}$color${cpubar  cpu5 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  4}°C${goto 120}$color${cpubar  cpu6 15,25}${goto 152}${color darkgreen}${cpu  cpu6}
+${color darkgreen}${lua conky_pad ${cpu  cpu7}}${goto  40}$color${cpubar  cpu7 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  5}°C${goto 120}$color${cpubar  cpu8 15,25}${goto 152}${color darkgreen}${cpu  cpu8}
+${color darkgreen}${lua conky_pad ${cpu  cpu9}}${goto  40}$color${cpubar  cpu9 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  6}°C${goto 120}$color${cpubar cpu10 15,25}${goto 152}${color darkgreen}${cpu cpu10}
+${color darkgreen}${lua conky_pad ${cpu cpu11}}${goto  40}$color${cpubar cpu11 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  7}°C${goto 120}$color${cpubar cpu12 15,25}${goto 152}${color darkgreen}${cpu cpu12}
 ${voffset 6}\
 ${color dimgray}\
 ${font DejaVu:pixelsize=14}\
@@ -42,11 +42,11 @@ ${alignc}Efficiency cores:
 ${voffset 2}\
 ${color darkgreen}\
 ${cpubar cpu13 15,28} \
-${cpubar cpu14 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp 26}°C${goto 117}${color darkgreen}\
+${cpubar cpu14 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp  8}°C${goto 117}${color darkgreen}\
 ${cpubar cpu15 15,28} \
 ${cpubar cpu16 15,28}
 ${cpubar cpu17 15,28} \
-${cpubar cpu18 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp 30}°C${goto 117}${color darkgreen}\
+${cpubar cpu18 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp 12}°C${goto 117}${color darkgreen}\
 ${cpubar cpu19 15,28} \
 ${cpubar cpu20 15,28}
 
