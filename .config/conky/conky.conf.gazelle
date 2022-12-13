@@ -53,11 +53,9 @@ ${cpubar cpu20 15,28}
 ${font DejaVu:pixelsize=16}${color grey}\
 GPU: ${color}${nvidia gpuutil}%${alignr}${nvidia temp}${color darkgreen}/${nvidia threshold}°C
 ${font DejaVu:pixelsize=14}${color dimgrey}\
-${color white}      ${nvidiagauge membwutil}${alignr}${nvidiagauge pcieutil}      
-${voffset -8}\
-${color dimgrey}    RAM b/w${alignr}PCIe b/w    
 RAM: ${color gray}$alignr${nvidia memused}MB ${nvidiabar 10,60 memused}
 ${alignc}${color dimgrey}Driver ${color gray}v${nvidia driverversion}
+${alignc}${color dimgrey}Desktop ${color gray}${execi 99995 loginctl show-session $(loginctl | grep $USER | awk '{print $1}') | grep Type | awk -F= '{print $2}'}
 
 ${font DejaVu:pixelsize=16}\
  ${color grey} ${goto 44}Down  ${goto 110}Up${color darkgreen}
@@ -78,10 +76,9 @@ ${color grey}Swap  ${goto 60}$color${swapbar 8,30} $swapmax
 ${color grey}/     ${goto 60}$color${fs_bar 8,30 /} ${fs_size /}
 ${color grey}/home ${goto 60}$color${fs_bar 8,30 /home} ${fs_size /home}
 
-${color gray}Desktop:${alignr}Uptime:
-$color${execi 99995 loginctl show-session $(loginctl | grep $USER | awk '{print $1}') | grep Type | awk -F= '{print $2}'}${alignr}$uptime_short
+${color gray}Kernel${alignr}Uptime
+$color${lua conky_truncate $kernel}${alignr}$uptime_short
 
-$alignc${color gray}Kernel: ${color}v${lua conky_truncate $kernel}
 $alignc${color gray}${execi 99999 lsb_release -ds}
 ]]
 
