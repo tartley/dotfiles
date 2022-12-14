@@ -23,42 +23,44 @@ conky.config = {
 conky.text = [[\
 ${font DejaVu:pixelsize=18}${color grey}\
 CPU:$color $cpu%$alignr${hwmon 5 temp  1 1 -4}°C
-${voffset 4}\
-${color dimgray}\
+${color #888}\
 ${font DejaVu:pixelsize=14}\
 ${alignc}Performance cores:
 ${voffset 2}\
 ${font UbuntuMono:pixelsize=19}\
-${color darkgreen}${lua conky_pad ${cpu  cpu1}}${goto  40}$color${cpubar  cpu1 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  2}°C${goto 120}$color${cpubar  cpu2 15,25}${goto 152}${color darkgreen}${cpu  cpu2}
-${color darkgreen}${lua conky_pad ${cpu  cpu3}}${goto  40}$color${cpubar  cpu3 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  3}°C${goto 120}$color${cpubar  cpu4 15,25}${goto 152}${color darkgreen}${cpu  cpu4}
-${color darkgreen}${lua conky_pad ${cpu  cpu5}}${goto  40}$color${cpubar  cpu5 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  4}°C${goto 120}$color${cpubar  cpu6 15,25}${goto 152}${color darkgreen}${cpu  cpu6}
-${color darkgreen}${lua conky_pad ${cpu  cpu7}}${goto  40}$color${cpubar  cpu7 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  5}°C${goto 120}$color${cpubar  cpu8 15,25}${goto 152}${color darkgreen}${cpu  cpu8}
-${color darkgreen}${lua conky_pad ${cpu  cpu9}}${goto  40}$color${cpubar  cpu9 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  6}°C${goto 120}$color${cpubar cpu10 15,25}${goto 152}${color darkgreen}${cpu cpu10}
-${color darkgreen}${lua conky_pad ${cpu cpu11}}${goto  40}$color${cpubar cpu11 15,25}${goto 73}${alignc}${color dimgrey}${hwmon 5 temp  7}°C${goto 120}$color${cpubar cpu12 15,25}${goto 152}${color darkgreen}${cpu cpu12}
-${voffset 6}\
-${color dimgray}\
+${color #394}${lua conky_pad ${cpu  cpu1}}${goto  40}$color${cpubar  cpu1 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  2}°${goto 112}$color${cpubar  cpu2 15,25}${goto 144}${color #394}${cpu  cpu2}
+${color #394}${lua conky_pad ${cpu  cpu3}}${goto  40}$color${cpubar  cpu3 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  3}°${goto 112}$color${cpubar  cpu4 15,25}${goto 144}${color #394}${cpu  cpu4}
+${color #394}${lua conky_pad ${cpu  cpu5}}${goto  40}$color${cpubar  cpu5 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  4}°${goto 112}$color${cpubar  cpu6 15,25}${goto 144}${color #394}${cpu  cpu6}
+${color #394}${lua conky_pad ${cpu  cpu7}}${goto  40}$color${cpubar  cpu7 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  5}°${goto 112}$color${cpubar  cpu8 15,25}${goto 144}${color #394}${cpu  cpu8}
+${color #394}${lua conky_pad ${cpu  cpu9}}${goto  40}$color${cpubar  cpu9 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  6}°${goto 112}$color${cpubar cpu10 15,25}${goto 144}${color #394}${cpu cpu10}
+${color #394}${lua conky_pad ${cpu cpu11}}${goto  40}$color${cpubar cpu11 15,28}${goto 78}${alignc}${color #888}${hwmon 5 temp  7}°${goto 112}$color${cpubar cpu12 15,25}${goto 144}${color #394}${cpu cpu12}
+${voffset 4}\
+${color #888}\
 ${font DejaVu:pixelsize=14}\
 ${alignc}Efficiency cores:
-${voffset 2}\
-${color darkgreen}\
+${voffset 2}${offset 4}\
+${color #394}\
 ${cpubar cpu13 15,28} \
-${cpubar cpu14 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp  8}°C${goto 117}${color darkgreen}\
+${cpubar cpu14 15,28}${goto 80}${alignc}${color #888}${hwmon 5 temp  8}°${goto 113}${color #394}\
 ${cpubar cpu15 15,28} \
 ${cpubar cpu16 15,28}
+${offset 4}\
 ${cpubar cpu17 15,28} \
-${cpubar cpu18 15,28}${goto 75}${alignc}${color dimgrey}${hwmon 5 temp 12}°C${goto 117}${color darkgreen}\
+${cpubar cpu18 15,28}${goto 80}${alignc}${color #888}${hwmon 5 temp 12}°${goto 113}${color #394}\
 ${cpubar cpu19 15,28} \
 ${cpubar cpu20 15,28}
 
 ${font DejaVu:pixelsize=16}${color grey}\
-GPU: ${color}${nvidia gpuutil}%${alignr}${nvidia temp}${color darkgreen}/${nvidia threshold}°C
-${font DejaVu:pixelsize=14}${color dimgrey}\
-RAM: ${color gray}$alignr${nvidia memused}MB ${nvidiabar 10,60 memused}
-${alignc}${color dimgrey}Driver ${color gray}v${nvidia driverversion}
-${alignc}${color dimgrey}Desktop ${color gray}${execi 99995 loginctl show-session $(loginctl | grep $USER | awk '{print $1}') | grep Type | awk -F= '{print $2}'}
+GPU: ${color white}${nvidiabar 15,35 gpuutil}${alignr}${color}${nvidia temp}${color #394}/${nvidia threshold}°C
+${font DejaVu:pixelsize=14}${color #888}\
+${alignc}Perf level (${nvidia perfmode}): ${color grey}${nvidia perflevelcur}/${nvidia perflevelmax}
+${font DejaVu:pixelsize=14}${color #888}\
+${alignc}RAM: ${color grey}${nvidiabar 10,60 memused} / ${nvidia memmax}MB
+${color #888}Driver:${alignr}Desktop:
+${color grey}v${nvidia driverversion}${alignr}${color grey}${execi 99995 loginctl show-session $(loginctl | grep $USER | awk '{print $1}') | grep Type | awk -F= '{print $2}'}
 
 ${font DejaVu:pixelsize=16}\
- ${color grey} ${goto 44}Down  ${goto 110}Up${color darkgreen}
+ ${color grey} ${goto 44}Down  ${goto 110}Up${color #394}
 ${if_existing /sys/class/net/wlp0s20f3/operstate up}\
  ${color grey}wifi:${color #88aaff}\
  ${goto  45}${downspeedgraph wlp0s20f3 15,60 104E8B 0077ff -t}\
@@ -71,14 +73,14 @@ ${if_existing /sys/class/net/eno0/operstate up}\
  ${upspeedgraph   eno0      15,40 104E8B 0077ff -t}
 ${endif}\
 
-${color grey}RAM   ${goto 60}$color${membar 8,30} $memmax
-${color grey}Swap  ${goto 60}$color${swapbar 8,30} $swapmax
-${color grey}/     ${goto 60}$color${fs_bar 8,30 /} ${fs_size /}
-${color grey}/home ${goto 60}$color${fs_bar 8,30 /home} ${fs_size /home}
-
-${color gray}Kernel${alignr}Uptime
+${color grey}RAM   ${goto 60}${color #88aaff}${membar 15,30}${color #394} / $memmax
+${color grey}Swap  ${goto 60}${color #88aaff}${swapbar 15,30}${color #394} / $swapmax
+${color grey}/     ${goto 60}${color #88aaff}${fs_bar 15,30 /}${color #394} / ${fs_size /}
+${color grey}/home ${goto 60}${color #88aaff}${fs_bar 15,30 /home}${color #394} / ${fs_size /home}
+${voffset 8}\
+${color grey}Kernel:${alignr}Uptime:
 $color${lua conky_truncate $kernel}${alignr}$uptime_short
-
-$alignc${color gray}${execi 99999 lsb_release -ds}
+${voffset 8}\
+$alignc${color grey}${execi 99999 lsb_release -ds}
 ]]
 
