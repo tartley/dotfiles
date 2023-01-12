@@ -389,6 +389,9 @@ noremap <Leader>t :Tags<CR>
 " fuzzy find tag under cursor
 noremap <Leader>T :call fzf#vim#tags(expand('<cword>'))<CR>
 
+command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
+noremap ,m :MyMarks<CR>:normal '
+
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
 
