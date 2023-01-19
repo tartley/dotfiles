@@ -293,7 +293,7 @@ function gfmm {
     git merge -q master
 }
 
-. ~/.git-completion
+. ~/.git-completion.bash
 
 
 ## bzr ####
