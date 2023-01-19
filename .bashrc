@@ -187,12 +187,8 @@ function ga {
     git add "$@"
 }
 
-function gci {
+function gc {
     git commit --verbose "$@"
-}
-
-function gco {
-    git checkout "$@"
 }
 
 function gdst {
@@ -234,17 +230,12 @@ function gaa {
     git add --all
 }
 
-# push, with tags
-function gp {
-    git push "$@" --tags
+function gpush {
+    git push --quiet "$@"
 }
 
-# pull and push, with tags
-# TODO: Should this use pull? Which might or might not produce a merge commit?
-# We probably want to gff instead. And shoulnd't gff do a fetch first?
-# Hmmm more thinking reqd.
-function gpp {
-    git pull && git fetch --tags && git push --follow-tags
+function gpull {
+    git pull --quiet "$@"
 }
 
 # output current branch name
