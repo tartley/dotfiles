@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Used to fix programs that output error messages on stdout (instead of stderr).
+#
+# Usage
+#
+#     err-to-stderr COMMAND
+#
+# Executes COMMAND. If exit value is zero, send output to stdout, otherwise to stderr.
+
+tmp=$(mktemp)
+
+if $@ >$tmp; then
+  cat $tmp
+else
+  cat $tmp >&2
+fi
+
+rm $tmp
+

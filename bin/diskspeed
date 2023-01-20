@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+fileloc=./speedtest
+count=10k
+echo "writes"
+dd if=/dev/zero of=$fileloc bs=8k count=$count
+echo "reads"
+dd if=$fileloc of=/dev/null bs=8k count=$count
+rm $fileloc
+

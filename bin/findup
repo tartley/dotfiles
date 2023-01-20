@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""\
+Find filenames matching the given glob in the current directory, and all parent
+directories. Uses the shell-like glob syntax of Python's fnmatch module, namely:
+
+    *       matches everything
+    ?       match any single character
+    [seq]   matches any character in 'seq'
+    [!seq]  matches any character not in 'seq'
+
+Examples
+
+    findup .gitignore  # finds .gitignore files in current dir and parents.
+    findup .git*       # finds .gitignore, .gitk, etc, in current dir and parents.
+"""
+
+import argparse
+import glob
+import pathlib
+import sys
+
+def parse_args(args):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('fileglob', help='A glob to match filenames')
+    return parser.parse_args(args)
+
+def find_up(options):
+    cwd = pathlib.Path.cwd()
+    for folder in [cwd] + list(cwd.parents):
+        for file in glob.glob(options.fileglob, root_dir=folder):
+            yield f'{str(folder)}/{file}'
+
+def display(filenames):
+    for filename in filenames:
+        print(filename)
+
+def main(args):
+    display(find_up(parse_args(args)))
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
+

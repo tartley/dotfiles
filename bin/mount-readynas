@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+mount=/media/jhartley/readynas-media
+
+mkdir -p $mount
+chown jhartley:jhartley $mount
+mount -t cifs -o rw,vers=3.0,uid=1000,gid=1000,credentials=~jhartley/.readynas-credentials //192.168.1.2/media $mount
+
