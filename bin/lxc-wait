@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Wait for a container to be properly started,
+# as detected by it responding to ssh.
+
+function usage {
+    echo "Usage: lxd-wait <container>"
+}
+
+if [ "$#" -ne 1 ] ; then
+    usage >&2
+    exit 1
+fi
+
+container="$1"
+while ! ssh -q -o ConnectTimeout=1 "$container.lxd" -- : ; do
+    echo -n "." >&2
+done
+

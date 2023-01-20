@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+# See usage() below.
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+function usage {
+    echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the specified LXD containers."
+    echo "The intent is to make the container ready for use as a development environment."
+    echo "Usage: lxc-cp-config OPTIONS <container>..."
+    echo "Where OPTIONS may include:"
+    echo "    -a|--all      Act on all existing lxd containers."
+    echo "                  No other container names must be specified."
+    echo "    -h|--help     Show this help and exit."
+}
+
+# process command line args
+all=false
+containers=()
+while [ $# -gt 0 ] ; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        -a|--all) all=true;;
+        *) containers+=("$1");;
+    esac
+    shift
+done
+
+if [ ${#containers[@]} -ne 0 ] && "$all" ; then
+    echo "lxc-cp-config: ERROR: Containers and '--all' are mutually exclusive." >&2
+    usage >&2
+    exit 1
+fi
+
+if $all ; then
+    IFS=$'\n' containers=($(lxcls))
+else
+    if [ "${#containers[@]}" -eq 0 ] ; then
+        echo "lxc-cp-config: WARNING: No containers specified." >&2
+        exit 1
+    fi
+fi
+
+function copy_files_to_container {
+    local c="$1"
+    scp -qrp \
+        ~/.bashrc* \
+        ~/.bazaar/ \
+        ~/.dircolors \
+        ~/.git-completion.bash \
+        ~/.gitconfig \
+        ~/.gitconfig.private \
+        ~/.profile \
+        ~/.ps1_vcs \
+        ~/.pythonstartup.py \
+        $c.lxd:~
+}
+
+function is_running {
+    local container="$1"
+    if lxc info $container | grep -q 'Status: RUNNING' ; then
+        echo true
+    else
+        echo false
+    fi
+}
+
+function process_container {
+    local container="$1"
+    echo -n "$container: " >&2
+    # If this is a valid container
+    if grep -q "^$container$" <<<"$(lxcls)" ; then
+
+        # If the container isn't running, start it.
+        is_initially_running=$(is_running $container)
+        if [ "$is_initially_running" = false ] ; then
+            echo -n "starting.." >&2
+            lxc start "$container"
+
+            # Wait for the container to start responding to ssh.
+            # Without this, the subsequent scp would sometimes fail with 'lost connection'.
+            lxc-wait "$container"
+
+            echo -n " " >&2
+        fi
+
+        # Actually copy the files, the point of this whole thing!
+        echo -n "copying... "
+        copy_files_to_container "$container"
+
+        # If we started the container, now we stop it again,
+        # to leave things how we found them.
+        if [ "$is_initially_running" = false ] ; then
+            echo -n "stopping... " >&2
+            lxc stop "$container" &
+        fi
+
+        echo "ok" >&2
+    else
+        echo "Not a container" >&2
+        exitval=1
+    fi
+}
+
+exitval=0
+for container in ${containers[@]}; do
+    process_container "$container"
+done
+exit $exitval
+
