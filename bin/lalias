@@ -67,13 +67,20 @@ if [ -n "$alias" ]; then
     fi
 else
     # No alias was given. Display all aliases.
+    # For each in a sorted list of containers
     containers=$(echo ${laliases[@]} | tr ' ' '\n' | sort -u)
     for container in $containers; do
-        echo "$container"
+        echo "container: $container"
+        # Accumulate an array of aliases matching that container
+        aliases=()
         for alias in ${!laliases[@]}; do
             if [ ${laliases[$alias]} = $container ]; then
-                echo -e "\t$alias"
+                aliases+=("${alias}")
             fi
+        done
+        # Display the matching aliases, sorted and indented.
+        for alias in $(echo "${aliases[@]}" | tr ' ' '\n' | sort -u ); do
+            echo "    $alias"
         done
     done
 fi
