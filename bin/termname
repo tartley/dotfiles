@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# Change terminal window / tab name
-printf "\e]2;$1\a"
-

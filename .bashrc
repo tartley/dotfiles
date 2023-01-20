@@ -162,6 +162,7 @@ function busyloop {
 }
 
 # for cleaning up busyloops from above
+# TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
 function killalljobs {
   for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
     kill %$jid
@@ -171,6 +172,21 @@ function killalljobs {
 function workon {
     . ~/.virtualenvs/$1/bin/activate
 }
+
+# Set the terminal window name
+function termname {
+    # Use window title specified by caller, with a fallback if they didn't specify.
+    if [ "$#" -ne 0 ]; then
+        name="$@"
+    else
+        name="$USER@$(hostname)"
+    fi
+    printf "\e]0;${name}\a"
+}
+
+# Set our terminal window name, but only for interactive sessions.
+# Printing to stdout in non-interactive sessions breaks scp copies to this host.
+[[ $- == *i* ]] && termname
 
 # git stuff
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
