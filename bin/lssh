@@ -1,36 +1,40 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S bash -i
+# The above flags let this script use functions (eg termname) from the .bashrc
 
-set -e # exit on error
-# set -x # debugging output
-set -u # exist on unset variables
+# ssh to given container or project alias.
+# Usage:
+#
+#   lssh <project-alias>
+#
+# Requires containers to have an IPv4 address, and name resolution to be working.
+# Use 'lalias' to list the available containers and their aliases.
+
+set -eu # -x
 
 if [ "$#" -ne 1 ] ; then
-    echo "Usage: lssh <projectname>"
-    return
+    echo "Usage: lssh <project-alias>"
+    echo "See available project aliases using 'lalias' command."
+    exit 1
 fi
+
 alias="$1"
 container=$(lalias $alias)
-host="$container.lxd"
 
-destdir="$HOME"
-if [ -d "$HOME/src/$alias" ]; then
-    destdir="$HOME/src/$alias"
-fi
+# We call ssh with:
+#
+#   -A: Forward ssh-agent. So we can, for example, hit github using passphrases
+#       cached by ssh-agent.
+#   -t: Force pseudo-terminal allocation. (I forget why.)
+#
+# cd to the same dir as we're currently in on the host, if it exists. Fallback
+# to a dir named for the project alias (eg if connecting to container 'ident',
+# cd $HOME/src/ident, which ought to exist. If that fails, we'll be in $HOME.
+# Exec a new shell to let us type commands from the resulting dir.
+ssh -A -t "${container}.lxd" -- \
+    "cd $(pwd) 2>/dev/null || \
+     cd "$HOME/src/$alias" 2>/dev/null ; \
+     exec -l $SHELL"
 
-tname="$container"
-if [ "$alias" != "$container" ]; then
-    tname="$alias on $container"
-fi
-
-termname "$tname"
-
-# ssh to container.
-# Requires containers to have IPv4 address,
-# and name resolution to be working.
-# -A: Forward ssh-agent. So we can, for example,
-#     hit github using passphrases cached by ssh-agent.
-# -t: Force pseudo-terminal allocation. (I forget why.)
-ssh -A -t "${host}" -- "cd $destdir; exec -l $SHELL"
-
-termname "Terminal"
+# Restore the our host's regular title for the terminal window.
+termname
 
