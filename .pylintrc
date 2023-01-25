@@ -17,10 +17,6 @@ const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__)|logger|log)$
 #    default=[a-z_][a-z0-9_]{2,30}$
 variable-rgx=[a-zA-Z_][a-zA-Z0-9_]{1,30}$
 
-# Allow the use of map, filter, lambda
-# default=map,filter,input
-bad-functions=
-
 # Allow much longer method names (esp. useful for tests)
 #  default=[a-z_][a-z0-9_]{2,30}$
 method-rgx=[a-z_][a-z0-9_]{2,80}$
@@ -33,5 +29,5 @@ ignore=tests
 [MESSAGES CONTROL]
 
 # Disable the messages with the given ids:
-disable=bad-continuation, locally-disabled, missing-docstring, star-args, too-few-public-methods, trailing-newlines
+disable=locally-disabled, missing-docstring, too-few-public-methods, trailing-newlines
 
