@@ -349,7 +349,6 @@ function pywait () {
 
 alias whence='type -a' # where, of a sort
 alias dateiso="date +%Y%m%d-%H%M%S"
-alias open='xdg-open 2>/dev/null'
 
 # if colordiff is installed, use it
 if type colordiff &>/dev/null ; then
