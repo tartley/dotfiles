@@ -49,6 +49,7 @@ function copy_files_to_container {
     scp -qrp \
         ~/.bashrc* \
         ~/.bazaar/ \
+        ~/.config/bat/config \
         ~/.dircolors \
         ~/.git-completion.bash \
         ~/.gitconfig \
