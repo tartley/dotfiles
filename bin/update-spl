@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Convert my list of custom spelling words into Neovim's compiled format.
+# This happens automatically if you mark words as correct within Neovim,
+# using things like 'zg' (word spelling is good).
+#
+# But if we manually edit the resulting plaintext list of words (e.g. by
+# sorting it, or curating the words we've previously added), then we
+# need to tell nvim to do the compile step:
+
+cd ~/.config/nvim/spell
+sort -u <en.utf-8.add -o en.utf-8.add
+nvim -c "mkspell! en.utf-8.add | quit"
+
