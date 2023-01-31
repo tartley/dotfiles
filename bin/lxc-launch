@@ -31,10 +31,10 @@ else
     echo "Container "$instance" already exists."
 fi
 
-# TODO Perhaps everything below this point should be part of lxc-cp-config?
+# TODO Perhaps everything below this point should be part of lxc-setup?
 # Which should be renamed to 'lxc-setup'?
 # Ah! No! Better! This script should be idempotent, and should contain
-# all of lxc-cp-config, then we can run this script to launch new containers
+# all of lxc-setup, then we can run this script to launch new containers
 # OR repave the config of existing ones. Maybe.
 
 # Remove any old key for a known host of this name.
@@ -57,7 +57,7 @@ lxc exec $instance -- chown $USER:$USER /home/$USER
 # This used to be provided by mounting shared $HOME dir, but that tripped over
 # things in ~/.local that were not installed on the container. So now I don't
 # mount $HOME, but mount some specific subdirs (in the profile) & copy some files.
-lxc-cp-config "$instance"
+lxc-setup "$instance"
 
 # Install nice-to-have packages, including sane apt-caching on the container.
 lxc exec $instance -- apt update

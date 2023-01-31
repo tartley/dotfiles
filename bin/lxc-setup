@@ -10,7 +10,7 @@ set -o pipefail
 function usage {
     echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the specified LXD containers."
     echo "The intent is to make the container ready for use as a development environment."
-    echo "Usage: lxc-cp-config OPTIONS <container>..."
+    echo "Usage: lxc-setup OPTIONS <container>..."
     echo "Where OPTIONS may include:"
     echo "    -a|--all      Act on all existing lxd containers."
     echo "                  No other container names must be specified."
@@ -30,7 +30,7 @@ while [ $# -gt 0 ] ; do
 done
 
 if [ ${#containers[@]} -ne 0 ] && "$all" ; then
-    echo "lxc-cp-config: ERROR: Containers and '--all' are mutually exclusive." >&2
+    echo "lxc-setup: ERROR: Containers and '--all' are mutually exclusive." >&2
     usage >&2
     exit 1
 fi
@@ -39,7 +39,7 @@ if $all ; then
     IFS=$'\n' containers=($(lxcls))
 else
     if [ "${#containers[@]}" -eq 0 ] ; then
-        echo "lxc-cp-config: WARNING: No containers specified." >&2
+        echo "lxc-setup: WARNING: No containers specified." >&2
         usage >&2
         exit 1
     fi
