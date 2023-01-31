@@ -45,7 +45,7 @@ else
     fi
 fi
 
-function copy_files_to_container {
+function copy_dotfiles {
     local container="$1"
     scp -qrp \
         ~/.bashrc* \
@@ -59,6 +59,11 @@ function copy_files_to_container {
         ~/.ps1_vcs \
         ~/.pythonstartup.py \
         $container.lxd:~
+}
+
+function configure_container {
+    local container="$1"
+    copy_dotfiles "$container"
 }
 
 function is_running {
@@ -81,17 +86,15 @@ function process_container {
         if [ "$is_initially_running" = false ] ; then
             echo -n "starting.." >&2
             lxc start "$container"
-
             # Wait for the container to start responding to ssh.
             # Without this, the subsequent scp would sometimes fail with 'lost connection'.
             lxc-wait "$container"
-
             echo -n " " >&2
         fi
 
         # Actually copy the files, the point of this whole thing!
         echo -n "copying... "
-        copy_files_to_container "$container"
+        configure_container "$container"
 
         # If we started the container, now we stop it again,
         # to leave things how we found them.
