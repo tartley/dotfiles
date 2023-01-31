@@ -7,7 +7,7 @@ set -u # treat unset vars as errors
 # set -x # debugging output
 set -o pipefail
 
-function usage {
+usage() {
     echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the specified LXD containers."
     echo "The intent is to make the container ready for use as a development environment."
     echo "Usage: lxc-setup OPTIONS <container>..."
@@ -17,7 +17,7 @@ function usage {
     echo "    -h|--help     Show this help and exit."
 }
 
-function process_cmdline {
+process_cmdline() {
     all=false
     containers=()
     while [ $# -gt 0 ] ; do
@@ -46,7 +46,7 @@ function process_cmdline {
     fi
 }
 
-function validate_container {
+validate_container() {
     # Validate that the given container name is a real existing container
     local container="$1"
     if ! grep -q "^$container$" <<<"$(lxcls)" ; then
@@ -55,7 +55,7 @@ function validate_container {
     fi
 }
 
-function copy_dotfiles {
+copy_dotfiles() {
     local container="$1"
     echo -n "copying... "
     scp -qrp \
@@ -72,12 +72,12 @@ function copy_dotfiles {
         $container.lxd:~
 }
 
-function configure_container {
+configure_container() {
     local container="$1"
     copy_dotfiles "$container"
 }
 
-function is_running {
+is_running() {
     local container="$1"
     if lxc info $container | grep -q 'Status: RUNNING' ; then
         echo true
@@ -86,7 +86,7 @@ function is_running {
     fi
 }
 
-function wait_for_container {
+wait_for_container() {
     # Wait for a (presumably new) container to start responding to ssh.
     # Without this, subsequent scp attempts would sometimes fail with 'lost connection'.
     # TODO: Add a timeout?
@@ -96,7 +96,7 @@ function wait_for_container {
     done
 }
 
-function start_container {
+start_container() {
     # If the given container isn't already running, start it up
     local container="$1"
     was_initially_running=$(is_running "$container")
@@ -109,7 +109,7 @@ function start_container {
     echo "$was_initially_running" # true or false
 }
 
-function stop_container {
+stop_container() {
     # If we started the container, now we stop it again,
     # to leave things how we found them.
     local container="$1"
@@ -120,7 +120,7 @@ function stop_container {
     fi
 }
 
-function process_container {
+process_container() {
     local container="$1"
     echo -n "$container: " >&2
     if ! validate_container "$container"; then
