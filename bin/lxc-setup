@@ -79,11 +79,21 @@ function is_running {
 
 function wait_for_container {
     # Wait for a (presumably new) container to start responding to ssh.
+    # Without this, subsequent scp attempts would sometimes fail with 'lost connection'.
     # TODO: Add a timeout?
     local container="$1"
     while ! ssh -q -o ConnectTimeout=1 "$container.lxd" -- : ; do
         echo -n "." >&2
     done
+}
+
+function start_container {
+    # Start a given existing container, and wait for it to start responding to ssh.
+    local container="$1"
+    echo -n "starting.." >&2
+    lxc start "$container"
+    wait_for_container "$container"
+    echo -n " " >&2
 }
 
 function process_container {
@@ -96,18 +106,11 @@ function process_container {
         return 1
     fi
 
-    # If the container isn't running, start it.
-    is_initially_running=$(is_running $container)
+    is_initially_running=$(is_running "$container")
     if [ "$is_initially_running" = false ] ; then
-        echo -n "starting.." >&2
-        lxc start "$container"
-        # Wait for the container to start responding to ssh.
-        # Without this, the subsequent scp would sometimes fail with 'lost connection'.
-        wait_for_container "$container"
-        echo -n " " >&2
+        start_container "$container"
     fi
 
-    # Actually copy the files, the point of this whole thing!
     configure_container "$container"
 
     # If we started the container, now we stop it again,
