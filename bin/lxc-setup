@@ -48,6 +48,7 @@ function process_cmdline {
 
 function copy_dotfiles {
     local container="$1"
+    echo -n "copying... "
     scp -qrp \
         ~/.bashrc* \
         ~/.bazaar/ \
@@ -107,7 +108,6 @@ function process_container {
     fi
 
     # Actually copy the files, the point of this whole thing!
-    echo -n "copying... "
     configure_container "$container"
 
     # If we started the container, now we stop it again,
