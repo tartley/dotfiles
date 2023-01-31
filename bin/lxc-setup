@@ -78,11 +78,11 @@ function is_running {
 function process_container {
     local container="$1"
     echo -n "$container: " >&2
-    # If this is a valid container
+
+    # Validate container name
     if ! grep -q "^$container$" <<<"$(lxcls)" ; then
-        echo "Not a container" >&2
-        exitval=1
-        return
+        echo "Not a valid container name" >&2
+        return 1
     fi
 
     # If the container isn't running, start it.
@@ -112,7 +112,7 @@ function process_container {
 
 exitval=0
 for container in ${containers[@]}; do
-    process_container "$container"
+    process_container "$container" || exitval=1
 done
 exit $exitval
 
