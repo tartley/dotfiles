@@ -75,6 +75,15 @@ function is_running {
     fi
 }
 
+function wait_for_container {
+    # Wait for a (presumably new) container to start responding to ssh.
+    # TODO: Add a timeout?
+    local container="$1"
+    while ! ssh -q -o ConnectTimeout=1 "$container.lxd" -- : ; do
+        echo -n "." >&2
+    done
+}
+
 function process_container {
     local container="$1"
     echo -n "$container: " >&2
@@ -92,7 +101,7 @@ function process_container {
         lxc start "$container"
         # Wait for the container to start responding to ssh.
         # Without this, the subsequent scp would sometimes fail with 'lost connection'.
-        lxc-wait "$container"
+        wait_for_container "$container"
         echo -n " " >&2
     fi
 
