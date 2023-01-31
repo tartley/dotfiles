@@ -46,7 +46,7 @@ else
 fi
 
 function copy_files_to_container {
-    local c="$1"
+    local container="$1"
     scp -qrp \
         ~/.bashrc* \
         ~/.bazaar/ \
@@ -58,7 +58,7 @@ function copy_files_to_container {
         ~/.profile \
         ~/.ps1_vcs \
         ~/.pythonstartup.py \
-        $c.lxd:~
+        $container.lxd:~
 }
 
 function is_running {
