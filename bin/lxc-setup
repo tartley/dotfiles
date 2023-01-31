@@ -7,13 +7,17 @@ set -u # treat unset vars as errors
 # set -x # debugging output
 set -o pipefail
 
+# To diagnose problems and silence default stdout, some logs are written to:
+log="$HOME/.local/var/log/lxc-setup.log"
+
 usage() {
-    echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the given LXD containers."
+    echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the given LXD container(s)."
     echo "The intent is to make the container ready for use as a development environment."
     echo "Usage: One of:"
     echo "    lxc-setup OPTIONS <container>..."
     echo "Where OPTIONS are:"
     echo "    -h|--help     Show this help and exit."
+    echo "One or more space-separated containers may be specified."
 }
 
 process_cmdline() {
@@ -44,7 +48,9 @@ validate_container() {
 
 copy_dotfiles() {
     local container="$1"
-    echo -n "copying... "
+    echo -n "chown…  "
+    lxc exec $instance -- chown $USER:$USER /home/$USER
+    echo -n "scp…  "
     scp -qrp \
         ~/.bashrc* \
         ~/.bazaar/ \
@@ -59,9 +65,49 @@ copy_dotfiles() {
         $container.lxd:~
 }
 
+update_packages() {
+    local container="$1"
+    echo -n "update…  "
+    lxc exec "$container" -- apt update --quiet &>>"$log"
+    echo -n "upgrade…  "
+    lxc exec "$container" -- apt upgrade -y --quiet &>>"$log"
+    echo -n "autoremove…  "
+    lxc exec "$container" -- apt autoremove -y --quiet &>>"$log"
+}
+
+install_packages() {
+    # Install, as root, nice-to-have packages, including apt-caching on the container.
+    local container="$1"
+    echo -n "install…  "
+    lxc exec --env DEBIAN_FRONTEND=noninteractive "$container" -- apt install -y --quiet \
+        apt-cacher-ng \
+        bat \
+        pipx \
+        python3-venv \
+        -- &>>"$log"
+}
+
+install_python_packages() {
+    # Install (as $USER) command-line tools which are Python packages.
+    local container="$1"
+    echo -n "pipx…  "
+    ssh $instance.lxd -- pipx install colout &>>"$log"
+}
+
+symlink_executables() {
+    # Symlink executables onto the path
+    local container="$1"
+    echo -n "symlink…  "
+    lxc exec $instance -- ln -sf /usr/bin/batcat "$HOME/.local/bin"
+}
+
 configure_container() {
     local container="$1"
     copy_dotfiles "$container"
+    update_packages "$container"
+    install_packages "$container"
+    install_python_packages "$container"
+    symlink_executables "$container"
 }
 
 is_running() {
@@ -88,7 +134,7 @@ start_container() {
     local container="$1"
     was_initially_running=$(is_running "$container")
     if [ "$was_initially_running" = false ] ; then
-        echo -n "starting.." >&2
+        echo -n "start… " >&2
         lxc start "$container"
         wait_for_container "$container"
         echo -n " " >&2
@@ -102,7 +148,7 @@ stop_container() {
     local container="$1"
     local was_initially_running="$2"
     if [ "$was_initially_running" = false ] ; then
-        echo -n "stopping... " >&2
+        echo -n "stop…  " >&2
         lxc stop "$container" &
     fi
 }
