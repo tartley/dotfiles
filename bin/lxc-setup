@@ -105,6 +105,15 @@ function start_container {
     echo -n " " >&2
 }
 
+function start_container_if_reqd {
+    local container="$1"
+    was_initially_running=$(is_running "$container")
+    if [ "$was_initially_running" = false ] ; then
+        start_container "$container"
+    fi
+    echo "$was_initially_running" # true or false
+}
+
 function stop_container_if_reqd {
     # If we started the container, now we stop it again,
     # to leave things how we found them.
@@ -123,11 +132,7 @@ function process_container {
     if ! validate_container "$container"; then
         return 1
     fi
-
-    was_initially_running=$(is_running "$container")
-    if [ "$was_initially_running" = false ] ; then
-        start_container "$container"
-    fi
+    was_initially_running=$(start_container_if_reqd "$container")
 
     configure_container "$container"
 
