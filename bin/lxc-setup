@@ -46,6 +46,15 @@ function process_cmdline {
     fi
 }
 
+function validate_container {
+    # Validate that the given container name is a real existing container
+    local container="$1"
+    if ! grep -q "^$container$" <<<"$(lxcls)" ; then
+        echo "Not a valid container name" >&2
+        return 1
+    fi
+}
+
 function copy_dotfiles {
     local container="$1"
     echo -n "copying... "
@@ -100,9 +109,7 @@ function process_container {
     local container="$1"
     echo -n "$container: " >&2
 
-    # Validate container name
-    if ! grep -q "^$container$" <<<"$(lxcls)" ; then
-        echo "Not a valid container name" >&2
+    if ! validate_container "$container"; then
         return 1
     fi
 
