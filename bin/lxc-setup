@@ -11,40 +11,25 @@ usage() {
     echo "Copy a fixed set of $HOME dotfiles (eg. .bashrc), into the given LXD containers."
     echo "The intent is to make the container ready for use as a development environment."
     echo "Usage: One of:"
-    echo "    lxc-setup <container>..."
-    echo "    lxc-setup --all|-a"
-    echo "    lxc-setup --help|-h"
-    echo "Where options are:"
-    echo "    -a|--all      Act on all existing lxd containers."
+    echo "    lxc-setup OPTIONS <container>..."
+    echo "Where OPTIONS are:"
     echo "    -h|--help     Show this help and exit."
 }
 
 process_cmdline() {
-    all=false
     containers=()
     while [ $# -gt 0 ] ; do
         case "$1" in
             -h|--help) usage; exit;;
-            -a|--all) all=true;;
             *) containers+=("$1");;
         esac
         shift
     done
 
-    if [ ${#containers[@]} -ne 0 ] && "$all" ; then
-        echo "lxc-setup: ERROR: Containers and '--all' are mutually exclusive." >&2
+    if [ "${#containers[@]}" -eq 0 ] ; then
+        echo "lxc-setup: WARNING: No containers specified." >&2
         usage >&2
         exit 1
-    fi
-
-    if $all ; then
-        IFS=$'\n' containers=($(lxcls))
-    else
-        if [ "${#containers[@]}" -eq 0 ] ; then
-            echo "lxc-setup: WARNING: No containers specified." >&2
-            usage >&2
-            exit 1
-        fi
     fi
 }
 

@@ -37,7 +37,7 @@ fi
 # all of lxc-setup, then we can run this script to launch new containers
 # OR repave the config of existing ones. Maybe.
 
-# Remove any old key for a known host of this name.
+# Remove any old ssh key for a known host of this name.
 ssh-keygen -f "$HOME/.ssh/known_hosts_lxd" -R "$instance.lxd" >/dev/null
 
 # As root, wait for $USER to be created, so we can ssh in.
