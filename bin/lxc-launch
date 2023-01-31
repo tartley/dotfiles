@@ -1,1 +1,81 @@
-/home/jhartley/canonical/projects/lxc-setup/lxc-launch
+#!/usr/bin/env bash
+
+# Launches the container as usual, and performs one-time setup on it. e.g.
+# copying some dotfiles, including .bashrc, that would otherwise be missing
+# from the container now I no longer mount all of $HOME.
+
+# Expects that the lxc profile named "$USER" will have been created already.
+# See lxd-setup-profile.
+
+set -e -x
+
+usage="launch <image> <instance>
+eg. launch ubuntu:20.04 siab-focal"
+
+image="$1"
+if [ -z "$image" ]; then
+    echo "$usage" >&2
+    exit 1
+fi
+
+instance="$2"
+if [ -z "$instance" ]; then
+    echo "$usage" >&2
+    exit 1
+fi
+
+# Create the container.
+if ! lxc info "$instance" &>/dev/null ; then
+    lxc launch "$image" -p default -p "$USER" "$instance"
+else
+    echo "Container "$instance" already exists."
+fi
+
+# TODO Perhaps everything below this point should be part of lxc-cp-config?
+# Which should be renamed to 'lxc-setup'?
+# Ah! No! Better! This script should be idempotent, and should contain
+# all of lxc-cp-config, then we can run this script to launch new containers
+# OR repave the config of existing ones. Maybe.
+
+# Remove any old key for a known host of this name.
+ssh-keygen -f "$HOME/.ssh/known_hosts_lxd" -R "$instance.lxd" >/dev/null
+
+# As root, wait for $USER to be created, so we can ssh in.
+echo -n "Awaiting user $USER@$instance"
+lxc exec $instance -- bash -c <<EOF "
+while ! id -u ${USER} &>/dev/null ; do
+    sleep 1
+    echo -n "."
+done
+echo ""
+"
+EOF
+
+# Set permissions on our own homr dir.
+lxc exec $instance -- chown $USER:$USER /home/$USER
+# Copy some config into $HOME dotfiles.
+# This used to be provided by mounting shared $HOME dir, but that tripped over
+# things in ~/.local that were not installed on the container. So now I don't
+# mount $HOME, but mount some specific subdirs (in the profile) & copy some files.
+lxc-cp-config "$instance"
+
+# Install nice-to-have packages, including sane apt-caching on the container.
+lxc exec $instance -- apt update
+lxc exec $instance -- apt upgrade -y
+lxc exec $instance -- apt autoremove -y
+lxc exec --env DEBIAN_FRONTEND=noninteractive $instance -- apt install -y \
+    apt-cacher-ng \
+    bat \
+    pipx \
+    python3-venv \
+    --
+
+# Install (as $USER) command-line tools which are Python packages.
+ssh $instance.lxd -- pipx install colout
+
+# Symlink executables onto the path
+lxc exec $instance -- (
+    cd ~/.local/bin
+    ln -s /usr/bin/batcat bat
+)
+
