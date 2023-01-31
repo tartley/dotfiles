@@ -40,6 +40,7 @@ if $all ; then
 else
     if [ "${#containers[@]}" -eq 0 ] ; then
         echo "lxc-cp-config: WARNING: No containers specified." >&2
+        usage >&2
         exit 1
     fi
 fi
