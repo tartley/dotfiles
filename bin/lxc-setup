@@ -17,33 +17,34 @@ function usage {
     echo "    -h|--help     Show this help and exit."
 }
 
-# process command line args
-all=false
-containers=()
-while [ $# -gt 0 ] ; do
-    case "$1" in
-        -h|--help) usage; exit;;
-        -a|--all) all=true;;
-        *) containers+=("$1");;
-    esac
-    shift
-done
+function process_cmdline {
+    all=false
+    containers=()
+    while [ $# -gt 0 ] ; do
+        case "$1" in
+            -h|--help) usage; exit;;
+            -a|--all) all=true;;
+            *) containers+=("$1");;
+        esac
+        shift
+    done
 
-if [ ${#containers[@]} -ne 0 ] && "$all" ; then
-    echo "lxc-setup: ERROR: Containers and '--all' are mutually exclusive." >&2
-    usage >&2
-    exit 1
-fi
-
-if $all ; then
-    IFS=$'\n' containers=($(lxcls))
-else
-    if [ "${#containers[@]}" -eq 0 ] ; then
-        echo "lxc-setup: WARNING: No containers specified." >&2
+    if [ ${#containers[@]} -ne 0 ] && "$all" ; then
+        echo "lxc-setup: ERROR: Containers and '--all' are mutually exclusive." >&2
         usage >&2
         exit 1
     fi
-fi
+
+    if $all ; then
+        IFS=$'\n' containers=($(lxcls))
+    else
+        if [ "${#containers[@]}" -eq 0 ] ; then
+            echo "lxc-setup: WARNING: No containers specified." >&2
+            usage >&2
+            exit 1
+        fi
+    fi
+}
 
 function copy_dotfiles {
     local container="$1"
@@ -119,6 +120,7 @@ function process_container {
     echo "ok" >&2
 }
 
+process_cmdline "$@"
 exitval=0
 for container in ${containers[@]}; do
     process_container "$container" || exitval=1
