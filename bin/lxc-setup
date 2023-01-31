@@ -105,6 +105,17 @@ function start_container {
     echo -n " " >&2
 }
 
+function stop_container_if_reqd {
+    # If we started the container, now we stop it again,
+    # to leave things how we found them.
+    local container="$1"
+    local was_initially_running="$2"
+    if [ "$was_initially_running" = false ] ; then
+        echo -n "stopping... " >&2
+        lxc stop "$container" &
+    fi
+}
+
 function process_container {
     local container="$1"
     echo -n "$container: " >&2
@@ -113,19 +124,14 @@ function process_container {
         return 1
     fi
 
-    is_initially_running=$(is_running "$container")
-    if [ "$is_initially_running" = false ] ; then
+    was_initially_running=$(is_running "$container")
+    if [ "$was_initially_running" = false ] ; then
         start_container "$container"
     fi
 
     configure_container "$container"
 
-    # If we started the container, now we stop it again,
-    # to leave things how we found them.
-    if [ "$is_initially_running" = false ] ; then
-        echo -n "stopping... " >&2
-        lxc stop "$container" &
-    fi
+    stop_container_if_reqd "$container" "$was_initially_running"
 
     echo "ok" >&2
 }
