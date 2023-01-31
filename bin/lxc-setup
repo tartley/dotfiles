@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-# See usage() below.
+# Run with -h or see usage() below.
+
+# TODO: Probably these actions should be scripts that I could run on the host if I
+# wanted to, and then this script should just invoke that script on the containers.
+# TODO: See the apparently common advice to not use 'set -e' in nontrivial scripts.
+# http://mywiki.wooledge.org/BashFAQ/105
 
 set -e # exit on error
 set -u # treat unset vars as errors
