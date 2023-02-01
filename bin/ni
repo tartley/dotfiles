@@ -1,17 +1,25 @@
 #!/usr/bin/env bash
 
-# Open a new terminal in solarized profile, and run neovim in it.
+# Wrapper for nvim.
 #
-# If invoked as 'nis' (ni synchronous), will block until neovim exits.
-# Intended for use as $EDITOR.
+# Launch a terminal to run nvim in, unless we are already in one. This means we
+# can be called from the command-line and from situations with no terminal
+# (e.g. a desktop custom shortcut key)
 #
-if [ "$(basename $0)" == "nis" ]; then
-    wait="--wait"
-else
-    wait=""
+# Fallback to vim if nvim is not installed, to make it safe to use this for things
+# one would rather not fail, such as $EDITOR.
+
+# Prefer nvim, fallback to vim
+editor=nvim
+if ! type -P nvim >/dev/null; then
+    editor=vim
 fi
 
-if ! gnome-terminal --profile editor $wait &>/dev/null -- nvim "$@" ; then
-    vim "$@"
+# If we are not in a terminal, open one
+# Run the terminal synchronously (--wait) so that we work as $EDITOR
+if [ "$(tty)" = "not a tty" ]; then
+    gnome-terminal --wait -- $editor "$@"
+else
+    $editor "$@"
 fi
 

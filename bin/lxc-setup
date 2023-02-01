@@ -89,6 +89,7 @@ install_packages() {
     lxc exec --env DEBIAN_FRONTEND=noninteractive "$container" -- apt install -y --quiet \
         apt-cacher-ng \
         bat \
+        neovim \
         pipx \
         python3-venv \
         -- &>>"$log"

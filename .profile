@@ -47,13 +47,7 @@ export PATH
 
 # Other env variables ######################
 
-if [ -f /usr/bin/nvim ]; then
-    export EDITOR=/usr/bin/nvim
-elif [ -f /usr/bin/vim ]; then
-    export EDITOR=/usr/bin/vim
-else
-    export EDITOR=/usr/bin/vi
-fi
+export EDITOR=ni
 
 export HISTSIZE=20000 # bash history will save this many commands
 export HISTFILESIZE=${HISTSIZE} # bash will remember this many commands
