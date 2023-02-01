@@ -53,8 +53,10 @@ validate_container() {
 
 copy_dotfiles() {
     local container="$1"
+
     echo -n "chown…  "
-    lxc exec $instance -- chown $USER:$USER /home/$USER
+    lxc exec $container -- chown $USER:$USER /home/$USER
+
     echo -n "scp…  "
     scp -qrp \
         ~/.bashrc* \
@@ -96,14 +98,14 @@ install_python_packages() {
     # Install (as $USER) command-line tools which are Python packages.
     local container="$1"
     echo -n "pipx…  "
-    ssh $instance.lxd -- pipx install colout &>>"$log"
+    ssh $container.lxd -- pipx install colout &>>"$log"
 }
 
 symlink_executables() {
     # Symlink executables onto the path
     local container="$1"
     echo -n "symlink…  "
-    lxc exec $instance -- ln -sf /usr/bin/batcat "$HOME/.local/bin"
+    lxc exec $container -- ln -sf /usr/bin/batcat "$HOME/.local/bin"
 }
 
 configure_container() {
