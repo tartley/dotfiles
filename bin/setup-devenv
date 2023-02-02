@@ -26,10 +26,11 @@ sudo apt update --quiet
 sudo apt upgrade -y --quiet
 sudo apt autoremove -y --quiet
 
-# Install nice-to-gave apt packages
+# Install nice-to-have apt packages
 sudo apt install -y --quiet \
     apt-cacher-ng \
     bat \
+    colordiff \
     neovim \
     pipx \
     python3-venv \
