@@ -274,6 +274,10 @@ function gs {
     git status -s "$@"
 }
 
+function gsi {
+    git status --ignored=traditional "$@"
+}
+
 function gst {
     git status "$@"
 }
