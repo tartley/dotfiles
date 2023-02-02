@@ -2,11 +2,14 @@
 
 # Wrapper for nvim. If we aren't running in a terminal, launch one for nvim.
 #
-# That means this wrapper can be called from the command-line, and from situations
-# with no terminal, such as a desktop custom shortcut key.
+# That means this wrapper can be called directly from the command-line, used as
+# EDITOR=ni, and invoked from contexts with no terminal, such as a desktop
+# custom shortcut key.
 #
-# Fallback to vim if nvim is not installed, to make it safe to use this for
-# things one would rather didn't fail, such as $EDITOR.
+# Beware that if we do open a new terminal window, it runs asynchronously, so
+# don't use EDITOR=nw.
+#
+# Fallback to vim if nvim is not installed.
 
 # One-off setup. Provide an alias which forces new terminal window creation.
 (
@@ -32,9 +35,8 @@ if ! type -P nvim >/dev/null; then
 fi
 
 # If we are not in a terminal, open one
-# Run the terminal synchronously (--wait) so that we work as $EDITOR
 if [ "$newterm" = true ] ; then
-    gnome-terminal --wait -- $editor "$@"
+    gnome-terminal -- $editor "$@"
 else
     $editor "$@"
 fi
