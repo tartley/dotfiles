@@ -135,8 +135,14 @@ function pydirs {
     python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
 }
 
+# Generate n busyloops to keep n CPUs busy.
+# See also 'killalljobs'
 function busyloop {
-  number=1 # how many busyloops to start. Each will occupy 1 CPU core
+  # Usage: busyloop N
+  # Where N is number of parallel busy processes to start.
+  # I forget why we loop over args rather than just using the first.
+
+  number=1 # Default to creating 1 busyloop process.
 
   while [ $# -gt 0 ]; do
       case "$1" in
@@ -161,7 +167,7 @@ function busyloop {
   done
 }
 
-# for cleaning up busyloops from above
+# This is good at cleaning up the results of 'busyloop'
 # TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
 function killalljobs {
   for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
@@ -326,7 +332,6 @@ function pywait () {
 ## aliases #################################################################
 
 alias whence='type -a' # where, of a sort
-alias dateiso="date +%Y%m%d-%H%M%S"
 
 # if colordiff is installed, use it
 if type colordiff &>/dev/null ; then
