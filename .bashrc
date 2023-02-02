@@ -191,16 +191,22 @@ function termname {
 # git stuff
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
-function gs {
-    git status -s "$@"
-}
-
-function gst {
-    git status "$@"
-}
-
 function ga {
     git add "$@"
+}
+
+function gaa {
+    git add --all
+}
+
+# List branches with commitid, remotes, commit message
+function gb {
+    git branch -vv --color=always "$@"
+}
+
+# bare current branch name
+function gbranch {
+    git branch "$@" | grep '^*'| cut -d' ' -f2
 }
 
 function gc {
@@ -211,19 +217,12 @@ function gdst {
     git diff --stat=160,120
 }
 
-function gr {
-    git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
-}
-
-# git log, pretty one line per commit, with graph
-function glog {
-    git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
-    echo
-}
-
-# git log, pretty one line per commit, with graph
-function gloga {
-    glog --all "$@"
+# git fast forward
+# Arg: branch to merge into current (just like regular 'git merge')
+# Merge given branch into current, without creating a merge commit.
+# Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
+function gff {
+    git merge --ff-only -q "$@"
 }
 
 # git log, further abbreviated one line per commit, with graph
@@ -242,71 +241,46 @@ function glb {
     git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
 }
 
-function gaa {
-    git add --all
+# git log, pretty one line per commit, with graph
+function glog {
+    git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+    echo
 }
 
-function gpush {
-    git push --quiet "$@"
+# git log, pretty one line per commit, with graph
+function gloga {
+    glog --all "$@"
+}
+
+# git merge, always creating a merge commit.
+# Arg1: branch to merge into current (like regular merge)
+function gm {
+    git merge --no-ff -q "$@"
 }
 
 function gpull {
     git pull --quiet "$@"
 }
 
-# output current branch name
-function gbranch {
-    git branch "$@" | grep '^*'| cut -d' ' -f2
+function gpush {
+    git push --quiet "$@"
 }
 
-function gb {
-    git branch -vv --color=always "$@"
+function gr {
+    git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
+}
+
+function gs {
+    git status -s "$@"
+}
+
+function gst {
+    git status "$@"
 }
 
 # output tags at the current commit
 function gtags {
     git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
-}
-
-# git fast forward
-# Arg1: branch to merge into current (like regular merge)
-# Will abort if cannot ff (eg. current has commits not in Arg1.)
-function gff {
-    git merge --ff-only -q "$@"
-}
-
-# git merge
-# Arg1: branch to merge into current (like regular merge)
-# With no fast forward, ie. always create a merge commit.
-function gm {
-    git merge --no-ff -q "$@"
-}
-
-# git fetch master
-# No args
-# Fetch latest master from origin
-function gfm {
-    # Fetch lastest master from origin, and ff-merge into local master.
-    # Doesn't work if master is current branch. Use "gff origin/master" instead.
-    git fetch origin master:master
-}
-
-# git fetch master & rebase
-# No args
-function gfmr {
-    # Fetch latest master from origin
-    gfm
-    # and rebase current branch onto it
-    git rebase master
-}
-
-# git fetch master & merge
-# No args
-function gfmm {
-    # Fetch latest master from origin
-    gfm
-    # and merge it into our current branch
-    git merge -q master
 }
 
 . ~/.git-completion.bash
