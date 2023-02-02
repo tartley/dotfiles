@@ -2,6 +2,8 @@
 
 # Run with -h or see usage() below.
 
+# TODO: Don't make changes without syncing with setup-devenv. See next item:
+#
 # TODO: Probably this should just call 'setup-devenv', maybe adding small
 # extras like the chown on $HOME? Then I can run the same setup on the host or
 # containers.

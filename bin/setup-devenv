@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Set up my preferred dev env tools.
+# I should probably wrestle with some devops tool to do this,
+# but isn't a crappy Bash script 1,000 times easier for my needs?
+
+# TODO: don't make changes to this without syncing with lxc-setup,
+# which should probably just invoke this script.
+
+set -e # exit on error
+set -u # treat unset vars as errors
+set -x # debugging output
+set -o pipefail
+
+cd "$HOME"
+
+# Get $HOME dotfiles
+if [ -d "$HOME/.git" ] ; then
+    git pull
+else
+    git clone git@github.com:tartley/dotfiles.git
+fi
+
+# Update apt repository
+sudo apt update --quiet
+sudo apt upgrade -y --quiet
+sudo apt autoremove -y --quiet
+
+# Install nice-to-gave apt packages
+sudo apt install -y --quiet \
+    apt-cacher-ng \
+    bat \
+    neovim \
+    pipx \
+    python3-venv \
+    --
+
+# Install nice-to-have tools distributed as Python packages
+pipx install \
+    colout \
+    --
+
+# Symlink irregular executables
+ln -sf /usr/bin/batcat "$HOME/.local/bin"
+
+echo "You should probably reboot to pick up the new env var definitions in .profile"
+
