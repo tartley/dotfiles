@@ -1,13 +1,29 @@
 #!/usr/bin/env bash
 
-# Wrapper for nvim.
+# Wrapper for nvim. If we aren't running in a terminal, launch one for nvim.
 #
-# Launch a terminal to run nvim in, unless we are already in one. This means we
-# can be called from the command-line and from situations with no terminal
-# (e.g. a desktop custom shortcut key)
+# That means this wrapper can be called from the command-line, and from situations
+# with no terminal, such as a desktop custom shortcut key.
 #
-# Fallback to vim if nvim is not installed, to make it safe to use this for things
-# one would rather not fail, such as $EDITOR.
+# Fallback to vim if nvim is not installed, to make it safe to use this for
+# things one would rather didn't fail, such as $EDITOR.
+
+# One-off setup. Provide an alias which forces new terminal window creation.
+(
+    cd "$HOME/bin"
+    ln -sf ni nw
+)
+
+# Should we create a new terminal to run nvim in?
+if [ "$(tty)" = "not a tty" ]; then
+    newterm=true
+else
+    if [[ "$0" = */nw ]] ; then
+        newterm=true
+    else
+        newterm=false
+    fi
+fi
 
 # Prefer nvim, fallback to vim
 editor=nvim
@@ -17,7 +33,7 @@ fi
 
 # If we are not in a terminal, open one
 # Run the terminal synchronously (--wait) so that we work as $EDITOR
-if [ "$(tty)" = "not a tty" ]; then
+if [ "$newterm" = true ] ; then
     gnome-terminal --wait -- $editor "$@"
 else
     $editor "$@"
