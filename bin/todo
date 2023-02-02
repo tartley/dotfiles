@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
 # edit my TODO file
-
-ni ~/TODO.md -c "set lines=45 | set nonumber | set columns=80"
+nw ~/TODO.md -c "set lines=45 | set nonumber | set columns=80"
 
