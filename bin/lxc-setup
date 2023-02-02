@@ -6,7 +6,8 @@
 #
 # TODO: Probably this should just call 'setup-devenv', maybe adding small
 # extras like the chown on $HOME? Then I can run the same setup on the host or
-# containers.
+# containers. First stumbling block: Will cloning dotfiles in the container
+# (instead of copying selected files and mounting selected dirs) break things?
 #
 # TODO: See the apparently common advice to not use 'set -e' in nontrivial
 # scripts. http://mywiki.wooledge.org/BashFAQ/105
