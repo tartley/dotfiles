@@ -805,5 +805,8 @@ if has("autocmd")
     " yaml
     autocmd! FileType yaml set expandtab | set list | set shiftwidth=2 | set tabstop=2
 
+    " gitcommit
+    autocmd! FileType gitcommit setlocal spell
+
 endif " has("autocmd")
 
