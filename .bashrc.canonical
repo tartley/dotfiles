@@ -1,6 +1,6 @@
 export OLS_WHEELS_DIR=/home/jhartley/.ols-wheels
 
-export CDPATH=.:~/src
+export CDPATH=:~/src
 
 ## LXD ##################################################### 
 
