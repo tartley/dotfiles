@@ -9,7 +9,7 @@
 
 set -e # exit on error
 set -u # treat unset vars as errors
-set -x # debugging output
+# set -x # debugging output
 set -o pipefail
 
 cd "$HOME"
@@ -34,6 +34,7 @@ sudo apt install -y --quiet \
     neovim \
     pipx \
     python3-venv \
+    tree \
     --
 
 # Install nice-to-have tools distributed as Python packages

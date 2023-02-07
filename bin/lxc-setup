@@ -98,6 +98,7 @@ install_packages() {
         neovim \
         pipx \
         python3-venv \
+        tree \
         -- &>>"$log"
 }
 
