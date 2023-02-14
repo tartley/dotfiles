@@ -105,6 +105,11 @@ alias cd..='cd ..'
 
 ## Functions ##############################################
 
+# cd into a directory, resolving any symlinks to give the full actual directory name
+function cdr {
+    cd $(readlink -e "$1")
+}
+
 function nh {
     nohup "$@" 1>/dev/null 2>&1 &
 }
