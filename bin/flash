@@ -1,9 +1,61 @@
 #!/usr/bin/env bash
 
-# Flashes terminal inverse briefly
+# Flashes terminal inverse, once, briefly.
+# With '--inf', flashes forever, until a key is pressed.
 
-function clean { printf "\\e[?5l"; unset clean; }
-trap clean EXIT
-printf "\\e[?5h"
-sleep 0.2
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+function usage {
+    echo "Flash the whole terminal once, using ANSI codes."
+    echo "Usage: flash [OPTIONS]"
+    echo "Where OPTIONS are:"
+    echo "  -h, --help      Print this message."
+    echo "  -f, --forever   Flashes until the user presses a key."
+}
+
+function on {
+    printf "\\e[?5h"
+}
+
+function off {
+    printf "\\e[?5l"
+}
+
+function on_exit {
+    off
+}
+trap on_exit EXIT
+
+function flash {
+    on
+    sleep 0.2
+    off
+}
+
+# Command line args
+
+forever=false
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        -f|--forever) forever=true;;
+        *) echo "Unrecognized arg $1" >&2; exit 1;;
+    esac
+    shift
+done
+
+# Do it
+
+if [ "$forever" = true ]; then
+    while true; do
+        flash
+        read -s -n1 -t1 && break
+    done
+else
+    flash
+fi
 

@@ -89,6 +89,8 @@ fi
 ## options to coreutils #####################################################
 
 # Requires latest gnu coreutils, maybe don't work with Mac's old built-in ones
+alias cd-='cd -'
+alias cd..='cd ..'
 alias cp='cp -i'
 alias df='df -h'
 alias du='du -h'
@@ -100,67 +102,22 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
-alias cd-='cd -'
-alias cd..='cd ..'
+
+
+## Other aliases #########################################
+
+alias whence='type -a' # where, of a sort
+
+# if colordiff is installed, use it
+if type colordiff &>/dev/null ; then
+    alias diff=colordiff
+fi
+
 
 ## Functions ##############################################
 
-# cd into a directory, resolving any symlinks to give the full actual directory name
-function cdr {
-    if [ -n "$1" ]; then in="$1"; else in="."; fi
-    cd $(readlink -e "$in")
-}
-
-# Parent of given PID, or else of current shell
-function ppid {
-    ps -p ${1:-$$} -o ppid=
-}
-
-function trash {
-    destdir="$HOME/docs/trash/$(date --iso)"
-    mkdir -p "$destdir"
-    exitval=0
-    for src; do
-        if [ -e "$src" ]; then
-            dest="$destdir/$(basename "$src").$(date +%H%M%S.%N)"
-            printf "$src -> $(echo "$dest" | humanize)\n" >&2
-            mv "$src" "$dest"
-        else
-            printf "Not found: $src\n" >&2
-            exitval=1
-        fi
-    done
-    return $exitval
-}
-
-function nh {
-    nohup "$@" 1>/dev/null 2>&1 &
-}
-
-# Allows use of 'watch' with aliases or functions
-function watcha {
-    watch -ctn1 "bash -i -c \"$@\""
-}
-
-function colout_traceroute () {
-    colout '(^ ?\d+)|(\([\d\.]+\))|([\d\.]+ ms)|(!\S+)' white,cyan,yellow,magenta bold,normal,normal,reverse
-}
-
-function pytree {
-    tree -AC -I '*.pyc|__pycache__' "$@"
-}
-
-function etime {
-    /usr/bin/time -f"%E" "$@"
-}
-
 function beep {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
-}
-
-# Use 'pytags $(pydirs) .' to tag with all stdlib and venv symbols
-function pydirs {
-    python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
 }
 
 # Generate n busyloops to keep n CPUs busy.
@@ -195,16 +152,71 @@ function busyloop {
   done
 }
 
+# See 'bzr functions', below.
+
+# cd into a directory, resolving any symlinks to give the full actual directory name
+function cdr {
+    if [ -n "$1" ]; then in="$1"; else in="."; fi
+    cd $(readlink -e "$in")
+}
+
+function colout_traceroute () {
+    colout '(^ ?\d+)|(\([\d\.]+\))|([\d\.]+ ms)|(!\S+)' white,cyan,yellow,magenta bold,normal,normal,reverse
+}
+
+function etime {
+    /usr/bin/time -f"%E" "$@"
+}
+
+# See 'git functions', below.
+
 # This is good at cleaning up the results of 'busyloop'
-# TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
 function killalljobs {
+  # TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
   for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
     kill %$jid
   done
 }
 
-function workon {
-    . ~/.virtualenvs/$1/bin/activate
+function nh {
+    nohup "$@" 1>/dev/null 2>&1 &
+}
+
+# Parent of given PID, or else of current shell
+function ppid {
+    ps -p ${1:-$$} -o ppid=
+}
+
+# show man pages rendered using postscript
+function psman () {
+    SLUG=$(echo $@ | tr ' ' '-')
+    FNAME="/tmp/man-$SLUG.pdf"
+    set -o pipefail
+    man -t "$@" | ps2pdf - "$FNAME" && \
+        nohup evince "$FNAME" >/dev/null 2>/dev/null
+    set +o pipefail
+}
+
+# Use 'pytags $(pydirs) .' to tag with all stdlib and venv symbols
+function pydirs {
+    python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
+}
+
+function pytree {
+    tree -AC -I '*.pyc|__pycache__' "$@"
+}
+
+function pywait () {
+    find -name 'env' -prune -o -name '*.py' -print | entr "$@"
+}
+
+# call given command every second until a key is pressed
+function repeat_until_key () {
+    command="$@"
+    while true; do
+        $command
+        read -s -n1 -t1 && break
+    done
 }
 
 # Set the terminal window name
@@ -222,7 +234,33 @@ function termname {
 # Printing to stdout in non-interactive sessions breaks scp copies to this host.
 [[ $- == *i* ]] && termname
 
-# git stuff
+function trash {
+    destdir="$HOME/docs/trash/$(date --iso)"
+    mkdir -p "$destdir"
+    exitval=0
+    for src; do
+        if [ -e "$src" ]; then
+            dest="$destdir/$(basename "$src").$(date +%H%M%S.%N)"
+            printf "$src -> $(echo "$dest" | humanize)\n" >&2
+            mv "$src" "$dest"
+        else
+            printf "Not found: $src\n" >&2
+            exitval=1
+        fi
+    done
+    return $exitval
+}
+
+# Allows use of 'watch' with aliases or functions
+function watcha {
+    watch -ctn1 "bash -i -c \"$@\""
+}
+
+function workon {
+    . ~/.virtualenvs/$1/bin/activate
+}
+
+# git functions
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
 function ga {
@@ -259,29 +297,29 @@ function gff {
     git merge --ff-only -q "$@"
 }
 
-# git log, further abbreviated one line per commit, with graph
+# git log current branch, abbreviated to one line per commit, with graph
 function gl {
     git log --graph --format=format:"%C(yellow)%h%C(reset)%C(auto)%d%C(reset)%C(white) %s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
-# git log, further abbreviated one line per commit, with graph
+# git log all branches, abbreviated to one line per commit, with graph
 function gla {
     gl --all "$@"
 }
 
-# git log branch - show the commits behind a given merge
-function glb {
+# git log merge - show the commits behind a given merge
+function glm {
     git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
 }
 
-# git log, pretty one line per commit, with graph
+# git log current branch, pretty, two lines per commit, with graph
 function glog {
     git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
-# git log, pretty one line per commit, with graph
+# git log all branches, pretty, two line per commit, with graph
 function gloga {
     glog --all "$@"
 }
@@ -324,7 +362,7 @@ function gtags {
 . ~/.git-completion.bash
 
 
-## bzr ####
+## bzr functions ####
 
 alias bs='bzr status && bzr show-pipeline'
 alias bt='bzr log -r-1' # tip
@@ -339,47 +377,6 @@ function blp {
 
 function bup {
     bzr unshelve --preview "$@" | colordiff
-}
-
-##
-
-# show man pages rendered using postscript
-function psman () {
-    SLUG=$(echo $@ | tr ' ' '-')
-    FNAME="/tmp/man-$SLUG.pdf"
-    set -o pipefail
-    man -t "$@" | ps2pdf - "$FNAME" && \
-        nohup evince "$FNAME" >/dev/null 2>/dev/null
-    set +o pipefail
-}
-
-function pywait () {
-    find -name 'env' -prune -o -name '*.py' -print | entr "$@"
-}
-
-## aliases #################################################################
-
-alias whence='type -a' # where, of a sort
-
-# if colordiff is installed, use it
-if type colordiff &>/dev/null ; then
-    alias diff=colordiff
-fi
-
-## Terminal frippery. ######################################################
-
-# call given command every second until a key is pressed
-function repeat_until_key () {
-    command="$@"
-    while true; do
-        $command
-        read -s -n1 -t1 && break
-    done
-}
-
-# Flash whole terminal inverse video until key press
-function flashes () {
-    repeat_until_key flash
 }
 
 ## Shell Options (See man bash) #############################################
@@ -429,7 +426,7 @@ fi
 # Backup .bash_history
 
 function historyc() {
-    history "$@" | colout '^ +(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
+    history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
 }
 
 function history_backup () {
