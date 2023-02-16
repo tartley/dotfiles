@@ -97,7 +97,6 @@ alias less='less -R' # display raw control characters for colors only
 alias ll='ls -lAGh'
 alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
 alias mv='mv -i'
-alias pst='pstree -anTC age $$'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
@@ -110,6 +109,57 @@ alias cd..='cd ..'
 function cdr {
     if [ -n "$1" ]; then in="$1"; else in="."; fi
     cd $(readlink -e "$in")
+}
+
+function pst {
+    usage="\
+    Usage: pst              # tree of this shell's children
+           pst PATTERN      # trees of processes matching a grep of ps output
+           pst PID [PID...] # trees of each given PID
+    eg. pst [b]ash"
+    # TODO A displayed process which is a child of of another displayed process will be
+    # displayed twice. Can we filter them out?
+    pids=()
+    pattern=''
+    # If no args, focus on this shell (PID=$$)
+    if [ "$#" -eq 0 ]; then
+        pids+=($$)
+    else
+        # Add each arg to our array of PIDs
+        for arg in "$@"; do
+            if [[ $value =~ ^[0-9]+$ ]] ; then
+                pids+=($1)
+            else
+                # This arg is not a numeric PID. It must be a PATTERN for grepping ps output
+                # If a PATTERN has already been specified, bail out.
+                if [ -n "$pattern" ]; then
+                    printf "Error: Can only give one non-numeric PATTERN\n" >&2
+                    printf "$usage" >&2
+                    return 1
+                fi
+                # If PIDs have already been specified, bail out.
+                if [ ${#pids[@]} -gt 0 ] ; then
+                    printf "Error: Cannot combine numeric PIDs and a non-numeric PATTERN\n" >&2
+                    printf "$usage" >&2
+                    return 1
+                fi
+                pattern="$1"
+            fi
+        done
+    fi
+    # If a PATTERN was specified, grep the ps output with it to yield an array of PIDs
+    # (This adds one extra PID to the list, which I'm pretty sure is the 'grep',
+    # even with a traditionally grep-excluding pattern like '[b]ash'. But the process
+    # no longer exists when we display the tree later, so it doesn't seem to matter.)
+    if [ -n "$pattern" ]; then
+        for pid in $(ps -eo pid,cmd | grep -w "$pattern" | awk '{print $1}'); do
+            pids+=($pid)
+        done
+    fi
+    # Display the pstree for each PID in our array
+    for pid in "${pids[@]}"; do
+        pstree -apnTC age --highlight-pid "$$" "$pid"
+    done
 }
 
 function trash {
