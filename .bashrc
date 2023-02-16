@@ -97,6 +97,7 @@ alias less='less -R' # display raw control characters for colors only
 alias ll='ls -lAGh'
 alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
 alias mv='mv -i'
+alias pst='pstree -anTC age $$'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
@@ -107,7 +108,25 @@ alias cd..='cd ..'
 
 # cd into a directory, resolving any symlinks to give the full actual directory name
 function cdr {
-    cd $(readlink -e "$1")
+    if [ -n "$1" ]; then in="$1"; else in="."; fi
+    cd $(readlink -e "$in")
+}
+
+function trash {
+    destdir="$HOME/docs/trash/$(date --iso)"
+    mkdir -p "$destdir"
+    exitval=0
+    for src; do
+        if [ -e "$src" ]; then
+            dest="$destdir/$(basename "$src").$(date +%H%M%S.%N)"
+            printf "$src -> $(echo "$dest" | humanize)\n" >&2
+            mv "$src" "$dest"
+        else
+            printf "Not found: $src\n" >&2
+            exitval=1
+        fi
+    done
+    return $exitval
 }
 
 function nh {
