@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+usage='Display a tree of the given PIDs and their children.
+Usage:
+    pst [OPTIONS] [PIDs]
+Where:
+    PIDs Is zero or more space separated numeric PIDs.
+         If omitted, defaults to the PID of gnome-terminal-server.
+         If multiple given, overlapping trees may cause dupes in the output.
+    OPTIONS may include:
+         -h|--help   Display this help
+         Any other arg beginning with '-' is passed on to pstree.
+Examples:
+    pst $$ # This shell and its children.
+    pst $(pgrep -x bash) # All Bash shells and their children\n
+'
+
+# TODO It would be nice if we could eliminate dupes in the output of
+# multiple PIDs caused by overlapping trees. Possible just display one
+# tree, rooted at the common ancestor of all given PIDs? However, this
+# isn't urgent because the common case, of displaying all children launched
+# from my Bash sessions, without dupes, is already covered by passing no args.
+
+pids=()
+pstree_args=()
+exitval=0
+# Process our args
+for arg in "$@"; do
+    # Options beginning with '-' that we recognize
+    if [ "$arg" == "-h" ] || [ "$arg" == "--help" ]; then
+        printf "$usage"
+        exit 0
+    elif [[ "$arg" == -* ]]; then
+        # Collect unrecognized flags beginning with '-'
+        pstree_args+=("$arg")
+    elif [[ "$arg" =~ ^[0-9]+$ ]] ; then
+        # Collect numeric PIDs
+        pids+=($arg)
+    else
+        # Anything else is an error
+        printf "Error: '$arg' is not a numeric PID\n" >&2
+        exitval=1
+    fi
+done
+if [ $exitval -ne 0 ]; then
+    exit $exitval
+fi
+
+# If no PIDs provided, root our tree at the gnome-terminal-server process.
+# This is the parent to all the Bash shells running in gnome-terminal.
+# We use that as a heuristic for the common-ancestor process of all
+# our manually-launched Bash sessions. Hacky but works for me.
+if [ ${#pids[@]} -eq 0 ]; then
+    pids+=( $(pgrep -f gnome-terminal-server) )
+fi
+
+# Display the pstree for each PID
+for pid in "${pids[@]}"; do
+    if ps -p $pid >/dev/null; then
+        pstree -apnTC age --highlight-pid "$$" "${pstree_args[@]}" "$pid"
+    else
+        printf "$pid: Not a process\n" >&2
+    fi
+done
+
