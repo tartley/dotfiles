@@ -113,7 +113,7 @@ symlink_executables() {
     # Symlink executables onto the path
     local container="$1"
     echo -n "symlink…  "
-    lxc exec $container -- ln -sf /usr/bin/batcat "$HOME/.local/bin"
+    lxc exec $container -- ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"
 }
 
 configure_container() {
