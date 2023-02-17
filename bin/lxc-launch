@@ -9,7 +9,7 @@
 
 set -e # -x
 
-usage="Usage: lxc-launch <image> <instance>
+usage="Usage: lxc-launch <image> <container>
 eg. lxc-launch ubuntu:22.04 siab-jammy"
 
 image="$1"
@@ -18,21 +18,21 @@ if [ -z "$image" ]; then
     exit 1
 fi
 
-instance="$2"
-if [ -z "$instance" ]; then
+container="$2"
+if [ -z "$container" ]; then
     echo "$usage" >&2
     exit 1
 fi
 
 # Create the container.
-if ! lxc info "$instance" &>/dev/null ; then
-    lxc launch "$image" -p default -p "$USER" "$instance"
+if ! lxc info "$container" &>/dev/null ; then
+    lxc launch "$image" -p default -p "$USER" "$container"
     # Remove any old ssh key for a known host of this name.
-    ssh-keygen -f "$HOME/.ssh/known_hosts_lxd" -R "$instance.lxd" >/dev/null
+    ssh-keygen -f "$HOME/.ssh/known_hosts_lxd" -R "$container.lxd" >/dev/null
 else
-    echo "Container "$instance" already exists."
+    echo "Container "$container" already exists."
 fi
 
 # My personal container configuration for use as a dev environment
-lxc-setup "$instance"
+lxc-setup "$container"
 

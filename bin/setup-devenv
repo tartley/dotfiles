@@ -38,9 +38,7 @@ sudo apt install -y --quiet \
     --
 
 # Install nice-to-have tools distributed as Python packages
-pipx install \
-    colout \
-    --
+pipx install colout
 
 # Symlink irregular executables
 ln -sf /usr/bin/batcat "$HOME/.local/bin"
