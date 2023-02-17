@@ -260,7 +260,7 @@ function workon {
     . ~/.virtualenvs/$1/bin/activate
 }
 
-# git functions
+# git functions (esp. see 'git'!)
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
 function ga {
@@ -276,7 +276,7 @@ function gb {
     git branch -vv --color=always "$@"
 }
 
-# bare current branch name
+# Print bare current branch name
 function gbranch {
     git branch "$@" | grep '^*'| cut -d' ' -f2
 }
@@ -285,16 +285,26 @@ function gc {
     git commit --verbose "$@"
 }
 
-function gdst {
-    git diff --stat=160,120
-}
-
 # git fast forward
 # Arg: branch to merge into current (just like regular 'git merge')
 # Merge given branch into current, without creating a merge commit.
 # Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
 function gff {
     git merge --ff-only -q "$@"
+}
+
+# Shadows git! To warn againt the use of 'git push -f'
+function git {
+    is_push=false
+    for arg in "$@"; do
+        [ "$arg" = "push" ] && is_push=true
+        if [ "$is_push" = true ] && [ "$arg" = "-f" -o "$arg" = "--force" ]; then
+            echo "git push -f: Consider 'git push --force-with-lease --force-if-includes' instead, which is aliased to 'gpf'"
+            return 1
+        fi
+    done
+    # run the executable, not this function
+    $(which git) "$@"
 }
 
 # git log current branch, abbreviated to one line per commit, with graph
@@ -336,6 +346,11 @@ function gpull {
 
 function gpush {
     git push --quiet "$@"
+}
+
+function gpf {
+    # Make it easy to use the new, safer alternatives to --force
+    gpush --force-with-lease --force-if-includes "$@"
 }
 
 function gr {
