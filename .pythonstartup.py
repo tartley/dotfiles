@@ -42,14 +42,14 @@ def enable_tab_completion():
         readline.parse_and_bind('bind ^I rl_complete')
     else:
         readline.parse_and_bind('tab: complete')
-        print("readline complete bound to [tab]")
+    print(".pythonstartup.py: Bound readline 'complete' to [tab]")
 
 
 def read_history_file():
     histfile = os.path.join(os.environ['HOME'], '.pythonhistory')
     try:
         readline.read_history_file(histfile)
-        print("Read .pythonhistory")
+        print(f".pythonstartup.py: Read history ({histfile})")
     except IOError:
         pass
     return histfile
@@ -57,7 +57,7 @@ def read_history_file():
 
 def write_history_atexit(histfile):
     atexit.register(readline.write_history_file, histfile)
-    print("Will write .pythonhistory atexit")
+    print(f".pythonstartup.py: Registered to write history file atexit")
 
 
 def delete_new_globals(startenv):
