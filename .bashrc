@@ -96,7 +96,8 @@ alias df='df -h'
 alias du='du -h'
 alias histread='history -c; history -r'
 alias less='less -R' # display raw control characters for colors only
-alias ll='ls -lAGh'
+alias ll='ls -lGh'
+alias la='ll -A'
 alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
 alias mv='mv -i'
 alias rm='rm -i'
@@ -106,7 +107,7 @@ alias timee='/usr/bin/time -f %E'
 
 ## Other aliases #########################################
 
-alias whence='type -a' # where, of a sort
+alias whence='type -a' # like where, but also describes aliases and functions
 
 # if colordiff is installed, use it
 if type colordiff &>/dev/null ; then
