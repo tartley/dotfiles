@@ -92,13 +92,6 @@ else
     export PYTHONSTARTUP=$HOME/.pythonstartup.py
 fi
 
-# Ruby Gems dir
-export GEM_HOME=$HOME/.gems
-
-# Add RVM to PATH for scripting.
-# Make sure this is the last PATH variable change.
-addpath "$HOME/.rvm/bin"
-
 ## Source other files ########################################################
 
 # run .bashrc if we're starting a Bash interactive shell, e.g. in a terminal
