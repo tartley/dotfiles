@@ -38,7 +38,19 @@ export PATH
 
 # Other env variables ######################
 
+# These completion tuning parameters change the default behavior of
+# bash_completion:
+# Define to avoid stripping description in --option=description of
+# './configure --help'
+export COMP_CONFIGURE_HINTS=1
+# Define to avoid flattening internal contents of tar files
+export COMP_TAR_INTERNAL_PATHS=1
+
+export CPPFLAGS="-I/usr/local/include"
+
 export EDITOR=ni
+
+export GREP_COLORS="ms=1;33:fn=32:ln=1;32:se=0;37"
 
 export HISTSIZE=20000 # bash history will save this many commands
 export HISTFILESIZE=${HISTSIZE} # bash will remember this many commands
@@ -51,7 +63,6 @@ export HISTTIMEFORMAT="%F %T " # Format used in output of history command
 # comments are used to delimit multi-line commands.
 
 export LESS=-R
-export MAILCHECK
 # prevent man pages from displaying bold text in black
 export LESS_TERMCAP_mb=$'\e[6m' # start blink
 export LESS_TERMCAP_md=$'\e[01;97m' # start bold (& bright white)
@@ -60,8 +71,6 @@ export LESS_TERMCAP_ue=$'\e[0m' # stop underline
 export LESS_TERMCAP_me=$'\e[0m' # turn off bold, blink, underline
 export LESS_TERMCAP_so=$'\e[1;7m' # start standout (reverse)
 export LESS_TERMCAP_se=$'\e[0m' # stop standout
-
-export GREP_COLORS="ms=1;33:fn=32:ln=1;32:se=0;37"
 
 # nice modern GNU 'ls'
 if ls --color >/dev/null 2>&1; then
@@ -72,24 +81,16 @@ else
 fi
 export LS_OPTIONS
 
+export MAILCHECK
+
+export PG_COLOR=auto
+
 if [ $OSTYPE = cygwin ] ; then
     export PYTHONSTARTUP=$HOME\\.pythonstartup.py
 else
     # native Linux shell
     export PYTHONSTARTUP=$HOME/.pythonstartup.py
 fi
-
-# These completion tuning parameters change the default behavior of
-# bash_completion:
-# Define to avoid stripping description in --option=description of
-# './configure --help'
-export COMP_CONFIGURE_HINTS=1
-# Define to avoid flattening internal contents of tar files
-export COMP_TAR_INTERNAL_PATHS=1
-
-export CPPFLAGS="-I/usr/local/include"
-
-export PG_COLOR=auto
 
 # Ruby Gems dir
 export GEM_HOME=$HOME/.gems
