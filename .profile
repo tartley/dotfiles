@@ -17,17 +17,8 @@ addpath() {
     fi
 }
 
-addpath "/opt/bin"
 addpath "$HOME/bin"
-addpath "$HOME/bin/linux"
 addpath "$HOME/.local/bin"
-addpath "$HOME/.gem/ruby/2.3.0/bin"
-addpath "$HOME/.gems/bin"
-
-if [ $OSTYPE = cygwin ] ; then
-    addpath ~/bin/cygwin
-    addpath ~/docs/bin/cygwin
-fi
 
 if [ $OSTYPE = darwin* ] ; then
     # this already in PATH, but we want it before /usr/bin so things like
