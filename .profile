@@ -85,6 +85,8 @@ export MAILCHECK
 
 export PG_COLOR=auto
 
+export PIP_CACHE_DIR=/home/jhartley/.cache/pip
+
 if [ $OSTYPE = cygwin ] ; then
     export PYTHONSTARTUP=$HOME\\.pythonstartup.py
 else
