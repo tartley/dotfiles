@@ -57,7 +57,7 @@ fi
 # Display the pstree for each PID
 for pid in "${pids[@]}"; do
     if ps -p $pid >/dev/null; then
-        pstree -apnTC age --highlight-pid "$$" "${pstree_args[@]}" "$pid"
+        pstree -anpTUC age --highlight-pid "$$" "${pstree_args[@]}" "$pid"
     else
         printf "$pid: Not a process\n" >&2
     fi
