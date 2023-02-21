@@ -264,29 +264,32 @@ function workon {
 # git functions (esp. see 'git'!)
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
+# git add
 function ga {
     git add "$@"
 }
 
+# git add all
 function gaa {
     git add --all
 }
 
-# List branches with commitid, remotes, commit message
+# git branch: List branches with commitid, remotes, commit message
 function gb {
     git branch -vv --color=always "$@"
 }
 
-# Print bare current branch name
+# git branch: Print bare current branch name
 function gbranch {
     git branch "$@" | grep '^*'| cut -d' ' -f2
 }
 
+# git commit
 function gc {
     git commit --verbose "$@"
 }
 
-# git fast forward
+# git fast forward : merge without a merge commit. (see gm for opposite)
 # Arg: branch to merge into current (just like regular 'git merge')
 # Merge given branch into current, without creating a merge commit.
 # Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
@@ -308,69 +311,76 @@ function git {
     $(which git) "$@"
 }
 
-# git log current branch, abbreviated to one line per commit, with graph
+# git log : one line per commit, with graph
 function gl {
     git log --graph --format=format:"%C(yellow)%h%C(reset)%C(auto)%d%C(reset)%C(white) %s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
-# git log all branches, abbreviated to one line per commit, with graph
+# git log : all branches, one line per commit, with graph
 function gla {
     gl --all "$@"
 }
 
-# git log merge - show the commits behind a given merge
+# git log merge : show the commits that are ancestors of a given merge
 function glm {
     git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
 }
 
-# git log current branch, pretty, two lines per commit, with graph
+# git log : two lines per commit, with graph
 function glog {
     git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
-# git log all branches, pretty, two line per commit, with graph
+# git log : all branches, two lines per commit, with graph
 function gloga {
     glog --all "$@"
 }
 
-# git merge, always creating a merge commit.
+# git merge, always creating a merge commit. (see gff for opposite)
 # Arg1: branch to merge into current (like regular merge)
 function gm {
     git merge --no-ff -q "$@"
 }
 
+# git pull
 function gpull {
     git pull --quiet "$@"
 }
 
+# git push
 function gpush {
     git push --quiet "$@"
 }
 
+# git push force: using the new, safer alternatives to --force
 function gpf {
-    # Make it easy to use the new, safer alternatives to --force
     gpush --force-with-lease --force-if-includes "$@"
 }
 
+# git remote : list remotes
 function gr {
     git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
 }
 
+# git status : short format
 function gs {
     git status -s "$@"
 }
 
-function gsi {
-    git status --ignored=traditional "$@"
+# git ignored : use git status to show ignored files in current dir
+# Can pass '..' or similar to see ignored files from other dirs.
+function gignored {
+    git status --ignored=traditional . "$@"
 }
 
+# git status : regular format
 function gst {
     git status "$@"
 }
 
-# output tags at the current commit
+# git tags : use 'git log' to display tags at the current commit
 function gtags {
     git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
 }
