@@ -2,9 +2,13 @@
 
 prog=$(basename $0)
 
+usage="\
+Usage: $prog CONTAINER
+Outputs IPv4 address of given CONTAINER.
+"
+
 function usage {
-    echo "Usage: $prog CONTAINER" >&2
-    echo "Outputs IPv4 address of given CONTAINER." >&2
+    echo "$usage" >&2
 }
 
 container=""
@@ -20,7 +24,7 @@ do
     if [ -z "$container" ]; then
         container=$1
     else
-        echo "$prog error: Not multiple CONTAINERs" >&2
+        echo "$prog error: Must give only a single CONTAINER" >&2
         usage
         exit 1
     fi
