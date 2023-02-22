@@ -117,13 +117,13 @@ fi
 
 ## Functions ##############################################
 
-function beep {
+beep() {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
 }
 
 # Generate n busyloops to keep n CPUs busy.
 # See also 'killalljobs'
-function busyloop {
+busyloop() {
   # Usage: busyloop N
   # Where N is number of parallel busy processes to start.
   # I forget why we loop over args rather than just using the first.
@@ -156,40 +156,40 @@ function busyloop {
 # See 'bzr functions', below.
 
 # cd into a directory, resolving any symlinks to give the full actual directory name
-function cdr {
+cdr() {
     if [ -n "$1" ]; then in="$1"; else in="."; fi
     cd $(readlink -e "$in")
 }
 
-function colout_traceroute () {
+colout_traceroute() {
     colout '(^ ?\d+)|(\([\d\.]+\))|([\d\.]+ ms)|(!\S+)' white,cyan,yellow,magenta bold,normal,normal,reverse
 }
 
-function etime {
+etime() {
     /usr/bin/time -f"%E" "$@"
 }
 
 # See 'git functions', below.
 
 # This is good at cleaning up the results of 'busyloop'
-function killalljobs {
+killalljobs() {
   # TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
   for jid in $(jobs | grep '\[' | cut -d']' -f1 | cut -c2-); do
     kill %$jid
   done
 }
 
-function nh {
+nh() {
     nohup "$@" 1>/dev/null 2>&1 &
 }
 
 # Parent of given PID, or else of current shell
-function ppid {
+ppid() {
     ps -p ${1:-$$} -o ppid=
 }
 
 # show man pages rendered using postscript
-function psman () {
+psman() {
     SLUG=$(echo $@ | tr ' ' '-')
     FNAME="/tmp/man-$SLUG.pdf"
     set -o pipefail
@@ -199,20 +199,20 @@ function psman () {
 }
 
 # Use 'pytags $(pydirs) .' to tag with all stdlib and venv symbols
-function pydirs {
+pydirs() {
     python -c "import os, sys; print(' '.join(os.path.relpath(d) for d in sys.path if d))"
 }
 
-function pytree {
+pytree() {
     tree -AC -I '*.pyc|__pycache__' "$@"
 }
 
-function pywait () {
+pywait() {
     find -name 'env' -prune -o -name '*.py' -print | entr "$@"
 }
 
 # call given command every second until a key is pressed
-function repeat_until_key () {
+repeat_until_key() {
     command="$@"
     while true; do
         $command
@@ -221,7 +221,7 @@ function repeat_until_key () {
 }
 
 # Set the terminal window name
-function termname {
+termname() {
     # Use window title specified by caller, with a fallback if they didn't specify.
     if [ "$#" -ne 0 ]; then
         name="$@"
@@ -235,7 +235,7 @@ function termname {
 # Printing to stdout in non-interactive sessions breaks scp copies to this host.
 [[ $- == *i* ]] && termname
 
-function trash {
+trash() {
     destdir="$HOME/docs/trash/$(date --iso)"
     mkdir -p "$destdir"
     exitval=0
@@ -253,11 +253,11 @@ function trash {
 }
 
 # Allows use of 'watch' with aliases or functions
-function watcha {
+watcha() {
     watch -ctn1 "bash -i -c \"$@\""
 }
 
-function workon {
+workon() {
     . ~/.virtualenvs/$1/bin/activate
 }
 
@@ -265,27 +265,27 @@ function workon {
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
 # git add
-function ga {
+ga() {
     git add "$@"
 }
 
 # git add all
-function gaa {
+gaa() {
     git add --all
 }
 
 # git branch: List branches with commitid, remotes, commit message
-function gb {
+gb() {
     git branch -vv --color=always "$@"
 }
 
 # git branch: Print bare current branch name
-function gbranch {
+gbranch() {
     git branch "$@" | grep '^*'| cut -d' ' -f2
 }
 
 # git commit
-function gc {
+gc() {
     git commit --verbose "$@"
 }
 
@@ -293,12 +293,12 @@ function gc {
 # Arg: branch to merge into current (just like regular 'git merge')
 # Merge given branch into current, without creating a merge commit.
 # Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
-function gff {
+gff() {
     git merge --ff-only -q "$@"
 }
 
 # Shadows git! To warn againt the use of 'git push -f'
-function git {
+git() {
     is_push=false
     for arg in "$@"; do
         [ "$arg" = "push" ] && is_push=true
@@ -312,76 +312,76 @@ function git {
 }
 
 # git log : one line per commit, with graph
-function gl {
+gl() {
     git log --graph --format=format:"%C(yellow)%h%C(reset)%C(auto)%d%C(reset)%C(white) %s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
 # git log : all branches, one line per commit, with graph
-function gla {
+gla() {
     gl --all "$@"
 }
 
 # git log merge : show the commits that are ancestors of a given merge
-function glm {
+glm() {
     git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
 }
 
 # git log : two lines per commit, with graph
-function glog {
+glog() {
     git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
     echo
 }
 
 # git log : all branches, two lines per commit, with graph
-function gloga {
+gloga() {
     glog --all "$@"
 }
 
 # git merge, always creating a merge commit. (see gff for opposite)
 # Arg1: branch to merge into current (like regular merge)
-function gm {
+gm() {
     git merge --no-ff -q "$@"
 }
 
 # git pull
-function gpull {
+gpull() {
     git pull --quiet "$@"
 }
 
 # git push
-function gpush {
+gpush() {
     git push --quiet "$@"
 }
 
 # git push force: using the new, safer alternatives to --force
-function gpf {
+gpf() {
     gpush --force-with-lease --force-if-includes "$@"
 }
 
 # git remote : list remotes
-function gr {
+gr() {
     git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
 }
 
 # git status : short format
-function gs {
+gs() {
     git status -s "$@"
 }
 
 # git ignored : use git status to show ignored files in current dir
 # Can pass '..' or similar to see ignored files from other dirs.
-function gignored {
+gignored() {
     git status --ignored=traditional . "$@"
 }
 
 # git status : regular format
-function gst {
+gst() {
     git status "$@"
 }
 
 # git tags : use 'git log' to display tags at the current commit
-function gtags {
+gtags() {
     git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
 }
 
@@ -393,15 +393,15 @@ function gtags {
 alias bs='bzr status && bzr show-pipeline'
 alias bt='bzr log -r-1' # tip
 
-function bl {
+bl() {
     bzr log "$@" | less
 }
 
-function blp {
+blp() {
     bzr log -v -p "$@" | colordiff | colout -- '^.{7}(-{5,})' cyan reverse | less
 }
 
-function bup {
+bup() {
     bzr unshelve --preview "$@" | colordiff
 }
 
@@ -451,11 +451,11 @@ fi
 
 # Backup .bash_history
 
-function historyc() {
+historyc() {
     history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
 }
 
-function history_backup () {
+history_backup() {
     (
         if [ -d ~/docs/config/bash_history ] ; then
             # make a backup, overwriting other backups from today
@@ -470,7 +470,7 @@ function history_backup () {
 }
 trap history_backup EXIT
 
-function dedupe_history () {
+dedupe_history() {
     # Now remove duplicate lines from history file
     dedupe-bash-history >/tmp/bash_history
     mv /tmp/bash_history ~/.bash_history
