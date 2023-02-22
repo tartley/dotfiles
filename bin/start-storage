@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-cd ~/src/storage
-SERVICE_CONF=service.charm-migration.conf make run
-sleep inf
-
