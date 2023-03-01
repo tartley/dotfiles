@@ -96,9 +96,12 @@ alias df='df -h'
 alias du='du -h'
 alias histread='history -c; history -r'
 alias less='less -R' # display raw control characters for colors only
+
+alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
 alias ll='ls -lGh'
 alias la='ll -A'
-alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
+alias lt='ll -t'
+
 alias mv='mv -i'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
