@@ -48,7 +48,7 @@
     branch = green
 
 [core]
-    pager = less -FRSX
+    pager = less -FRS
     trustctime = false
     attributesfile = /home/jhartley/.gitattributes
 

@@ -314,15 +314,18 @@ git() {
     $(which git) "$@"
 }
 
-# git log : one line per commit, with graph
+# git log <N>: display N lines of git log as glog
 gl() {
-    git log --graph --format=format:"%C(yellow)%h%C(reset)%C(auto)%d%C(reset)%C(white) %s%C(reset)" --abbrev-commit "$@"
-    echo
+    # Check $1 is an integer
+    [ $1 -eq $1 2>/dev/null ] || return 1
+    glog -n "$@"
 }
 
 # git log : all branches, one line per commit, with graph
 gla() {
-    gl --all "$@"
+    # Check $1 is an integer
+    [ $1 -eq $1 2>/dev/null ] || return 1
+    gloga -n "$@"
 }
 
 # git log merge : show the commits that are ancestors of a given merge
@@ -333,7 +336,6 @@ glm() {
 # git log : two lines per commit, with graph
 glog() {
     git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
-    echo
 }
 
 # git log : all branches, two lines per commit, with graph
