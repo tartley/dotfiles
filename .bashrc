@@ -316,9 +316,14 @@ git() {
 
 # git log <N>: display N lines of git log as glog
 gl() {
-    # Check $1 is an integer
-    [ $1 -eq $1 2>/dev/null ] || return 1
-    glog -n "$@"
+    # First arg is number of commits to show
+    n="$1"
+    shift
+    # Default if no args given
+    [ -z "$n" ] && n=12
+    # Assert n is an integer
+    [ $1 -eq $1 2>/dev/null ] || { echo "gl Error: Require numeric first argument" >&2 ; return 1; }
+    glog -n"$n" "$@"
 }
 
 # git log : all branches, one line per commit, with graph
