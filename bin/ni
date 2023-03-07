@@ -15,11 +15,45 @@
 # Fallback to vim if nvim is not installed, so I can type the same thing in an lxc,
 # for example.
 
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
 # One-off setup. Provide the 'nw' alias.
 (
     cd "$HOME/bin"
     ln -sf ni nw
 )
+
+function usage {
+    echo "Usage: ni|nw [OPTIONS] [ARGS]"
+    echo ""
+    echo "Invoke the editor 'nvim'. If we are not in a terminal, or were invoked as 'nw',"
+    echo "then first create a new gnome-terminal to run nvim in. OPTIONS may include:"
+    echo ""
+    echo "  -h, --help          Print this message."
+    echo "  -t X, --terminal X  Single extra terminal command-line arg."
+    echo "                      May be specified more than once."
+    echo ""
+    echo "ARGS are passed to nvim."
+    echo ""
+    echo "eg: nw -t --profile=Pop -t --zoom=2 ~/TODO.md"
+}
+
+# Command line args
+
+terminal_args=()
+editor_args=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        -t|--terminal) terminal_args+=("$2"); shift;;
+        *) editor_args+=("$1");;
+    esac
+    shift
+done
 
 # Should we create a new terminal to run nvim in?
 if [ "$(tty)" = "not a tty" ]; then
@@ -38,10 +72,11 @@ if ! type -P nvim >/dev/null; then
     editor=vim
 fi
 
-# If we are not in a terminal, open one
 if [ "$newterm" = true ] ; then
-    gnome-terminal -- $editor "$@"
+    # open editor in a new terminal
+    gnome-terminal "${terminal_args[@]}" -- $editor "${editor_args[@]}"
 else
-    $editor "$@"
+    # open editor in this terminal
+    $editor "${editor_args[@]}"
 fi
 
