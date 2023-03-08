@@ -267,11 +267,6 @@ workon() {
 # git functions (esp. see 'git'!)
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
-# git add
-ga() {
-    git add "$@"
-}
-
 # git add all
 gaa() {
     git add --all
@@ -316,21 +311,19 @@ git() {
 
 # git log <N>: display N lines of git log as glog
 gl() {
-    # First arg is number of commits to show
-    n="$1"
-    shift
-    # Default if no args given
-    [ -z "$n" ] && n=12
-    # Assert n is an integer
-    [ $1 -eq $1 2>/dev/null ] || { echo "gl Error: Require numeric first argument" >&2 ; return 1; }
+    # If first arg is an integer, interpret as number of commits to show.
+    if [ -n "$1" -a $1 -eq $1 2>/dev/null ]; then
+        n="$1"
+        shift
+    else
+        n=12 # Default if no args given
+    fi
     glog -n"$n" "$@"
 }
 
-# git log : all branches, one line per commit, with graph
-gla() {
-    # Check $1 is an integer
-    [ $1 -eq $1 2>/dev/null ] || return 1
-    gloga -n "$@"
+# git log --all <N>: Like 'gl' but show all branches
+ga() {
+    gl "$@" --all
 }
 
 # git log merge : show the commits that are ancestors of a given merge
