@@ -333,7 +333,18 @@ glm() {
 
 # git log : two lines per commit, with graph
 glog() {
-    git log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+    # Turn off pager if args limit the number of commits shown. This clunky
+    # approach is required because letting git/less make the decision, based on
+    # whether output fills the terminal, will erroneously use a pager in the
+    # common case where a short output includes a long wrapping line.
+    pager=
+    for arg in "$@"; do
+        # Do our args limit the number of commits to show?
+        if [[ "$arg" =~ ^(-[0-9]+|-n|-n[0-9]+|--max-count|--max-count=[0-9]+)$ ]]; then
+            pager='--no-pager '
+        fi
+    done
+    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
 }
 
 # git log : all branches, two lines per commit, with graph
