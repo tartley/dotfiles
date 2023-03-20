@@ -319,6 +319,7 @@ gl() {
         n=12 # Default if no args given
     fi
     glog -n"$n" "$@"
+    echo
 }
 
 # git log --all <N>: Like 'gl' but show all branches
