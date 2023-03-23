@@ -39,14 +39,21 @@ case $- in
 
   pwd="$dim_cyan\w$reset"
   prompt="$bright_yellow_inverse\$$reset"
+
   user="${USER}"
   if [ "$user" = "jhartley" ]; then
     user="${green}${user}${reset}"
   else
     user="${magenta}${user}${reset}"
   fi
+
   host="${HOSTNAME%%.*}"
-  if [ "$host" = "pop-os" -o "$host" = "t460" -o "$host" = "asus" ]; then
+  if [ \
+    "$host" = "pop-os" -o \
+    "$host" = "gazelle" -o \
+    "$host" = "thinkpad" -o \
+    "$host" = "asus" \
+  ]; then
     host="${green}${host}${reset}"
   else
     host="${magenta}${host}${reset}"
