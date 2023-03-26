@@ -8,7 +8,7 @@ set output-meta On
 set convert-meta Off
 
 # tab-completion
-set completion-ignore-case On
+set completion-ignore-case Off
 set mark-symlinked-directories On
 set show-all-if-ambiguous On
 
