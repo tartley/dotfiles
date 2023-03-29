@@ -3,7 +3,7 @@
 import sys
 import xml.dom.minidom
 content = xml.dom.minidom.parse(sys.stdin)
-for line in content.toprettyxml().splitlines():
+for line in content.toprettyxml(indent="    ").splitlines():
     if line == '' or line.strip() != '':
-        print line
+        print(line)
 
