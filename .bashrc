@@ -268,6 +268,9 @@ watcha() {
 }
 
 workon() {
+    if [ -d "$HOME/$1" ]; then
+        cdr "$HOME/$1"
+    fi
     . ~/.virtualenvs/$1/bin/activate
 }
 
