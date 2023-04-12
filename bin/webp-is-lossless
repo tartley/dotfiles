@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Depends on `sudo apt install webp`
+# See also 'webp-is-lossy'
+
+webpinfo "$@" | grep -q ' Format: Lossless '
+
