@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-nw ~/docs/text/bookshelf/books.md
+ni ~/docs/text/bookshelf/books.md
