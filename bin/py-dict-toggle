@@ -38,6 +38,16 @@ def get_indentation(string):
         indentation += ' '
     return ''.join(indentation)
 
+def is_oneple(value):
+    """Is given value a tuple of one value?"""
+    return isinstance(value, tuple) and len(value) == 1
+
+def get_dict_value(value):
+    dict_value = value[0] if is_oneple(value) else value
+    if not isinstance(dict_value, dict):
+        error(f'Error: Input is a {type(value).__name__}, should be a dict.')
+    return dict_value
+
 @dataclasses.dataclass
 class ParsedDict:
     indentation: str
@@ -47,10 +57,6 @@ class ParsedDict:
 
 def parse_input(string):
     """Parse the given string for a single Python dictionary, using 'eval'"""
-    indentation = get_indentation(string)
-    is_literal = string.strip().startswith('{')
-    trailing_comma = False
-
     try:
         value = eval(string)
     except SyntaxError as exc:
@@ -59,17 +65,11 @@ def parse_input(string):
             f'{exc.text}',
             f'{" " * (exc.offset - 1)}^',
         )
-
-    if isinstance(value, tuple) and len(value) == 1:
-        value = value[0]
-        trailing_comma = True
-    if not isinstance(value, dict):
-        error(f'Error: Input is a {type(value).__name__}, should be a dict.')
     return ParsedDict(
-        indentation=indentation,
-        value=value,
-        is_literal=is_literal,
-        trailing_comma=trailing_comma,
+        indentation=get_indentation(string),
+        value=get_dict_value(value),
+        is_literal=string.strip().startswith('{'),
+        trailing_comma=is_oneple(value),
     )
 
 def format_literal(mydict, trailing_comma):
@@ -97,8 +97,7 @@ def format_output(parsed):
     yield from indent(parsed.indentation, formatter(parsed.value, parsed.trailing_comma))
 
 def main():
-    parsed = parse_input(sys.stdin.read())
-    for line in format_output(parsed):
+    for line in format_output(parse_input(sys.stdin.read())):
         print(line)
 
 if __name__ == '__main__':
