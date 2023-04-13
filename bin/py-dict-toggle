@@ -36,13 +36,17 @@ def get_indentation(string):
 
     Raise if any tabs are spotted.
     """
-    indentation = []
+    # TODO: Bug if 1st line is all spaces, and is shorter than subsequent line indent.
+    # Fix is to reset 'indent' to zero on newline.
+    # This bug is masked though, the indent of line 2 prevents parsing.
+    # We should perhaps, instead, strip initial empty lines from the input.
+    indent = 0
     for char in string:
         assert char != '\t'
         if char != ' ':
             break
-        indentation += ' '
-    return ''.join(indentation)
+        indent += 1
+    return ' ' * indent
 
 def is_oneple(value):
     """Is given value a tuple of one value?"""
@@ -60,8 +64,9 @@ def is_oneline(string):
 
 def parse_input(string):
     """Parse the given string using 'eval', looking for a single Python dictionary"""
+    lines = [l for l in string.split('\n') if l.strip()]
     try:
-        value = eval(string)
+        value = eval('\n'.join(lines))
     except SyntaxError as exc:
         error(
             f'Error: {exc.msg}, line {exc.lineno}:\n'
