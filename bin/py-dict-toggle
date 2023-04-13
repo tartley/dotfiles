@@ -51,7 +51,7 @@ def get_dict_value(value):
 @dataclasses.dataclass
 class ParsedDict:
     indentation: str
-    value: dict
+    dict_value: dict
     is_literal: bool
     trailing_comma: bool
 
@@ -67,24 +67,24 @@ def parse_input(string):
         )
     return ParsedDict(
         indentation=get_indentation(string),
-        value=get_dict_value(value),
+        dict_value=get_dict_value(value),
         is_literal=string.strip().startswith('{'),
         trailing_comma=is_oneple(value),
     )
 
-def format_literal(mydict, trailing_comma):
+def format_literal(parsed):
     """Generator of str lines containing the given dict as a literal"""
     yield '{'
-    for key, value in sorted(mydict.items()):
+    for key, value in sorted(parsed.dict_value.items()):
         yield f'    {key!r}: {value!r},'
-    yield '},' if trailing_comma else '}'
+    yield '},' if parsed.trailing_comma else '}'
 
-def format_constructor(mydict, trailing_comma):
+def format_constructor(parsed):
     """Generator of str lines containing the given dict as a constructor call"""
     yield f'dict('
-    for key, value in sorted(mydict.items()):
+    for key, value in sorted(parsed.dict_value.items()):
         yield f'    {key}={value!r},'
-    yield '),' if trailing_comma else ')'
+    yield '),' if parsed.trailing_comma else ')'
 
 def indent(indentation, lines):
     """Use the given indentation prefix to indent the given lines"""
@@ -94,7 +94,7 @@ def indent(indentation, lines):
 def format_output(parsed):
     """Format the output"""
     formatter = format_constructor if parsed.is_literal else format_literal
-    yield from indent(parsed.indentation, formatter(parsed.value, parsed.trailing_comma))
+    yield from indent(parsed.indentation, formatter(parsed))
 
 def main():
     for line in format_output(parse_input(sys.stdin.read())):
