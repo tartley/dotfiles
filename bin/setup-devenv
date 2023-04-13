@@ -21,6 +21,9 @@ else
     git clone git@github.com:tartley/dotfiles.git
 fi
 
+# Add PPAs (GUI machines only, and same for webp-picxbuf-loader, below)
+sudo add-apt-repository ppa:helkaluin/webp-pixbuf-loader # view WebP images
+
 # Update apt repository
 sudo apt update --quiet
 sudo apt upgrade -y --quiet
@@ -35,6 +38,7 @@ sudo apt install -y --quiet \
     pipx \
     python3-venv \
     tree \
+    webp-pixbuf-loader \
     --
 
 # Install nice-to-have tools distributed as Python packages
