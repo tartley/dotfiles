@@ -2,34 +2,40 @@
 """
 Filter to toggle Python dictionaries between literal and dict() constructor format.
 
-Reads and evaluates stdin for a Python dictionary. If the dict is a literal
-(e.g. `{'a':1}`) it is converted to a constructor call (eg `dict(a=1)`).
-Otherwise it is converted into a literal.
+Reads and evaluates stdin, expecting to find a single Python dictionary. If the
+dict is a literal, e.g. `{'a': 1}`, then it is converted to a constructor call,
+eg `dict(a=1)`. Otherwise it is converted into a literal.
 
-The input dict may be multi-line, but must be the only value present, barring an
-optional trailing comma, which will be replicated on the output. The output is
-always multi-line, with one key-value pair per line, eg:
+The input dict must be the only value present on stdin, barring an optional
+trailing comma, which will be replicated on the output. If the input dict fits
+on one line, then the output will be on one line too, otherwise output will
+have one key-value pair per line.
+
+eg: One line, with trailing comma: `{'a': 1},` -> `dict(a=1),`
+
+eg: Multi-line, no trailing comma:
 
     {
         'a': 1,
     }
 
-or
+->
 
     dict(
         a=1,
     )
 
 """
-import ast
 import dataclasses
 import sys
 
-def error(*lines, exitval=1):
-    print('\n'.join(lines), file=sys.stderr)
-    sys.exit(exitval)
+# parse input
 
 def get_indentation(string):
+    """Given a string, return the space chars that form its initial indent
+
+    Raise if any tabs are spotted.
+    """
     indentation = []
     for char in string:
         assert char != '\t'
@@ -48,58 +54,90 @@ def get_dict_value(value):
         error(f'Error: Input is a {type(value).__name__}, should be a dict.')
     return dict_value
 
-@dataclasses.dataclass
-class ParsedDict:
-    indentation: str
-    dict_value: dict
-    is_literal: bool
-    trailing_comma: bool
+def is_oneline(string):
+    nonempty_lines = [l for l in string.split('\n') if l.strip()]
+    return len(nonempty_lines) <= 1
 
 def parse_input(string):
-    """Parse the given string for a single Python dictionary, using 'eval'"""
+    """Parse the given string using 'eval', looking for a single Python dictionary"""
     try:
         value = eval(string)
     except SyntaxError as exc:
         error(
-            f'Error: {exc.msg}, line {exc.lineno}:',
-            f'{exc.text}',
-            f'{" " * (exc.offset - 1)}^',
+            f'Error: {exc.msg}, line {exc.lineno}:\n'
+            f'{exc.text}\n'
+            f'{" " * (exc.offset - 1)}^'
         )
     return ParsedDict(
         indentation=get_indentation(string),
         dict_value=get_dict_value(value),
         is_literal=string.strip().startswith('{'),
+        is_oneline=is_oneline(string),
         trailing_comma=is_oneple(value),
     )
 
-def format_literal(parsed):
-    """Return list of str containing the given dict as a literal"""
-    parts = ['{']
-    for key, value in sorted(parsed.dict_value.items()):
-        parts.append(f'    {key!r}: {value!r},')
-    parts.append('},' if parsed.trailing_comma else '}')
-    return parts
+# format output
 
-def format_constructor(parsed):
-    """Return list of str containing the given dict as a constructor call"""
-    parts = ['dict(']
-    for key, value in sorted(parsed.dict_value.items()):
-        parts.append(f'    {key}={value!r},')
-    parts.append('),' if parsed.trailing_comma else ')')
-    return parts
+@dataclasses.dataclass
+class Parts:
+    """Parts used to construct formatted output"""
+    open_brace: str
+    item_indent: str
+    item: str
+    item_sep: str
+    close_brace: str
+
+    @staticmethod
+    def create(parsed):
+        trailing_comma=',' if parsed.trailing_comma else ''
+        return Parts(
+            open_brace='{' if parsed.is_literal else 'dict(',
+            item_indent='' if parsed.is_oneline else '    ',
+            item='{key!r}: {value!r}' if parsed.is_literal else '{key}={value!r}',
+            item_sep=', ' if parsed.is_oneline else ',',
+            close_brace=f'}}{trailing_comma}' if parsed.is_literal else f'){trailing_comma}',
+        )
+
+def format_dict(parsed, parts):
+    """Return list of str lines, containing the given dict as a literal"""
+    results = [parts.open_brace]
+    for index, (key, value) in enumerate(sorted(parsed.dict_value.items())):
+        comma = parts.item_sep if not parsed.is_oneline or index < len(parsed.dict_value) - 1 else ''
+        # First the f-string substitutes values for the single-braced {parts.item},
+        # then the .format substitutes values for the other double-braced items.
+        results.append(f'{{parts.item_indent}}{parts.item}{{comma}}'.format(**locals()))
+    results.append(parts.close_brace)
+    return [''.join(results)] if parsed.is_oneline else results
 
 def indent(indentation, lines):
     """Use the given indentation prefix to indent the given lines"""
-    for line in lines:
-        yield f'{indentation}{line}'
+    return [f'{indentation}{line}' for line in lines]
 
 def format_output(parsed):
     """Format the output"""
-    formatter = format_constructor if parsed.is_literal else format_literal
-    yield from indent(parsed.indentation, formatter(parsed))
+    sep = Parts.create(parsed)
+    return indent(parsed.indentation, format_dict(parsed, sep))
+
+# core
+
+def error(message, exitval=1):
+    print(message, file=sys.stderr)
+    sys.exit(exitval)
+
+@dataclasses.dataclass
+class ParsedDict:
+    indentation: str
+    dict_value: dict
+    is_literal: bool
+    is_oneline: bool
+    trailing_comma: bool
+
+def transform(parsed):
+    # Output is just like input, except for toggled use of dict literals
+    return dataclasses.replace(parsed, is_literal=not parsed.is_literal)
 
 def main():
-    for line in format_output(parse_input(sys.stdin.read())):
+    for line in format_output(transform(parse_input(sys.stdin.read()))):
         print(line)
 
 if __name__ == '__main__':
