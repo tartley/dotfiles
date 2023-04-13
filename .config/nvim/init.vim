@@ -526,6 +526,28 @@ nnoremap <leader>k :call EnBlackenFile()<CR>
 " without putting it into the buffer's visual selection.
 xnoremap <Leader>k !enblacken $codewidth 2>/tmp/vim.err <CR>:echo join(readfile("/tmp/vim.err"), "\n")<CR>
 
+" DONE: invoke from vim without selection on single line
+" TODO: keep single-line dicts on one line
+" TODO: Can we combine PyDictToggleRange functions?
+" TODO: generecize to enblacken can use it too
+" TODO: (harder) When invoked without a selection, automatically figure out the dict?
+function! s:PyDictToggleRange() range
+    silent '<,'>!py-dict-toggle 2>/tmp/vim.err
+    if v:shell_error
+        echo join(readfile("/tmp/vim.err"), "\n")
+    endif
+endfunction
+
+function! s:PyDictToggleLine()
+    silent .!py-dict-toggle 2>/tmp/vim.err
+    if v:shell_error
+        echo join(readfile("/tmp/vim.err"), "\n")
+    endif
+endfunction
+
+xnoremap <Leader>d :call <sid>PyDictToggleRange()<CR>
+nnoremap <Leader>d :call <sid>PyDictToggleLine()<CR>
+
 " Undo changes if a filter command fails (e.g. Python Black)
 " This prevents a failed filter from mangling (commonly, completely erasing)
 " the buffer's content.

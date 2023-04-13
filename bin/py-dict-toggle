@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""
+Filter to toggle Python dictionaries between literal and dict() constructor format.
+
+Reads and evaluates stdin for a Python dictionary. If the dict is a literal
+(e.g. `{'a':1}`) it is converted to a constructor call (eg `dict(a=1)`).
+Otherwise it is converted into a literal.
+
+The input dict may be multi-line, but must be the only value present, barring an
+optional trailing comma, which will be replicated on the output. The output is
+always multi-line, with one key-value pair per line, eg:
+
+    {
+        'a': 1,
+    }
+
+or
+
+    dict(
+        a=1,
+    )
+
+"""
+import ast
+import dataclasses
+import sys
+
+def error(*lines, exitval=1):
+    print('\n'.join(lines), file=sys.stderr)
+    sys.exit(exitval)
+
+def get_indentation(string):
+    indentation = []
+    for char in string:
+        assert char != '\t'
+        if char != ' ':
+            break
+        indentation += ' '
+    return ''.join(indentation)
+
+@dataclasses.dataclass
+class ParsedDict:
+    indentation: str
+    value: dict
+    is_literal: bool
+    trailing_comma: bool
+
+def parse_input(string):
+    """Parse the given string for a single Python dictionary, using 'eval'"""
+    indentation = get_indentation(string)
+    is_literal = string.strip().startswith('{')
+    trailing_comma = False
+
+    try:
+        value = eval(string)
+    except SyntaxError as exc:
+        error(
+            f'Error: {exc.msg}, line {exc.lineno}:',
+            f'{exc.text}',
+            f'{" " * (exc.offset - 1)}^',
+        )
+
+    if isinstance(value, tuple) and len(value) == 1:
+        value = value[0]
+        trailing_comma = True
+    if not isinstance(value, dict):
+        error(f'Error: Input is a {type(value).__name__}, should be a dict.')
+    return ParsedDict(
+        indentation=indentation,
+        value=value,
+        is_literal=is_literal,
+        trailing_comma=trailing_comma,
+    )
+
+def format_literal(mydict, trailing_comma):
+    """Generator of str lines containing the given dict as a literal"""
+    yield '{'
+    for key, value in sorted(mydict.items()):
+        yield f'    {key!r}: {value!r},'
+    yield '},' if trailing_comma else '}'
+
+def format_constructor(mydict, trailing_comma):
+    """Generator of str lines containing the given dict as a constructor call"""
+    yield f'dict('
+    for key, value in sorted(mydict.items()):
+        yield f'    {key}={value!r},'
+    yield '),' if trailing_comma else ')'
+
+def indent(indentation, lines):
+    """Use the given indentation prefix to indent the given lines"""
+    for line in lines:
+        yield f'{indentation}{line}'
+
+def format_output(parsed):
+    """Format the output"""
+    formatter = format_constructor if parsed.is_literal else format_literal
+    yield from indent(parsed.indentation, formatter(parsed.value, parsed.trailing_comma))
+
+def main():
+    parsed = parse_input(sys.stdin.read())
+    for line in format_output(parsed):
+        print(line)
+
+if __name__ == '__main__':
+    main()
+
