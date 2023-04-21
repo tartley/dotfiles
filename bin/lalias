@@ -55,7 +55,7 @@ if [ -n "$alias" ]; then
         exit 0
     else
         # Look for the alias in container names.
-        for container in $(lxcls); do
+        for container in $(lxc-ls); do
             if [ "$container" = "$alias" ]; then
                 echo "$container"
                 exit 0

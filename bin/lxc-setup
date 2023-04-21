@@ -30,6 +30,11 @@ usage() {
     echo "One or more space-separated containers may be specified."
 }
 
+warn() {
+    message="$1"
+    printf '\e[33m%s\e[0m\n' "lxc-setup: Warning: $message" >&2
+}
+
 process_cmdline() {
     containers=()
     while [ $# -gt 0 ] ; do
@@ -41,7 +46,7 @@ process_cmdline() {
     done
 
     if [ "${#containers[@]}" -eq 0 ] ; then
-        echo "lxc-setup: WARNING: No containers specified." >&2
+        warn "No containers specified."
         usage >&2
         exit 1
     fi
@@ -50,8 +55,8 @@ process_cmdline() {
 validate_container() {
     # Validate that the given container name is a real existing container
     local container="$1"
-    if ! grep -q "^$container$" <<<"$(lxcls)" ; then
-        echo "Not a valid container name" >&2
+    if ! grep -q "^$container$" <<<"$(lxc-ls)" ; then
+        warn "Not a valid container name"
         return 1
     fi
 }
@@ -177,7 +182,7 @@ process_container() {
     was_initially_running=$(start_container "$container")
     configure_container "$container"
     stop_container "$container" "$was_initially_running"
-    echo "ok" >&2
+    echo "done" >&2
 }
 
 process_cmdline "$@"
