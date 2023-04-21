@@ -381,7 +381,9 @@ gpush() {
 
 # git push force: using the new, safer alternatives to --force
 gpf() {
-    gpush --force-with-lease --force-if-includes "$@"
+    if ! gpush --force-with-lease --force-if-includes "$@" 2>/dev/null ; then
+      gpush --force-with-lease "$@"
+    fi
 }
 
 # git remote : list remotes
