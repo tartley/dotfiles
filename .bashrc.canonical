@@ -4,14 +4,6 @@ export CDPATH=:~/src
 
 ## LXD ##################################################### 
 
-# lxc list long
-function lxcll {
-    lxc list -cns4 \
-        | grep '\w' \
-        | tr -d '|' \
-        | colout '(^\s+NAME\s.+)|(RUNNING)|(STOPPED)' white,green,red bold,normal
-}
-
 function whatsnap {
     [ "$1" != "" ] || return && local snapid=$1
     curl -s https://assertions.ubuntu.com/v1/assertions/snap-declaration/16/${snapid} | jq -r '.headers."snap-name"'

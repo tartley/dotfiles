@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-lxc list -cn --format=csv
-

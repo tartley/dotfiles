@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-lxc ls -cn -fcompact | grep -vE '^ +NAME +$'
+
+lxc list -cn --format=csv
 

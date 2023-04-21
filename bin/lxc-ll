@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+lxc list -cns4 "$@" | grep '\w' | tr -d '|' | colout '(^\s+NAME\s.+)|(RUNNING)|(STOPPED)' white,green,red bold,normal
+
