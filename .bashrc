@@ -189,6 +189,11 @@ killalljobs() {
   done
 }
 
+# previously known as lxc-ll
+lll() {
+    lxc list -cns4 "$@" | grep '\w' | tr -d '|' | colout '(^\s+NAME\s.+)|(RUNNING)|(STOPPED)' white,green,red bold,normal
+}
+
 nh() {
     nohup "$@" 1>/dev/null 2>&1 &
 }
