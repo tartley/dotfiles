@@ -396,9 +396,17 @@ gr() {
     git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
 }
 
+gre() {
+    git restore "$@"
+}
+
 # git status : short format
 gs() {
     git status -s "$@"
+}
+
+gsw() {
+    git switch "$@"
 }
 
 # git ignored : use git status to show ignored files in current dir
