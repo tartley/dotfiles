@@ -527,9 +527,14 @@ nnoremap <leader>k :call EnBlackenFile()<CR>
 xnoremap <Leader>k !enblacken $codewidth 2>/tmp/vim.err <CR>:echo join(readfile("/tmp/vim.err"), "\n")<CR>
 
 " TODO: Can we combine PyDictToggleRange functions?
-" TODO: generecize to enblacken can use it too
+" TODO: genericize so enblacken can use it too
 " TODO: (harder) When invoked without a selection, automatically figure out the range
-"       containing the dict?
+"       containing the dict? If we're inside nested dicts, do we operate on the
+"       largest or the smallest, or give the user some way to choose? Talk about
+"       gold-plating!
+" TODO: Consider integrating this answer to my question about how to handle
+"       errors from external commands: https://superuser.com/questions/1779615
+"       See FILTER_ERROR below, which might already do this?
 function! s:PyDictToggleRange() range
     silent '<,'>!py-dict-toggle 2>/tmp/vim.err
     if v:shell_error
