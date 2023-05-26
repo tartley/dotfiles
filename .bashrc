@@ -324,6 +324,18 @@ git() {
     $(which git) "$@"
 }
 
+# git log --all <N>: Like 'gl' but show all branches
+# of various lengths
+ga() {
+    gl "$@" --all
+}
+gaa() {
+    ga 20 "$@"
+}
+gaaa() {
+    ga 29 "$@"
+}
+
 # git log <N>: display N lines of git log as glog
 gl() {
     # If first arg is an integer, interpret as number of commits to show.
@@ -335,11 +347,6 @@ gl() {
     fi
     glog -n"$n" "$@"
     echo
-}
-
-# git log --all <N>: Like 'gl' but show all branches
-ga() {
-    gl "$@" --all
 }
 
 # git log merge : show the commits that are ancestors of a given merge
