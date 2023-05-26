@@ -27,6 +27,7 @@ usage() {
     echo "    lxc-setup OPTIONS <container>..."
     echo "Where OPTIONS are:"
     echo "    -h|--help     Show this help and exit."
+    echo "    -s|--scp      Just scp config files, omit other steps"
     echo "One or more space-separated containers may be specified."
 }
 
@@ -35,11 +36,14 @@ warn() {
     printf '\e[33m%s\e[0m\n' "lxc-setup: Warning: $message" >&2
 }
 
+scp=false
+
 process_cmdline() {
     containers=()
     while [ $# -gt 0 ] ; do
         case "$1" in
             -h|--help) usage; exit;;
+            -s|--scp) scp=true;;
             *) containers+=("$1");;
         esac
         shift
@@ -124,10 +128,12 @@ symlink_executables() {
 configure_container() {
     local container="$1"
     copy_dotfiles "$container"
-    update_packages "$container"
-    install_packages "$container"
-    install_python_packages "$container"
-    symlink_executables "$container"
+    if [ "$scp" != 'true' ] ; then
+        update_packages "$container"
+        install_packages "$container"
+        install_python_packages "$container"
+        symlink_executables "$container"
+    fi
 }
 
 is_running() {
