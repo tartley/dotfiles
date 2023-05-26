@@ -150,8 +150,11 @@ wait_for_container() {
     # Without this, subsequent scp attempts would sometimes fail with 'lost connection'.
     # TODO: Add a timeout?
     local container="$1"
+    spin='-\|/'
+    i=4
     while ! ssh -q -o ConnectTimeout=1 "$container.lxd" -- : ; do
-        echo -n "." >&2
+        i=$(( (i+1) %4 ))
+        printf '%c\b' "${spin:$i:1}" >&2
     done
 }
 
