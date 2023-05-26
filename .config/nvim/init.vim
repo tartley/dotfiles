@@ -502,9 +502,9 @@ command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 " Grp all files for the word under the cursor (& case insensitive version)
 noremap <Leader>g :Grp -w '<C-r><C-w>' .<CR>
 noremap <Leader>G :Grp -wi '<C-r><C-w>' .<CR>
-" Grp .py files
-noremap <Leader>p :Grpy -w '<C-r><C-w>' .<CR>
-noremap <Leader>P :Grpy -wi '<C-r><C-w>' .<CR>
+" Grp .py files (and upper case to include tests)
+noremap <Leader>p :Grpy -w --exclude-dir=tests '<C-r><C-w>' .<CR>
+noremap <Leader>P :Grpy -w '<C-r><C-w>' .<CR>
 
 " JSON encode a Python data structure,
 noremap <Leader>j :!py2json<CR>
