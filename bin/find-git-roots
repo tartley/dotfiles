@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import pathlib
+import sys
+
+def find_roots(start):
+    root = pathlib.Path('/')
+    current = start
+    git_roots = []
+    while current != root:
+        candidate = current / '.git'
+        if candidate.is_dir():
+            git_roots.append(candidate)
+        current = current.parent
+    return git_roots
+
+def to_str(roots):
+    return '\n'.join(str(r) for r in roots)
+
+def main():
+    print(to_str(find_roots(pathlib.Path.cwd())))
+
+if __name__ == '__main__':
+    main()
+
