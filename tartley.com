@@ -1,1 +1,0 @@
-/home/jhartley/docs/text/tartley.github.io
