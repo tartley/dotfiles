@@ -118,13 +118,6 @@ install_python_packages() {
     ssh $container.lxd -- pipx install colout &>>"$log"
 }
 
-symlink_executables() {
-    # Symlink executables onto the path
-    local container="$1"
-    echo -n "symlink…  "
-    lxc exec $container -- ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"
-}
-
 configure_container() {
     local container="$1"
     copy_dotfiles "$container"
@@ -132,7 +125,6 @@ configure_container() {
         update_packages "$container"
         install_packages "$container"
         install_python_packages "$container"
-        symlink_executables "$container"
     fi
 }
 

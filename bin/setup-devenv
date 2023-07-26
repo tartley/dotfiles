@@ -44,8 +44,5 @@ sudo apt install -y --quiet \
 # Install nice-to-have tools distributed as Python packages
 pipx install colout
 
-# Symlink irregular executables
-ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"
-
 echo "You should probably reboot to pick up the new env var definitions in .profile"
 

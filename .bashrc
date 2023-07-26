@@ -79,6 +79,17 @@ case $- in
   # for searching command line history forwards (opposite of ctrl-r)
   stty -ixon
 
+  # shadow 'cat'
+  cat() {
+    if [ -t 1 ]; then
+        # stdout is terminal, prettify output
+        $(which batcat) "$@"
+    else
+        # stdout is elsewhere, leave output unchanged
+        $(which cat) "$@"
+    fi
+  }
+
 ;;
 
 # non-interactive shell
@@ -126,6 +137,9 @@ fi
 
 
 ## Functions ##############################################
+
+# TODO: maybe all these should only be defined if it is an interactive shell?
+# Maybe lots of things in this file are like that?
 
 beep() {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
