@@ -33,6 +33,7 @@ blog
 botnet
 BSON
 builtin
+builtins
 Cardano
 celiac
 CentOS
@@ -63,6 +64,7 @@ Crosshair
 cryptocurrencies
 cryptocurrency
 ctrl
+dataclass
 datasheet
 datatypes
 datetime
@@ -87,16 +89,20 @@ dropdown
 DSP
 Dyson
 eGPU
+Elasticsearch
 EOD
 eosinophilic
 equanimously
 ESC
 esophagitis
 ESRI
+etc
 Ethereum
 Eurofighter
 EuroPython
+Excel's
 expressivity
+eXtreme
 FaceTrackNoIR
 FastBridge
 ffmpeg
@@ -109,6 +115,7 @@ fugly
 gameplay
 GeForce
 geodatabase
+geodatabases
 geospatial
 GIS
 Github
@@ -140,7 +147,10 @@ incrementalism
 indie
 internet
 IP
+iptables
 IronPython
+isinstance
+iterable
 jello
 Jira
 jpg
@@ -188,6 +198,7 @@ myotomy
 MySQL
 mythos
 Mythos
+namedtuple
 namespace
 namespaces
 Neovim
@@ -241,6 +252,7 @@ PyWeek
 Radeon
 rando
 randos
+Rangespan
 RDBMS
 README
 rebar
@@ -252,6 +264,7 @@ refactored
 regex
 reify
 repo
+RethinkDB
 RGB
 RHEL
 Ringworld
@@ -295,6 +308,7 @@ Suze's
 symlink
 symlinked
 symlinks
+SyntaxError
 System76
 tartley
 TBH
@@ -313,7 +327,9 @@ TIL
 timestamp
 TODO
 TrackHat
+transformative
 Trello
+Trialreach
 TrialReach
 trippy
 Twisted's
@@ -337,6 +353,7 @@ VBA
 Veidt
 Veidt's
 vendored
+versioned
 videogame
 videogames
 virtualenv
