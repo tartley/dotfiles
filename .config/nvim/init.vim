@@ -443,8 +443,8 @@ function! MaximizeVertical()
 endfunction
 " call MaximizeVertical()
 
-let $codewidth=88
-set colorcolumn=89
+let $codewidth=80
+set colorcolumn=81
 
 " single column
 noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+$codewidth<CR>
