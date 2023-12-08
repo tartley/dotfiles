@@ -604,10 +604,10 @@ map! <silent> <A-q> <esc><C-tab>
 noremap <silent> <A-w> :silent hide bn<CR>
 map! <silent> <A-w> <esc><C-S-tab>
 " close buffer
-noremap <A-backspace> :Bclose<CR>
-map! <A-backspace> <esc><A-backspace>
-noremap <A-delete> :Bclose!<CR>
-map! <A-delete> <esc><A-delete>
+noremap <leader><backspace> :Bclose<CR>
+map! <leader><backspace> <esc><leader><backspace>
+noremap <leader><delete> :Bclose!<CR>
+map! <leader><delete> <esc><leader><delete>
 
 " navigating between windows
 noremap <C-left> <C-w>h
