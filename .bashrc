@@ -327,14 +327,17 @@ gff() {
 # Shadows git! To warn againt the use of 'git push -f'
 git() {
     is_push=false
+    is_force=false
     for arg in "$@"; do
         [ "$arg" = "push" ] && is_push=true
-        if [ "$is_push" = true ] && [ "$arg" = "-f" -o "$arg" = "--force" ]; then
-            echo "git push -f: Consider 'git push --force-with-lease --force-if-includes' instead, which is aliased to 'gpf'"
-            return 1
-        fi
+        [ "$arg" = "-f" -o "$arg" = "--force" ] && is_force=true
     done
-    # run the executable, not this function
+    if [ "$is_push" = true ] && [ "$is_force" = true ]; then
+        # Suggest alternative commands.
+        echo "git push -f: Consider 'git push --force-with-lease --force-if-includes' instead, which is aliased to 'gpf'"
+        return 1
+    fi
+    # Run the given command, using the git executable instead of this function.
     $(which git) "$@"
 }
 
