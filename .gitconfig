@@ -46,6 +46,7 @@
     added = green
     changed = 226 # bright yellow
     branch = green
+    deleted = red
 
 [core]
     pager = less -FRS
