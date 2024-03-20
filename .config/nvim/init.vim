@@ -1,33 +1,6 @@
 " Neovim config
 " Jonathan Hartley, tartley@tartley.com
 
-" 0. Dev env ideas ------------------------------------------------------------
-
-" check out fugitive plugin (Anthony and David recommend)
-
-" check out https://github.com/tpope/vim-rsi
-
-" check out cole's init.vim:
-" https://github.com/colepeters/dotfiles/blob/master/config/nvim/init.vim
-
-" Check out yapf for formatting
-
-" bind a vim key to pretty print json
-"   whole buffer
-"   visual selection
-"   visual selection preserving initial indent
-
-" bind a key to format python
-"   whole buffer
-"   visual selection
-"   visual selection preserving initial indent
-
-" Try neomake, the neovim async replacement for syntastic syntax checker
-" https://github.com/neomake/neomake
-
-" consider extending comment/uncomment to use a 'comment-leader' variable
-" that is set per filetype.
-
 " 1. Plugins ------------------------------------------------------------------
 " Managed by https://github.com/junegunn/vim-plug
 
@@ -52,8 +25,6 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'milkypostman/vim-togglelist'
 let g:toggle_list_copen_command="botright copen"
 
-Plug 'lifepillar/vim-solarized8'
-
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 " turn off annoying and useless preview window during autocomplete
@@ -66,6 +37,28 @@ endfunction"}}}
 inoremap <expr><C-n> pumvisible() ? "\<C-n>" :
     \ <SID>check_back_space() ? "\<TAB>" :
     \ deoplete#mappings#manual_complete()
+
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_no_default_key_mappings = 1
+let g_vim_markdown_fenced_languages = ['bash=sh', 'js=javascript', 'py=python', 'viml=vim']
+" Highlight front matter (useful for Hugo posts).
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_json_frontmatter = 1
+let g:vim_markdown_frontmatter = 1
+" Format strike-through text (wrapped in `~~`).
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_toc_autofit = 1
+" Consider this to stop highlight emphasis from spanning lines
+" let g:vim_markdown_emphasis_multiline = 0
+" 'ge' on links to other files will then search for the url anchor
+let g:vim_markdown_follow_anchor = 1
+" 'ge' on [text](path) will open 'path.md' instead of 'path'.
+let g:vim_markdown_no_extensions_in_markdown = 1
+" (where 'ge' is like 'gx' (open link in browser), but opens in editor (Vim).)
+" Enable ':TableFormat' command even on borderless tables:
+let g:vim_markdown_borderless_table = 1
 
 call plug#end()
 
@@ -372,6 +365,14 @@ set undofile
 
 " 3. Key mappings -------------------------------------------------------------
 
+" Map key to toggle option and display its value
+function MapToggle(key, opt)
+  let cmd = ':set '.a:opt.'! \| set '.a:opt."?\<CR>"
+  exec 'nnoremap '.a:key.' '.cmd
+  exec 'inoremap '.a:key." \<C-O>".cmd
+endfunction
+command -nargs=+ MapToggle call MapToggle(<f-args>)
+
 " edit this config file
 nmap <Leader>c :e ~/.config/nvim/init.vim<CR>
 
@@ -421,14 +422,11 @@ noremap <silent> <Leader>F :call fzf#run({
 noremap <ScrollWheelUp> 10<C-y>
 noremap <ScrollWheelDown> 10<C-e>
 
-" Refresh window
-" Make it alt-l so that default (ctrl-l) can be used for switching windows
-" Doesn't just refresh window, but also hides search highlights.
-" nnoremap <silent> <A-l> :nohlsearch<CR><C-l>
-" inoremap <silent> <A-l> <Esc>:nohlsearch<CR><C-l>
-" 
+" toggle highlight of search results
+MapToggle <Leader>h hlsearch
+
 " toggle visibility of invisible characters
-nmap <silent> <Leader>s :set list!<CR>
+MapToggle <Leader>s list
 
 " strip trailing whitespace
 nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
@@ -456,7 +454,7 @@ noremap <silent> <Leader><f3> :only!<CR>:let &columns=&numberwidth*3+$codewidth*
 
 " show line numbers
 set number
-nmap <Leader>n :set number!<CR>
+MapToggle <Leader>n number
 
 " toggle between last two buffers
 noremap <Leader><Leader> <C-^>
