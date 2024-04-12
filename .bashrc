@@ -195,6 +195,11 @@ colout_traceroute() {
     colout '(^ ?\d+)|(\([\d\.]+\))|([\d\.]+ ms)|(!\S+)' white,cyan,yellow,magenta bold,normal,normal,reverse
 }
 
+# docker ps
+dps() {
+    docker container ls --format 'table {{.Names}}\t{{.Image}}\t{{.ID}}\t{{.Status}}' "$@" | colout '(^NAMES .+$)|(.+Up .+)|(.+Exited .+)' white,green,red bold,normal
+}
+
 etime() {
     /usr/bin/time -f"%E" "$@"
 }
@@ -298,10 +303,21 @@ ve() {
 }
 
 workon() {
+    if [ "$#" -eq 0 ]; then
+        if type deactivate &>/dev/null; then
+            deactivate
+        fi
+        ls -1 "$ve_root"
+        return 0
+    elif [ "$#" -ne 1 ]; then
+        echo "workon: Error: more than one virtualenv name given."
+        echo "USAGE: workon [virtualenv]"
+        return 1
+    fi
+    source "$ve_root/$1/bin/activate"
     if [ -d "$HOME/$1" ]; then
         cdr "$HOME/$1"
     fi
-    . "$ve_root/$1/bin/activate"
 }
 
 # --
@@ -310,165 +326,6 @@ workon() {
 watcha() {
     watch -ctn1 "bash -i -c \"$@\""
 }
-
-# git functions (esp. see 'git'!)
-# See also ~/bin for commands I use non-interactively, eg. "watch gd"
-
-# git add all
-gaa() {
-    git add --all
-}
-
-# git branch: List branches with commitid, remotes, commit message
-gb() {
-    git branch -vv --color=always "$@"
-}
-
-# git branch: Print bare current branch name
-gbranch() {
-    git branch "$@" | grep '^*'| cut -d' ' -f2
-}
-
-# git commit
-gc() {
-    git commit --verbose "$@"
-}
-
-# git fast forward : merge without a merge commit. (see gm for opposite)
-# Arg: branch to merge into current (just like regular 'git merge')
-# Merge given branch into current, without creating a merge commit.
-# Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
-gff() {
-    git merge --ff-only -q "$@"
-}
-
-# Shadows git! To warn againt the use of 'git push -f'
-git() {
-    is_push=false
-    is_force=false
-    for arg in "$@"; do
-        [ "$arg" = "push" ] && is_push=true
-        [ "$arg" = "-f" -o "$arg" = "--force" ] && is_force=true
-    done
-    if [ "$is_push" = true ] && [ "$is_force" = true ]; then
-        # Suggest alternative commands.
-        echo "git push -f: Consider 'git push --force-with-lease --force-if-includes' instead, which is aliased to 'gpf'"
-        return 1
-    fi
-    # Run the given command, using the git executable instead of this function.
-    $(which git) "$@"
-}
-
-# git log --all <N>: Like 'gl' but show all branches
-# of various lengths
-ga() {
-    gl "$@" --all
-}
-gaa() {
-    ga 20 "$@"
-}
-gaaa() {
-    ga 29 "$@"
-}
-
-# git log <N>: display N lines of git log as glog
-gl() {
-    # If first arg is an integer, interpret as number of commits to show.
-    if [ -n "$1" -a $1 -eq $1 2>/dev/null ]; then
-        n="$1"
-        shift
-    else
-        n=12 # Default if no args given
-    fi
-    glog -n"$n" "$@"
-    echo
-}
-
-# git log merge : show the commits that are ancestors of a given merge
-glm() {
-    git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
-}
-
-# git log : two lines per commit, with graph
-glog() {
-    # Turn off pager if args limit the number of commits shown. This clunky
-    # approach is required because letting git/less make the decision, based on
-    # whether output fills the terminal, will erroneously use a pager in the
-    # common case where a short output includes a long wrapping line.
-    pager=
-    for arg in "$@"; do
-        # Do our args limit the number of commits to show?
-        if [[ "$arg" =~ ^(-[0-9]+|-n|-n[0-9]+|--max-count|--max-count=[0-9]+)$ ]]; then
-            pager='--no-pager '
-        fi
-    done
-    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
-}
-
-# git log : all branches, two lines per commit, with graph
-gloga() {
-    glog --all "$@"
-}
-
-# git merge, always creating a merge commit. (see gff for opposite)
-# Arg1: branch to merge into current (like regular merge)
-gm() {
-    git merge --no-ff -q "$@"
-}
-
-# git pull
-gpull() {
-    git pull --quiet "$@"
-}
-
-# git push
-gpush() {
-    git push --quiet "$@"
-}
-
-# git push force: using the new, safer alternatives to --force
-gpf() {
-    if ! gpush --force-with-lease --force-if-includes "$@" 2>/dev/null ; then
-      gpush --force-with-lease "$@"
-    fi
-}
-
-# git remote : list remotes
-gr() {
-    git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
-}
-
-gre() {
-    git restore "$@"
-}
-
-# git status : short format
-gs() {
-    git status -s "$@"
-}
-
-gsw() {
-    git switch "$@"
-}
-
-# git ignored : use git status to show ignored files in current dir
-# Can pass '..' or similar to see ignored files from other dirs.
-gignored() {
-    git status --ignored=traditional . "$@"
-}
-
-# git status : regular format
-gst() {
-    git status "$@"
-}
-
-# git tags : use 'git log' to display tags at the current commit
-gtags() {
-    git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
-}
-
-. ~/.git-completion.bash
-
 
 ## bzr functions ####
 
@@ -487,10 +344,9 @@ bup() {
     bzr unshelve --preview "$@" | colordiff
 }
 
-## Tool setup ###############################################################
+## Tool setup #################################################################
 
 ## FZF
-# Neovim plugin config:
 # Solarized colors
 export FZF_DEFAULT_OPTS='
   --color bg+:#073642,bg:#002b36,spinner:#719e07,hl:#618e04
@@ -509,7 +365,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-## On exit ##################################################################
+## On exit ####################################################################
 
 # Backup .bash_history
 

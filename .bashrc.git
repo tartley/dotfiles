@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+
+. ~/.git-completion.bash
+
+# git functions (esp. see 'git'!)
+# See also ~/bin for commands I use non-interactively, eg. "watch gd"
+
+# git branch: List branches with commitid, remotes, commit message
+gb() {
+    git branch -vv --color=always "$@"
+}
+
+# git branch: Print bare current branch name
+gbranch() {
+    git branch "$@" | grep '^*'| cut -d' ' -f2
+}
+
+# git commit
+gc() {
+    git commit --verbose "$@"
+}
+
+# git fast forward : merge without a merge commit. (see gm for opposite)
+# Arg: branch to merge into current (just like regular 'git merge')
+# Merge given branch into current, without creating a merge commit.
+# Will abort if cannot fast-forward (eg. current has commits not in Arg1.)
+gff() {
+    git merge --ff-only -q "$@"
+}
+
+# git ignored : use git status to show ignored files in current dir
+# Can pass '..' or similar to see ignored files from other dirs.
+gignored() {
+    git status --ignored=traditional . "$@"
+}
+
+# PS1 related env-vars (other env vars are in .profile)
+pre="\033["
+post='m'
+cyan="${pre}96${post}"
+white="${pre}97${post}"
+reset="${pre}0${post}"
+
+# Shadows git! To warn againt the use of 'git push -f'
+git() {
+    is_push=false
+    is_force=false
+    for arg in "$@"; do
+        [ "$arg" = "push" ] && is_push=true
+        [ "$arg" = "-f" -o "$arg" = "--force" ] && is_force=true
+    done
+    if [ "$is_push" = true ] && [ "$is_force" = true ]; then
+        # Suggest alternative commands.
+        echo -e "    Consider '${white}git push --force-with-lease --force-if-includes${reset}' instead,\n    which is aliased to '${white}gpf${reset}'."
+        return 1
+    fi
+    # Run the given command, using the git executable instead of this function.
+    $(which git) "$@"
+}
+
+# git log <N>: display N lines of git log as glog
+gl() {
+    # If first arg is an integer, interpret as number of commits to show.
+    if [ -n "$1" -a $1 -eq $1 2>/dev/null ]; then
+        n="$1"
+        shift
+    else
+        n=15 # Default if no args given
+    fi
+    glog -n"$n" "$@"
+    echo
+}
+gll() {
+    gl 29 "$@"
+}
+# git log --all <N>: Like 'gl' but show all branches
+gla() {
+    gl "$@" --all
+}
+glla() {
+    gll "$@" --all
+}
+# git log branches (local branches, not all)
+glb() {
+    gl "$@" --branches
+}
+gllb() {
+    gll "$@" --branches
+}
+
+# git log merge : show the commits that are ancestors of a given merge
+glm() {
+    git log --graph $(git merge-base --octopus $(git log -1 --pretty=format:%P $1)).. --boundary
+}
+
+# git log : two lines per commit, with graph
+glog() {
+    # Turn off pager if args limit the number of commits shown. This clunky
+    # approach is required because letting git/less make the decision, based on
+    # whether output fills the terminal, will erroneously use a pager in the
+    # common case where a short output includes a long wrapping line.
+    pager=
+    for arg in "$@"; do
+        # Do our args limit the number of commits to show?
+        if [[ "$arg" =~ ^(-[0-9]+|-n|-n[0-9]+|--max-count|--max-count=[0-9]+)$ ]]; then
+            pager='--no-pager '
+        fi
+    done
+    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+}
+
+# git log : all branches, two lines per commit, with graph
+gloga() {
+    glog --all "$@"
+}
+
+# git merge, always creating a merge commit. (see gff for opposite)
+# Arg1: branch to merge into current (like regular merge)
+gm() {
+    git merge --no-ff -q "$@"
+}
+
+# git merge latest "main" into current branch
+gmm() {
+    git fetch origin main
+    git merge origin main
+}
+
+# list branches that have no remote
+gprunable() {
+    gsm ; git fetch -qp ; git branch -v | fgrep ' [gone] ' | awk '{print $1}'
+}
+# delete them
+gprune() {
+    gsm
+    prunable=$(gprunable)
+    echo "Branches tracking a deleted remote:"
+    echo "$prunable" | colout . green regular
+    if read -q "_?Press y or Y to delete them: "; then
+        echo
+        echo "$prunable" | xargs git branch -D
+    fi
+}
+
+# git pull
+gpull() {
+    git pull --quiet "$@"
+}
+
+# git push
+gpush() {
+    git push --quiet "$@"
+}
+
+# git push force: using the new, safer alternatives to --force
+gpf() {
+    if ! gpush --force-with-lease --force-if-includes "$@" 2>/dev/null ; then
+      gpush --force-with-lease "$@"
+    fi
+}
+
+# git remote : list remotes
+gr() {
+    git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
+}
+
+# encourage use of 'git restore', over legacy checkout, etc.
+gre() {
+    git restore "$@"
+}
+
+# git status
+gs() {
+    git status -s "$@"
+}
+gst() {
+    git status "$@"
+}
+
+# git stash list
+gsl() {
+    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8})?(.+)$' yellow,white,white,green,magenta,white normal
+}
+# git stash show
+gss() {
+    git stash show -p "$@"
+}
+
+# git switch main
+gsm() {
+    git switch -q main && git pull -q && git switch -
+}
+
+# encourage use of 'git switch', over legacy checkout, etc.
+gsw() {
+    git switch "$@"
+}
+
+# git tags : use 'git log' to display tags at the current commit
+gtags() {
+    git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
+}
+

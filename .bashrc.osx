@@ -9,6 +9,12 @@ if ls --G >/dev/null 2>&1; then
     LS_OPTIONS='-G'
 fi
 
+cdr() {
+    if [ -n "$1" ]; then in="$1"; else in="."; fi
+    # MACOS specific 'greadlink'
+    cd $(greadlink -f "$in")
+}
+
 # Quit an application from the command line
 function quit () {
     for app in $*; do
