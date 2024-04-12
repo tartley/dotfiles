@@ -35,7 +35,8 @@ case $- in
   magenta="${pre}95${post}"
   dim_cyan="${pre}96${post}"
   bright_yellow_inverse="${pre}93;1;7${post}"
-  reset="${pre}00${post}"
+  red_inverse="${pre}97;41;01${post}"
+  reset="${pre}0${post}"
 
   pwd="$dim_cyan\w$reset"
   prompt="$bright_yellow_inverse\$$reset"
@@ -57,19 +58,17 @@ case $- in
 
   . ~/.ps1_vcs
 
-  export PS1="${user}@${host} $pwd\$(${dvcs_function})\n$prompt "
-
-  unset pre post green magenta dim_cyan bright_yellow_inverse reset pwd prompt
-
   # Whenever displaying the prompt, append history to disk
   PROMPT_COMMAND='history -a'
   # To have all terminals sync their history after every command
   # PROMPT_COMMAND='history -a; history -n'
 
   # if exit value isn't zero, display it with red background, and a bell
-  PROMPT_COMMAND='EXITVAL=$?; '$PROMPT_COMMAND
-  GET_EXITVAL='$(if [[ $EXITVAL != 0 ]]; then echo -ne "\[\e[37;41;01;5m\] $EXITVAL \[\e[0m\]\07 "; fi)'
-  export PS1="$GET_EXITVAL$PS1"
+  PROMPT_COMMAND='exitval=$?; '$PROMPT_COMMAND
+  get_exitval="\$(if [[ \$exitval != 0 ]]; then echo \"${red_inverse} \$exitval ${reset}\"; fi)"
+  export PS1="$get_exitval\n${user}@${host} $pwd\$(${dvcs_function})\n$prompt "
+
+  unset pre post green magenta dim_cyan bright_yellow_inverse reset pwd prompt
 
   # turn off flow control, mapped to ctrl-s, so that we regain use of that key
   # for searching command line history forwards (opposite of ctrl-r)
