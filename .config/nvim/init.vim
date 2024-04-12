@@ -70,9 +70,7 @@ if has('vim_starting')
     scriptencoding utf-8
 endif
 
-let g:python_host_prog = '/home/jhartley/.virtualenvs/neovim2/bin/python2'
-let g:python3_host_prog = '/usr/bin/python3'
-" '/home/jhartley/.virtualenvs/neovim/bin/python3'
+let g:python3_host_prog="$HOME/.virtualenvs/neovim/bin/python3"
 
 " Yank/delete should populate the '*' register, ie. the X 'primary' selection
 " (pasted in NVim using 'p' or 'P')
@@ -149,7 +147,7 @@ set statusline+=\
 " Modified flag
 set statusline+=%#lCursor#
 set statusline+=%M
-set statusline+=%*
+set statusline+=%*\ 
 set statusline+=\ 
 " A nice color
 set statusline+=%#directory#
@@ -202,7 +200,7 @@ set statusline+=%*
 " Right-align
 set statusline+=%=
 " Filetype
-set statusline+=%{strlen(&ft)?&ft:'none'}
+set statusline+=%{strlen(&ft)?&ft:'no\ filetype'}
 set statusline+=\ 
 " Char under the cursor
 set statusline+=%3b,0x%02B
@@ -441,15 +439,15 @@ function! MaximizeVertical()
 endfunction
 " call MaximizeVertical()
 
-let $codewidth=80
-set colorcolumn=81
+set textwidth=80
+set colorcolumn=+1
 
 " single column
-noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+$codewidth<CR>
+noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+&textwidth<CR>
 " double column
-noremap <silent> <Leader><f2> :only!<CR>:let &columns=&numberwidth*2+$codewidth*2+1<CR>:vsplit<CR>
+noremap <silent> <Leader><f2> :only!<CR>:let &columns=&numberwidth*2+&textwidth*2+1<CR>:vsplit<CR>
 " TRIPLE COLUMN MADNESS!!!
-noremap <silent> <Leader><f3> :only!<CR>:let &columns=&numberwidth*3+$codewidth*3+2<CR>:vsplit<CR>:vsplit<CR>
+noremap <silent> <Leader><f3> :only!<CR>:let &columns=&numberwidth*3+&textwidth*3+2<CR>:vsplit<CR>:vsplit<CR>
 
 
 " show line numbers
@@ -498,11 +496,18 @@ command! -nargs=* -complete=file Grp call Grp(<q-args>)
 command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 
 " Grp all files for the word under the cursor (& case insensitive version)
-noremap <Leader>g :Grp -w '<C-r><C-w>' .<CR>
-noremap <Leader>G :Grp -wi '<C-r><C-w>' .<CR>
+noremap <Leader>g :silent Grp -w '<C-r><C-w>' .<CR>
+noremap <Leader>G :silent Grp -wi '<C-r><C-w>' .<CR>
 " Grp .py files (and upper case to include tests)
-noremap <Leader>p :Grpy -w --exclude-dir=tests '<C-r><C-w>' .<CR>
-noremap <Leader>P :Grpy -w '<C-r><C-w>' .<CR>
+noremap <Leader>p :silent Grpy -w --exclude-dir=tests '<C-r><C-w>' .<CR>
+noremap <Leader>P :silent Grpy -w '<C-r><C-w>' .<CR>
+
+" Arbitrary command in the quickfix
+function! Qf(args)
+    execute "cexpr system('" . a:args . "')"
+    botright copen
+endfunction
+command! -nargs=* -complete=file Qf call Qf(<q-args>)
 
 " JSON encode a Python data structure,
 noremap <Leader>j :!py2json<CR>
@@ -513,7 +518,7 @@ function! EnBlackenFile()
     let pos = getcurpos()
     " TODO doesn't work in container if black installed in host
     " TODO also would be good to use env/bin/black if it exists
-    1,$!black -q --line-length=$codewidth -
+    1,$!black -q --line-length=&textwidth -
     call setpos('.', pos)
 endfunction
 
@@ -570,7 +575,7 @@ nnoremap ; :
 vnoremap <C-x> "+x
 vnoremap <C-c> "+y
 noremap <C-v> "+gP
-imap <C-v> <esc>"+gpa
+imap <C-v> <esc>"+gpi
 vmap <C-v> "-cx<Esc>\\paste\\"_x
 cnoremap <C-v> <C-r>+
 
@@ -595,17 +600,13 @@ map <M-up> <A-k>
 map! <M-k> <esc><A-k>
 map! <M-up> <A-k>
 
-" go to prev buffer
-noremap <silent> <A-q> :silent hide bp<CR>
-map! <silent> <A-q> <esc><C-tab>
-" go to next buffer
-noremap <silent> <A-w> :silent hide bn<CR>
-map! <silent> <A-w> <esc><C-S-tab>
+" go to next/prev buffer
+noremap <leader>; :silent hide bp<CR>
+noremap <leader>' :silent hide bn<CR>
+
 " close buffer
 noremap <leader><backspace> :Bclose<CR>
-map! <leader><backspace> <esc><leader><backspace>
 noremap <leader><delete> :Bclose!<CR>
-map! <leader><delete> <esc><leader><delete>
 
 " navigating between windows
 noremap <C-left> <C-w>h
@@ -669,13 +670,13 @@ let g:autoformat = 0
 
 function! ToggleAutoformat()
     if g:autoformat == 0
-        " 'a'utomatically reformat edited paragraphs
+        " [a]utomatically reformat edited paragraphs
         setlocal formatoptions+=a
         " break lines here as they are typed, at the preceding word end
         setlocal textwidth=80
         " turn on spellcheck
         setlocal spell spelllang=en_us
-        " turn off number gutte
+        " turn off number gutter
         setlocal nonumber
         let g:autoformat = 1
     else

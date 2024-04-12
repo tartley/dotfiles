@@ -40,24 +40,20 @@ case $- in
   pwd="$dim_cyan\w$reset"
   prompt="$bright_yellow_inverse\$$reset"
 
-  user="${USER}"
-  if [ "$user" = "jhartley" ]; then
-    user="${green}${user}${reset}"
+  if [[ "$USER" =~ ^(jhartley|jonathan)$ ]]; then
+    usercol="${green}"
   else
-    user="${magenta}${user}${reset}"
+    usercol="${magenta}"
   fi
+  user="${usercol}${USER}${reset}"
 
   host="${HOSTNAME%%.*}"
-  if [ \
-    "$host" = "pop-os" -o \
-    "$host" = "gazelle" -o \
-    "$host" = "thinkpad" -o \
-    "$host" = "asus" \
-  ]; then
-    host="${green}${host}${reset}"
+  if [[ "$host" =~ ^(asus|gazelle|t460|x1)$ ]]; then
+    hostcol="${green}"
   else
-    host="${magenta}${host}${reset}"
+    hostcol="${magenta}"
   fi
+  host="${hostcol}${host}${reset}"
 
   . ~/.ps1_vcs
 
@@ -281,16 +277,28 @@ trash() {
     return $exitval
 }
 
-# Allows use of 'watch' with aliases or functions
-watcha() {
-    watch -ctn1 "bash -i -c \"$@\""
+# -- virtualenvs
+
+ve_root="$HOME/.virtualenvs"
+
+ve() {
+    ve="$ve_root/$1"
+    python3 -m venv "$ve"
+    "$ve/bin/pip" --quiet install --upgrade pip
 }
 
 workon() {
     if [ -d "$HOME/$1" ]; then
         cdr "$HOME/$1"
     fi
-    . ~/.virtualenvs/$1/bin/activate
+    . "$ve_root/$1/bin/activate"
+}
+
+# --
+
+# Allows use of 'watch' with aliases or functions
+watcha() {
+    watch -ctn1 "bash -i -c \"$@\""
 }
 
 # git functions (esp. see 'git'!)

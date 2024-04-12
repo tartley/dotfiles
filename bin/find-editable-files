@@ -14,14 +14,18 @@ find . \
     -name \*\.egg-info -o \
     -name \.eggs -o \
     -name \.git -o \
+    -name \.mypy_cache -o \
     -name \.pytest_cache -o \
+    -name \.ruff_cache -o \
     -name \.testrepository -o \
     -name \.tox -o \
     -name \.venv -o \
     -name __pycache__ -o \
+    -name _build -o \
     -name build -o \
     -name dist -o \
     -name env -o \
+    -name logs -o \
     -name node_modules -o \
     -name venv \
   \) -prune -o \

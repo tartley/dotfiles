@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Lambda
+# Emulate CI
+
+if [ "$#" -gt 0 ]; then
+    echo "ERROR: 'ci' takes no args"
+    exit 1
+fi
+
+lint && format && typecheck && unit
+

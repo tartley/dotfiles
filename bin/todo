@@ -3,5 +3,5 @@
 # edit my TODO file in a new window
 # -t values are args for gnome-terminal, and select a slightly enlarged vector font.
 # args after the filename to edit are for nvim itself.
-nw -t --profile=Pop -t --zoom=1.2 ~/TODO.md -c "set lines=45 | set nonumber | set columns=80"
+nw -t --profile=vector ~/TODO.md -c "set nonumber | set columns=80"
 

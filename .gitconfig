@@ -1,13 +1,12 @@
-[include]
-  # For username / creds / etc
-  path = ~/.gitconfig.private
-
 [user]
     name = Jonathan Hartley
     email = tartley@tartley.com
 
 [alias]
 # See 'g*' functions in .bashrc
+
+[init]
+    defaultBranch = main
 
 [gui]
     warndetachedcommit = true
@@ -67,6 +66,7 @@
 
 [push]
     default = current
+    autoSetupRemote = true
 
 [pull]
     ff = only
@@ -102,7 +102,4 @@
 
 [url "git+ssh://tartley@git.launchpad.net/"]
     insteadof = lp:
-
-[init]
-    defaultBranch = main
 
