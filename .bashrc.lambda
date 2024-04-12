@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+
+export SB_TEST_HYPERVISORS='inst-rui8t-san-jose-dev-a10-hypervisors_pool'
+export SB_ENV='jonathan'
+
 mfr() {
     make format review
 }
