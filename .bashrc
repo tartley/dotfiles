@@ -1,7 +1,29 @@
 # .bashrc, run by every non-login bash
 # aliases and transient shell options that are not inherited by child processes
 
-# echo "$(date) .bashrc" >> .profile.log
+## Shell Options (See man bash) #############################################
+
+# Don't wait for job termination notification
+set -o notify
+
+# Don't use ^D to exit
+set -o ignoreeof
+
+# Make bash append rather than overwrite the history on disk
+shopt -s histappend
+
+# Check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# save multi-line commands as a single line in the history.
+shopt -s cmdhist
+# and use newlines to separate rather than semi-colons
+shopt -s lithist
+
+# don't autocomplete if command-line is empty
+shopt -s no_empty_cmd_completion
+
 
 ## Readline and key binds ####################################################
 
@@ -20,14 +42,14 @@ if [[ ${SHELLOPTS} =~ (vi|emacs) ]]; then
 
 fi
 
-## Env vars related to interacive prompt #####################################
-# (other env vars are in .profile)
+## Interactive shell tweaks ################################################
 
-# PS1
 case $- in
 
 # interactive shell
 *i*)
+
+  # PS1 related env-vars (other env vars are in .profile)
   pre='\[\e['
   post='m\]'
 
@@ -73,17 +95,6 @@ case $- in
   # turn off flow control, mapped to ctrl-s, so that we regain use of that key
   # for searching command line history forwards (opposite of ctrl-r)
   stty -ixon
-
-  # shadow 'cat'
-  cat() {
-    if [ -t 1 ]; then
-        # stdout is terminal, prettify output
-        $(which batcat) "$@"
-    else
-        # stdout is elsewhere, leave output unchanged
-        $(which cat) "$@"
-    fi
-  }
 
 ;;
 
@@ -476,30 +487,6 @@ bup() {
     bzr unshelve --preview "$@" | colordiff
 }
 
-## Shell Options (See man bash) #############################################
-
-# Don't wait for job termination notification
-set -o notify
-
-# Don't use ^D to exit
-set -o ignoreeof
-
-# Make bash append rather than overwrite the history on disk
-shopt -s histappend
-
-# Check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# save multi-line commands as a single line in the history.
-shopt -s cmdhist
-# and use newlines to separate rather than semi-colons
-shopt -s lithist
-
-# don't autocomplete if command-line is empty
-shopt -s no_empty_cmd_completion
-
-
 ## Tool setup ###############################################################
 
 ## FZF
@@ -513,9 +500,13 @@ export FZF_DEFAULT_OPTS='
 # Bash command line:
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash || :
 
-# Go version master
-if [[ -s "/home/jhartley/.gvm/scripts/gvm" ]] ; then
-    source "/home/jhartley/.gvm/scripts/gvm"
+# Completion features
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
 
 ## On exit ##################################################################

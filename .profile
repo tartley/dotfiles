@@ -38,6 +38,8 @@ export PATH
 
 # Other env variables ######################
 
+export CDPATH=".:$HOME/src/cosmos"
+
 # These completion tuning parameters change the default behavior of
 # bash_completion:
 # Define to avoid stripping description in --option=description of
