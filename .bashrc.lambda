@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-echo starting
-
 # Only run this script on my Lambda machine
 if [ $(hostname) != "x1" ]; then
     return 0
 fi
-
-echo running
 
 export SB_TEST_HYPERVISORS='inst-rui8t-san-jose-dev-a10-hypervisors_pool'
 export SB_ENV='jonathan'
