@@ -297,7 +297,16 @@ trash() {
 ve_root="$HOME/.virtualenvs"
 
 ve() {
+    if [ -z "$1" ]; then
+        echo "Error: no virtualenv name given." >&2
+        echo "USAGE: ve <virtualenv-name>" >&2
+        return 1
+    fi
     ve="$ve_root/$1"
+    if [ -e "$ve" ]; then
+        echo "Error: \"$ve\" exists." >&2
+        return 2
+    fi
     python3 -m venv "$ve"
     "$ve/bin/pip" --quiet install --upgrade pip
 }
