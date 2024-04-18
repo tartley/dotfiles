@@ -1,15 +1,1 @@
-#!/usr/bin/env bash
-
-# Only run this script on my Lambda machine
-if [ $(hostname) != "x1" ]; then
-    return 0
-fi
-
-export SB_TEST_HYPERVISORS='inst-rui8t-san-jose-dev-a10-hypervisors_pool'
-export SB_ENV='jonathan'
-# export DD_API_KEY='' # TODO
-
-mfr() {
-    make format review
-}
-
+.dotlocal/.bashrc.lambda
