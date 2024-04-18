@@ -28,6 +28,11 @@ gff() {
     git merge --ff-only -q "$@"
 }
 
+# git fetch main
+gfm() {
+    git switch -q main && git fetch -q origin main && git merge -q --ff-only origin/main && git switch -q -
+}
+
 # git ignored : use git status to show ignored files in current dir
 # Can pass '..' or similar to see ignored files from other dirs.
 gignored() {
@@ -184,11 +189,6 @@ gsl() {
 # git stash show
 gss() {
     git stash show -p "$@"
-}
-
-# git switch main
-gsm() {
-    git switch -q main && git pull -q && git switch -
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
