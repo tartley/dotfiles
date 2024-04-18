@@ -10,7 +10,9 @@ grep \
   --exclude-dir=\.bzr \
   --exclude-dir=\.git \
   --exclude-dir=\.hg \
+  --exclude-dir=\.mypy_cache \
   --exclude-dir=\.pytest_cache \
+  --exclude-dir=\.ruff_cache \
   --exclude-dir=\.svn \
   --exclude-dir=\.testrepository \
   --exclude-dir=\.tox \
