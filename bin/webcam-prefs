@@ -1,2 +1,10 @@
 #!/usr/bin/env bash
-v4l2-ctl -d /dev/video0 -c backlight_compensation=1
+
+# List possible settings and their values with:
+#   v4l2-ctl [...] -L
+
+v4l2-ctl -d /dev/video0 \
+  -c backlight_compensation=1 \
+  -c brightness=150 \
+
+
