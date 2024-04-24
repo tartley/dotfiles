@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ "$#" -eq 0 ]; then
+    in=/dev/stdin
+    out=/dev/stdout
+elif [ "$#" -eq 1 ]; then
+    in="$1"
+    out="${1%.md}.pdf"
+else
+    echo "Error: More than one arg" >&2
+    echo "Specify input filename, or no args to read from stdin." >&2
+    exit 1
+fi
+
+pandoc --to pdf --from markdown "$in" -o "$out"
+
