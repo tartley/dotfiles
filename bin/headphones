@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+device="FC:58:FA:A3:08:D7" # MPOW H19 IPO bluetooth headphones
+
+connect() {
+    echo connect
+    bluetoothctl connect $device
+}
+
+disconnect() {
+    echo disconnect
+    bluetoothctl disconnect $device
+}
+
+is_connected() {
+    bluetoothctl info $device | grep -q "Connected: yes" 
+}
+
+toggle() {
+    if is_connected; then
+        disconnect
+    else
+        connect
+    fi
+}
+
+if [ "$1" == "connect" -o "$1" == "c" ]; then
+    connect
+elif [ "$1" == "disconnect" -o "$1" == "d" ]; then
+    disconnect
+elif [ "$1" == "toggle" -o "$1" == "t" ]; then
+    toggle
+fi
+
+
