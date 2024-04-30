@@ -70,6 +70,11 @@ if has('vim_starting')
     scriptencoding utf-8
 endif
 
+" Define comma as the non-default <leader> key,
+let g:mapleader = ","
+" and allow pressing it with shift, to make things like <leader>W (capital W) easier.
+nmap "<" <Leader>
+
 let g:python3_host_prog="$HOME/.virtualenvs/neovim/bin/python3"
 
 " Yank/delete should populate the '*' register, ie. the X 'primary' selection
@@ -104,9 +109,6 @@ set wildignore=*.pyc,*.pyo
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
-
-" use 'comma' prefix for user-defined multi-stroke keyboard mappings
-let mapleader = ","
 
 " sane text files
 set fileformat=unix
@@ -246,7 +248,17 @@ endfunction
 set linebreak
 silent call ToggleWrapWords()
 
-noremap <Leader>w :call ToggleWrapWords()<CR>
+" Map key to toggle option and display its value
+function MapToggle(key, opt)
+  let cmd = ':set '.a:opt.'! \| set '.a:opt."?\<CR>"
+  exec 'nnoremap '.a:key.' '.cmd
+  " Why did I ever think the following was a good idea? Delete it soon...
+  " exec 'inoremap '.a:key." \<C-O>".cmd
+endfunction
+command -nargs=+ MapToggle call MapToggle(<f-args>)
+
+MapToggle <Leader>w wrap
+noremap <Leader>W :call ToggleWrapWords()<CR>
 
 " wrapped lines start with same indent as start of line
 set breakindent
@@ -363,15 +375,7 @@ set undofile
 
 " 3. Key mappings -------------------------------------------------------------
 
-" Map key to toggle option and display its value
-function MapToggle(key, opt)
-  let cmd = ':set '.a:opt.'! \| set '.a:opt."?\<CR>"
-  exec 'nnoremap '.a:key.' '.cmd
-  exec 'inoremap '.a:key." \<C-O>".cmd
-endfunction
-command -nargs=+ MapToggle call MapToggle(<f-args>)
-
-" edit this config file
+" Reload this config file on saving edits
 nmap <Leader>c :e ~/.config/nvim/init.vim<CR>
 
 " -- fzf plugin ----
@@ -439,16 +443,27 @@ function! MaximizeVertical()
 endfunction
 " call MaximizeVertical()
 
-set textwidth=80
+set textwidth=100
 set colorcolumn=+1
+let g:numColumns=1
+
+function! SetColumnWidths()
+    let &columns=g:numColumns*&textwidth + g:numColumns*&numberwidth + (g:numColumns - 1)
+endfunction
+call SetColumnWidths()
+
+noremap <Leader>8 :set textwidth=80<CR>:call SetColumnWidths()<CR>
+noremap <Leader>9 :set textwidth=90<CR>:call SetColumnWidths()<CR>
+noremap <Leader>0 :set textwidth=100<CR>:call SetColumnWidths()<CR>
 
 " single column
-noremap <silent> <Leader><f1> :only!<CR>:let &columns=&numberwidth+&textwidth<CR>
+noremap <silent> <Leader><f1> :only!<CR>:let g:numColumns=1<CR>:call SetColumnWidths()<CR>
 " double column
-noremap <silent> <Leader><f2> :only!<CR>:let &columns=&numberwidth*2+&textwidth*2+1<CR>:vsplit<CR>
+noremap <silent> <Leader><f2> :only!<CR>:let g:numColumns=2<CR>:call SetColumnWidths()<CR>:vsplit<CR>
 " TRIPLE COLUMN MADNESS!!!
-noremap <silent> <Leader><f3> :only!<CR>:let &columns=&numberwidth*3+&textwidth*3+2<CR>:vsplit<CR>:vsplit<CR>
+noremap <silent> <Leader><f3> :only!<CR>:let g:numColumns=3<CR>:call SetColumnWidths()<CR>:vsplit<CR>:vsplit<CR>
 
+" set equalalways
 
 " show line numbers
 set number
@@ -751,7 +766,8 @@ augroup LongLineHighlightGroup
     autocmd BufEnter * call LongLineHighlightInit()
 augroup end
 
-nnoremap <silent> <Leader>8 :call LongLineHighlightToggle()<CR>
+" Disabled to free up this 
+" nnoremap <silent> <Leader>8 :call LongLineHighlightToggle()<CR>
 
 
 " 4. Autocommands --------------------------------------------------------------
