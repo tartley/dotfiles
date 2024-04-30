@@ -1,15 +1,40 @@
 #!/usr/bin/env bash
 
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+usage="USAGE: headphones [connect|c|disconnect|d|toggle|t]"
 device="FC:58:FA:A3:08:D7" # MPOW H19 IPO bluetooth headphones
 
+usage() {
+    echo $usage >&2
+}
+
+function print_error {
+    paplay /usr/share/sounds/sound-icons/percussion-50.wav
+    read line file <<<$(caller)
+    echo "An error occurred in line $line of file $file:" >&2
+    sed "${line}q;d" "$file" >&2
+}
+trap print_error ERR
+
+report() {
+    echo "$1"
+    say "$1" || true
+}
+
 connect() {
-    echo connect
+    report "connecting headphones"
     bluetoothctl connect $device
+    report "connected"
 }
 
 disconnect() {
-    echo disconnect
+    report "disconnecting headphones"
     bluetoothctl disconnect $device
+    report "disconnected"
 }
 
 is_connected() {
@@ -24,12 +49,21 @@ toggle() {
     fi
 }
 
+paplay /usr/share/sounds/sound-icons/percussion-10.wav
+
+if [ "$#" -ne 1 ]; then
+    usage
+    exit 1
+fi
+
 if [ "$1" == "connect" -o "$1" == "c" ]; then
     connect
 elif [ "$1" == "disconnect" -o "$1" == "d" ]; then
     disconnect
 elif [ "$1" == "toggle" -o "$1" == "t" ]; then
     toggle
+else
+    usage
+    exit 1
 fi
-
 
