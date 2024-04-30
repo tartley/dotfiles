@@ -193,7 +193,7 @@ gss() {
 
 # git switch main
 gsm() {
-    git switch -q main && git fetch -q origin main && git merge -q --ff-only origin/main
+    git switch -q main && git fetch -q origin main && git merge --ff-only origin/main
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
