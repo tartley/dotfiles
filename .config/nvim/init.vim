@@ -441,27 +441,30 @@ nmap <Leader>N /[^\x00-\x7F]<CR>
 function! MaximizeVertical()
     set lines=64
 endfunction
-" call MaximizeVertical()
+call MaximizeVertical()
+
+function! SetWindowWidth()
+    let &columns=g:numColumns*&textwidth + g:numColumns*&numberwidth * &number + (g:numColumns - 1)
+    normal <Ctrl-w>=
+endfunction
 
 set textwidth=100
 set colorcolumn=+1
-let g:numColumns=1
+if !exists("g:numColumns")
+    let g:numColumns=1
+    call SetWindowWidth()
+endif
 
-function! SetColumnWidths()
-    let &columns=g:numColumns*&textwidth + g:numColumns*&numberwidth + (g:numColumns - 1)
-endfunction
-call SetColumnWidths()
-
-noremap <Leader>8 :set textwidth=80<CR>:call SetColumnWidths()<CR>
-noremap <Leader>9 :set textwidth=90<CR>:call SetColumnWidths()<CR>
-noremap <Leader>0 :set textwidth=100<CR>:call SetColumnWidths()<CR>
+noremap <Leader>8 :set textwidth=80<CR>:call SetWindowWidth()<CR>
+noremap <Leader>9 :set textwidth=90<CR>:call SetWindowWidth()<CR>
+noremap <Leader>0 :set textwidth=100<CR>:call SetWindowWidth()<CR>
 
 " single column
-noremap <silent> <Leader><f1> :only!<CR>:let g:numColumns=1<CR>:call SetColumnWidths()<CR>
+noremap <silent> <Leader><f1> :only!<CR>:let g:numColumns=1<CR>:call SetWindowWidth()<CR>
 " double column
-noremap <silent> <Leader><f2> :only!<CR>:let g:numColumns=2<CR>:call SetColumnWidths()<CR>:vsplit<CR>
+noremap <silent> <Leader><f2> :only!<CR>:let g:numColumns=2<CR>:call SetWindowWidth()<CR>:vsplit<CR>
 " TRIPLE COLUMN MADNESS!!!
-noremap <silent> <Leader><f3> :only!<CR>:let g:numColumns=3<CR>:call SetColumnWidths()<CR>:vsplit<CR>:vsplit<CR>
+noremap <silent> <Leader><f3> :only!<CR>:let g:numColumns=3<CR>:call SetWindowWidth()<CR>:vsplit<CR>:vsplit<CR>
 
 " set equalalways
 
