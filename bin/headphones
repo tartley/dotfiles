@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e # exit on error
+set -E # even in functions
 set -u # treat unset vars as errors
 # set -x # debugging output
 set -o pipefail
@@ -13,7 +14,7 @@ usage() {
 }
 
 function print_error {
-    paplay /usr/share/sounds/sound-icons/percussion-50.wav
+    say "error"
     read line file <<<$(caller)
     echo "An error occurred in line $line of file $file:" >&2
     sed "${line}q;d" "$file" >&2
@@ -23,6 +24,16 @@ trap print_error ERR
 report() {
     echo "$1"
     say "$1" || true
+}
+
+play() {
+    if [ -f "$1" ]; then
+        ffplay -v 0 -nodisp -autoexit "$1"
+    fi
+}
+
+is_connected() {
+    bluetoothctl info $device | grep -q "Connected: yes" 
 }
 
 connect() {
@@ -37,10 +48,6 @@ disconnect() {
     report "disconnected"
 }
 
-is_connected() {
-    bluetoothctl info $device | grep -q "Connected: yes" 
-}
-
 toggle() {
     if is_connected; then
         disconnect
@@ -49,7 +56,7 @@ toggle() {
     fi
 }
 
-paplay /usr/share/sounds/sound-icons/percussion-10.wav
+play "$HOME/docs/audio/effects/percussion-10.wav"
 
 if [ "$#" -ne 1 ]; then
     usage
