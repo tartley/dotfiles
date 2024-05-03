@@ -436,24 +436,26 @@ nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
 " search for non-ascii characters
 nmap <Leader>N /[^\x00-\x7F]<CR>
 
+" show line numbers
+set number
+MapToggle <Leader>n number
+
 " set window size
-
-function! MaximizeVertical()
-    set lines=64
-endfunction
-call MaximizeVertical()
-
-function! SetWindowWidth()
-    let &columns=g:numColumns*&textwidth + g:numColumns*&numberwidth * &number + (g:numColumns - 1)
-    normal <Ctrl-w>=
-endfunction
-
+set lines=64
 set textwidth=100
 set colorcolumn=+1
 if !exists("g:numColumns")
     let g:numColumns=1
-    call SetWindowWidth()
 endif
+
+function! SetWindowWidth()
+    " Beware, calling this on startup seems to set the variable, but not change the actual window
+    " size. The two being out of sync causes screen refresh glitches. Subsequentially setting
+    " columns to the same value again has no effect. Only setting it to a different value rescues
+    " the session.
+    let &columns=g:numColumns*&textwidth + g:numColumns*&numberwidth*&number + (g:numColumns - 1)
+    normal <Ctrl-w>=
+endfunction
 
 noremap <Leader>8 :set textwidth=80<CR>:call SetWindowWidth()<CR>
 noremap <Leader>9 :set textwidth=90<CR>:call SetWindowWidth()<CR>
@@ -467,10 +469,6 @@ noremap <silent> <Leader><f2> :only!<CR>:let g:numColumns=2<CR>:call SetWindowWi
 noremap <silent> <Leader><f3> :only!<CR>:let g:numColumns=3<CR>:call SetWindowWidth()<CR>:vsplit<CR>:vsplit<CR>
 
 " set equalalways
-
-" show line numbers
-set number
-MapToggle <Leader>n number
 
 " toggle between last two buffers
 noremap <Leader><Leader> <C-^>
@@ -695,11 +693,9 @@ function! ToggleAutoformat()
         " turn on spellcheck
         setlocal spell spelllang=en_us
         " turn off number gutter
-        setlocal nonumber
         let g:autoformat = 1
     else
         setlocal formatoptions-=a
-        setlocal textwidth=0
         setlocal nospell
         setlocal number
         let g:autoformat = 0
@@ -817,7 +813,7 @@ if has("autocmd")
     " highlight current line only in the current window
     augroup CursorLine
       au!
-      au VimEnter,WinEnter,BufWinEnter file://* setlocal cursorline
+      au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
       au WinLeave * setlocal nocursorline
     augroup END
 
