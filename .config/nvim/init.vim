@@ -441,7 +441,6 @@ set number
 MapToggle <Leader>n number
 
 " set window size
-set lines=64
 set textwidth=100
 set colorcolumn=+1
 if !exists("g:numColumns")
@@ -689,10 +688,12 @@ function! ToggleAutoformat()
         " [a]utomatically reformat edited paragraphs
         setlocal formatoptions+=a
         " break lines here as they are typed, at the preceding word end
-        setlocal textwidth=80
+        " Commented because surely we should use the existing value
+        " setlocal textwidth=80
         " turn on spellcheck
         setlocal spell spelllang=en_us
         " turn off number gutter
+        setlocal nonumber " doesn't work?
         let g:autoformat = 1
     else
         setlocal formatoptions-=a
@@ -712,10 +713,10 @@ noremap <silent> <f1> <esc>
 map! <silent> <f1> <esc>
 
 " generate tags for all (Python) files in or below current dir
-" Commented out: because I hardly ever use it.
 " Mac & Linux
 noremap <f12> :silent !pytags<CR>
 " Windows
+" Commented out: because I hardly ever use it.
 " noremap <Leader>T :!start /min ctags -R --languages=python .<CR>:FufRenewCache<CR>
 
 " go to defn of tag under the cursor
@@ -729,45 +730,6 @@ fun! MatchCaseTag()
   endtry
 endfun
 nnoremap <silent> <C-]> :call MatchCaseTag()<CR>
-
-" Toggle color highlight on characters over the line width
-highlight LongLineHighlight ctermbg=darkgrey ctermfg=white guibg=#292929
-
-fun! LongLineHighlightInit()
-    if !exists("w:llh")
-        if &filetype ==# 'python'
-            call LongLineHighlightOn()
-        else
-            let w:llh = 0
-        endif
-    endif
-endfunction
-
-fun! LongLineHighlightOn()
-    " TODO generate this dynamically from: codewidth + 1
-    let w:llh = matchadd("LongLineHighlight", '\%89v.')
-endfunction
-
-fun! LongLineHighlightOff()
-    call matchdelete(w:llh)
-    let w:llh = 0
-endfunction
-
-fun! LongLineHighlightToggle()
-    if !exists("w:llh") || w:llh == 0
-        call LongLineHighlightOn()
-    else
-        call LongLineHighlightOff()
-    endif
-endfunction
-
-augroup LongLineHighlightGroup
-    autocmd BufEnter * call LongLineHighlightInit()
-augroup end
-
-" Disabled to free up this 
-" nnoremap <silent> <Leader>8 :call LongLineHighlightToggle()<CR>
-
 
 " 4. Autocommands --------------------------------------------------------------
 
