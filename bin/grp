@@ -3,6 +3,7 @@
 # recursive search in text files
 grep \
   -rI \
+  -E \
   --color \
   "$@" \
   --exclude=.session.vim \
