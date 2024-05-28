@@ -7,7 +7,7 @@
 
 # git branch: List branches with commitid, remotes, commit message
 gb() {
-    git branch -vv --color=always "$@"
+    git --no-pager branch -vv --color=always "$@"
 }
 
 # git branch: Print bare current branch name
