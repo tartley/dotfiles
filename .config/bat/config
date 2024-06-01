@@ -3,4 +3,5 @@
 --italic-text=always
 --paging=never
 --theme=DarkNeon
+--map-syntax=*.godot:INI
 
