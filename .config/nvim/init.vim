@@ -567,9 +567,6 @@ function! s:PyDictToggleLine()
     endif
 endfunction
 
-xnoremap <Leader>d :call <sid>PyDictToggleRange()<CR>
-nnoremap <Leader>d :call <sid>PyDictToggleLine()<CR>
-
 " Undo changes if a filter command fails (e.g. Python Black)
 " This prevents a failed filter from mangling (commonly, completely erasing)
 " the buffer's content.
@@ -729,7 +726,7 @@ fun! MatchCaseTag()
     let &ic = ic
   endtry
 endfun
-nnoremap <silent> <C-]> :call MatchCaseTag()<CR>
+" nnoremap <silent> <C-]> :call MatchCaseTag()<CR>
 
 " 4. Autocommands --------------------------------------------------------------
 
