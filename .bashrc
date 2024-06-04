@@ -122,8 +122,10 @@ alias histread='history -c; history -r'
 alias less='less -R' # display raw control characters for colors only
 
 alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
-alias ll='eza --long --git --no-quotes --color-scale=age --sort=Name'
-alias la='ll --all'
+command -v eza >/dev/null && \
+    alias ll='eza --long --git --no-quotes --color-scale=age' || \
+    alias ll='ls -lGh'
+alias la='ll -A'
 
 alias mv='mv -i'
 alias rm='rm -i'
