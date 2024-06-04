@@ -20,6 +20,9 @@ Plug 'lifepillar/vim-solarized8'
 " Deleting a buffer without closing the window
 Plug 'rbgrouleff/bclose.vim'
 
+" Language Server Protocol config
+Plug 'neovim/nvim-lspconfig'
+
 " <Leader>l - toggle location window
 " <Leader>q - toggle quickfix window
 Plug 'milkypostman/vim-togglelist'
