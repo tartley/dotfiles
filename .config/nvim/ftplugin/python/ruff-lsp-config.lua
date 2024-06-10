@@ -33,22 +33,11 @@
 --
 -- K Hover, ie. show info on function under cursor.
 --   Never has any info to display.
---
-
-
-vim.lsp.start({
-  name = "Ruff Language Server",
-  cmd = {"ruff", "server", "--preview"},
-  -- root_dir = vim.fs.root(0, {'setup.py', 'pyproject.toml'}),
-})
 
 require('lspconfig').ruff.setup{}
 
--- Diagnostics
 -- toggle diagnostics
 vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.enable(vim.diagnostic.is_disabled())<cr>')
 -- display code action menu (e.g. to ignore or apply auto-fixes)
-vim.keymap.set('n', 'df', '<cmd>lua vim.lsp.buf.code_action()<cr>')
--- rename symbol under cursor
-vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<cr>')
+vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
