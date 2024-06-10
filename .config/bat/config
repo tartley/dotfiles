@@ -2,6 +2,6 @@
 --style=plain
 --italic-text=always
 --paging=never
---theme=DarkNeon
+--theme='Solarized (dark)'
 --map-syntax=*.godot:INI
 
