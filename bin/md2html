@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# See 'usage' below.
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+function print_error {
+    read line file <<<$(caller)
+    echo "An error occurred in line $line of file $file:" >&2
+    sed "${line}q;d" "$file" >&2
+}
+trap print_error ERR
+
+function usage {
+    echo "Usage: md2html [filename]"
+    echo "Converts markdown to HTML. Reads from 'filename', writing to filename.html,"
+    echo "or falls back to stdin, writing to stdout."
+    echo ""
+    echo "  -h, --help      Print this message."
+    echo ""
+}
+
+# Command line args
+
+# defaults
+declare -a args=()
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        *) args+=("$1");;
+    esac
+    shift
+done
+
+if [ ${#args[@]} -eq 0 ]; then
+    input=/dev/stdin
+    output=/dev/stdout
+elif [ ${#args[@]} -eq 1 ]; then
+    input="${args[0]}"
+    output="${args[0]%.md}.html"
+else
+    echo "md2html: Error: Cannot accept more than one arg: ${args[@]}"
+    exit 1
+fi
+
+css="$HOME/.config/watch-markdown/style.css"
+pandoc --from markdown --to html --standalone -c "${css}" "${input}" -o "${output}"
+
