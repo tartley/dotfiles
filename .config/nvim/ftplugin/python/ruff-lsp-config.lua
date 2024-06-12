@@ -20,19 +20,19 @@
 --
 -- # NOT WORKING / TODO
 --
--- Should I be using the beta ruff languages server instead of ruff-lsp?
--- It is intgegrated into ruff itself, so presumably 
 -- What's the keybind to format a whole buffer? Other than 1GgqG
 --
 -- gd Go to definition
---    Only works for functions and classes.
---    While this purportedly has advantages over ctags, in practice it's not remotely as useful.
+--    While this purportedly has advantages over ctags,
+--    it only works for functions and classes.
+--    so in practice it's not as useful as what I had without LSP
 --
 -- <C-X><C-O> Omni mode completion.
 --    Only completes classes and functions though, not variables :-(
+--    in practice it's not as useful as what I had without LSP
 --
 -- K Hover, ie. show info on function under cursor.
---   Never has any info to display.
+--   Never has any info to display. I thing ruff server doesn't support this.
 
 require('lspconfig').ruff.setup{}
 
