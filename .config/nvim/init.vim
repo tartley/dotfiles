@@ -75,8 +75,6 @@ endif
 
 " Define comma as the non-default <leader> key,
 let g:mapleader = ","
-" and allow pressing it with shift, to make things like <leader>W (capital W) easier.
-nmap "<" <Leader>
 
 let g:python3_host_prog="$HOME/.virtualenvs/neovim/bin/python3"
 
@@ -172,10 +170,6 @@ function! TabsPresent()
     endif
     return b:tabs_present
 endfunction
-" Recalculate after writing and when idle
-if has("autocmd")
-    autocmd bufwritepost,cursorhold * unlet! b:tabs_present
-endif
 " Warn if file contains tab chars
 set statusline+=%{TabsPresent()}
 
@@ -190,10 +184,6 @@ function! NonAsciiPresent()
     endif
     return b:nonascii_present
 endfunction
-if has("autocmd")
-    " Recalculate after writing and when idle
-    autocmd bufwritepost,cursorhold * unlet! b:nonascii_present
-endif
 " Warn if file contains non-ascii
 set statusline+=%{NonAsciiPresent()}
 
@@ -481,8 +471,10 @@ noremap Y y$
 " delete without overwriting the yank register. eg. Dd to delete line.
 noremap D "_d
 
-" make Q do somethign useful - format para
+" Format para
 noremap Q gq}
+" Format whole document (then restore cursor to same line number :-/)
+noremap <leader>Q mz1GgqG'z
 
 " search for visual selection if one exists, otherwise for word under cursor
 function! s:VSetSearch()
@@ -569,14 +561,6 @@ function! s:PyDictToggleLine()
         echo join(readfile("/tmp/vim.err"), "\n")
     endif
 endfunction
-
-" Undo changes if a filter command fails (e.g. Python Black)
-" This prevents a failed filter from mangling (commonly, completely erasing)
-" the buffer's content.
-augroup FILTER_ERROR
-    au!
-    autocmd ShellFilterPost * if v:shell_error | silent undo | endif
-augroup END
 
 
 " move up/down by visible lines on long wrapped lines of text
@@ -733,7 +717,9 @@ endfun
 
 " 4. Autocommands --------------------------------------------------------------
 
-if has("autocmd")
+if has("autocmd") && !exists("autocommands_loaded")
+
+    let autocommands_loaded = 1
 
     " enables filetype detection
     filetype on
@@ -809,6 +795,18 @@ if has("autocmd")
 
     " gitcommit
     autocmd! FileType gitcommit setlocal spell
+
+    " Undo changes if a filter command fails (e.g. Python Black)
+    " This prevents a failed filter from mangling (commonly, completely erasing)
+    " the buffer's content.
+    augroup FILTER_ERROR
+        au!
+        autocmd ShellFilterPost * if v:shell_error | silent undo | endif
+    augroup END
+
+    " Recalculate vars used in statusline after writing and when idle
+    autocmd bufwritepost,cursorhold * unlet! b:nonascii_present
+    autocmd bufwritepost,cursorhold * unlet! b:tabs_present
 
 endif " has("autocmd")
 
