@@ -28,10 +28,11 @@
 require('lspconfig').ruff.setup{
 
     -- Server-specific settings. See `:help lspconfig-setup`
+    ruff = {
              -- Cannot get this to work. Formatting uses 88 (ruff default).
              -- How can I set this in the way I have previously been setting textwidth?
              lineLength = 60,
-
+    },
         -- -- Any extra CLI arguments for `ruff` go here.
         -- args = {},
 
@@ -48,12 +49,21 @@ vim.cmd(
 )
 vim.o.updatetime = 250
 
+-- Format on file save
+vim.cmd(
+    'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
+)
+
+-- configure the floaty diagnostic messages
 vim.diagnostic.config({
     float = {
         header ='',
         source = 'always',
     },
     signs = {
+        float = {
+            severity_sort = true,
+        },
         severity = {
             vim.diagnostic.severity.ERROR,
             vim.diagnostic.severity.WARN,
@@ -73,8 +83,4 @@ vim.diagnostic.config({
         prefix = '● ',
     },
 })
-
--- NOT the lua way to do this: Format on file save
--- AHA use 'vim.cmd()' to do this, see above.
--- autocmd BufWritePre *.py lua vim.lsp.buf.format({ async = false })
 
