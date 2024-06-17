@@ -28,13 +28,25 @@
 require('lspconfig').ruff.setup{
 
     -- Server-specific settings. See `:help lspconfig-setup`
-    ruff = {
-             -- Cannot get this to work. Formatting uses 88 (ruff default).
-             -- How can I set this in the way I have previously been setting textwidth?
-             lineLength = 60,
+    settings = {
+        -- Cannot get this to work. Formatting uses 88 (ruff default).
+        -- Projects configured with pyproject.toml, etc, correctly use the settings from that,
+        -- But how can I set this on-the-fly for other standalone files?
+        -- lineLength = 60,
+
+        -- Cannot get this to work.
+        -- lint = {
+        --     select = {
+        --         "ALL",
+        --     },
+        -- },
+
+        args = {
+            -- Any extra CLI arguments for `ruff` go here. This works!
+            -- "--line-length=100",
+        },
+
     },
-        -- -- Any extra CLI arguments for `ruff` go here.
-        -- args = {},
 
 }
 
