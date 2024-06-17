@@ -59,7 +59,7 @@ vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 vim.cmd(
     'autocmd CursorHold,CursorHoldI *.py lua vim.diagnostic.open_float({focusable=false})'
 )
-vim.o.updatetime = 250
+vim.o.updatetime = 750
 
 -- Format on file save
 vim.cmd(
