@@ -27,25 +27,24 @@
 
 require('lspconfig').ruff.setup{
 
+    init_options = {
+        settings = {
+            -- Config used for standalone files without a pyproject.toml, etc.
+            lineLength = 88,
+            -- lint = {
+            --     select = {
+            --         "ALL",
+            --     },
+            -- },
+        }
+    },
+
     -- Server-specific settings. See `:help lspconfig-setup`
     settings = {
-        -- Cannot get this to work. Formatting uses 88 (ruff default).
-        -- Projects configured with pyproject.toml, etc, correctly use the settings from that,
-        -- But how can I set this on-the-fly for other standalone files?
-        -- lineLength = 60,
-
-        -- Cannot get this to work.
-        -- lint = {
-        --     select = {
-        --         "ALL",
-        --     },
-        -- },
-
         args = {
             -- Any extra CLI arguments for `ruff` go here. This works!
-            -- "--line-length=100",
+            -- "--line-length=80",
         },
-
     },
 
 }
@@ -59,12 +58,13 @@ vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 vim.cmd(
     'autocmd CursorHold,CursorHoldI *.py lua vim.diagnostic.open_float({focusable=false})'
 )
-vim.o.updatetime = 750
+vim.o.updatetime = 1000
 
 -- Format on file save
-vim.cmd(
-    'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
-)
+-- Commented because sometimes I do not want to do this (e.g. when editing Rackit code at work)
+-- vim.cmd(
+--     'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
+-- )
 
 -- configure the floaty diagnostic messages
 vim.diagnostic.config({
