@@ -92,7 +92,7 @@ command -v bat >/dev/null && export MANPAGER="sh -c 'col -bx | bat -l man -p | l
 
 export PG_COLOR=auto
 
-export PIP_CACHE_DIR=/home/jhartley/.cache/pip
+export PIP_CACHE_DIR=$HOME/.cache/pip
 
 if [ $OSTYPE = cygwin ] ; then
     export PYTHONSTARTUP=$HOME\\.pythonstartup.py
