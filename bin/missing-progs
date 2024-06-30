@@ -1,0 +1,78 @@
+#!/usr/bin/env python3
+"""
+Usage:
+
+    missing-progs PREFIX
+
+Look through files in the current directory, named:
+
+    <PREFIX>INTEGER<any-suffix>
+
+Find lowest and highest INTEGER, and reports which files are missing
+from the sequence. ("Progs" is what comic 2000AD calls "Issues").
+"""
+import os
+import re
+import sys
+
+# command line
+
+USAGE = """\
+Usage: missing-progs PREFIX
+Finds files in the current directory named `<PREFIX><INTEGER><any-suffix>`,
+and lists missing entries in the sequence from the min to the max INTEGER.
+"""
+
+def usage(msg):
+    print(msg, file=sys.stderr)
+    print(USAGE, file=sys.stderr)
+    sys.exit(1)
+
+def cmdline(argv):
+    if len(argv) < 2:
+        usage("Error: Need prefix arg")
+    elif len(argv) > 2:
+        usage("Error: Too many args")
+    return argv[1]
+
+# filesystem
+
+def read(prefix):
+    return (
+        [
+            f for f in os.listdir('.')
+            if os.path.isfile(f) and f.startswith(prefix)
+        ],
+        prefix,
+    )
+
+# process
+
+def present(files, prefix):
+    """
+    Given collection of filenames with common prefix followed by an int,
+    return a set of the ints that are present.
+    """
+    return set(int(re.match(f"{prefix}([0-9]+).*", f)[1]) for f in files)
+
+def missing(present):
+    """
+    Given a set of present ints, return the ones that are missing from
+    a contiguous sequence across that range.
+    """
+    return set(range(min(present), max(present))) - present
+
+def process(files, prefix):
+    return [f"{prefix}{i}" for i in sorted(missing(present(files, prefix)))]
+
+def fmt(items):
+    return '\n'.join(items)
+
+# entrypoint
+
+def main():
+    print(fmt(process(*read(cmdline(sys.argv)))))
+
+if __name__ == "__main__":
+    main()
+
