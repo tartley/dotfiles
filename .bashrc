@@ -298,31 +298,38 @@ trash() {
 ve_root="$HOME/.virtualenvs"
 
 ve() {
-    if [ -z "$1" ]; then
-        echo "Error: no virtualenv name given." >&2
-        echo "USAGE: ve <virtualenv-name>" >&2
+    if [ "$#" -eq 0 ]; then
+        ls -1 "$ve_root"
+        return 0
+    elif [ "$#" -ne 1 ]; then
+        echo "ve: Error: more than one virtualenv name given." >&2
+        echo "USAGE: ve [virtualenv]" >&2
+        echo "Omit virtualenv to list existing content of ~/.virtualenvs." >&2
         return 1
     fi
     ve="$ve_root/$1"
     if [ -e "$ve" ]; then
-        echo "Error: \"$ve\" exists." >&2
+        echo "ve: Error: \"$ve\" exists." >&2
         return 2
     fi
+
     python3 -m venv "$ve"
     "$ve/bin/pip" --quiet install --upgrade pip
 }
 
 workon() {
     if [ "$#" -eq 0 ]; then
-        if type deactivate &>/dev/null; then
-            deactivate
-        fi
         ls -1 "$ve_root"
         return 0
     elif [ "$#" -ne 1 ]; then
-        echo "workon: Error: more than one virtualenv name given."
-        echo "USAGE: workon [virtualenv]"
+        echo "workon: Error: more than one virtualenv name given." >&2
+        echo "USAGE: workon [virtualenv]" >&2
+        echo "Omit virtualenv to list existing content of ~/.virtualenvs." >&2
         return 1
+    fi
+
+    if type deactivate &>/dev/null; then
+        deactivate
     fi
     source "$ve_root/$1/bin/activate"
     if [ -d "$HOME/$1" ]; then
