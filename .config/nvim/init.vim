@@ -90,8 +90,11 @@ set hidden
 " Make searches case-sensitive only if they contain upper-case characters
 set ignorecase
 set smartcase
-" show search matches as the search pattern is typed
+" show search matches and resplace results as the search pattern is typed
 set incsearch
+" Also show replace results in a temporary split. Useful if they are
+" too separated to be simultaneously visible in the buffer.
+set inccommand=split
 
 " Don't flick cursor to show matching brackets, they're already highlighted
 set noshowmatch
