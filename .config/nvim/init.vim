@@ -706,8 +706,10 @@ noremap <f12> :silent !pytags<CR>
 " Commented out: because I hardly ever use it.
 " noremap <Leader>T :!start /min ctags -R --languages=python .<CR>:FufRenewCache<CR>
 
-" go to defn of tag under the cursor
-fun! MatchCaseTag()
+" Go to defn of tag under the cursor.
+" If more than one definition, show a menu instead of jumping directly.
+" Turn off case-insensitive matches while we do this.
+fun! TagJumpMatchCase()
   let ic = &ic
   set noic
   try
@@ -716,7 +718,7 @@ fun! MatchCaseTag()
     let &ic = ic
   endtry
 endfun
-" nnoremap <silent> <C-]> :call MatchCaseTag()<CR>
+nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. Autocommands --------------------------------------------------------------
 
