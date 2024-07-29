@@ -53,6 +53,8 @@ require('lspconfig').ruff.setup{
 vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.enable(vim.diagnostic.is_disabled())<cr>')
 -- display code action menu (e.g. to ignore or apply auto-fixes)
 vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+-- Restart to dismiss erroneously lingering diagnostics, move cursor to dismiss floating window
+vim.keymap.set('n', '<leader>r', '<cmd>LspRestart<cr>lh')
 
 -- Automatically show all current line diagnostics in a floating window.
 vim.cmd(
