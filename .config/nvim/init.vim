@@ -63,6 +63,9 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 " Enable ':TableFormat' command even on borderless tables:
 let g:vim_markdown_borderless_table = 1
 
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+
 call plug#end()
 
 " 2. Neovim settings ----------------------------------------------------------
