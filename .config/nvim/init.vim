@@ -121,6 +121,10 @@ set backspace=indent,eol,start
 set fileformat=unix
 set fileformats=unix,dos,mac
 
+" Don't uniliaterally add a final eol character
+" I don't like this but John@Lambda does, so :shrug:
+set nofixeol
+
 " sane editing
 set tabstop=4
 set shiftwidth=4
