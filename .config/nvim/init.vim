@@ -504,6 +504,15 @@ function! Grp(args)
     botright copen
 endfunction
 
+" Silent grrp and then show results in quickfix
+" Grp for Lambda.Rackit, excludes 'docs' dir.
+function! Grrp(args)
+    " grp is my own Bash wrapper for system grep
+    set grepprg=grrp\ -n\ $*
+    execute "silent! grep! " . a:args
+    botright copen
+endfunction
+
 " Grp across .py files only
 function! Grpy(args)
     " grpy is my own Bash wrapper for system grep
@@ -513,6 +522,7 @@ function! Grpy(args)
 endfunction
 
 command! -nargs=* -complete=file Grp call Grp(<q-args>)
+command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
 command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 
 " Grp all files for the word under the cursor (& case insensitive version)
