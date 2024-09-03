@@ -25,6 +25,11 @@
 --      ,D  Menu which offers to organize imports
 --
 
+-- Restore normal working of gqq to format text
+local pylsp_on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, "formatexpr", "")
+end
+
 require('lspconfig').ruff.setup{
 
     init_options = {
@@ -46,6 +51,8 @@ require('lspconfig').ruff.setup{
             -- "--line-length=80",
         },
     },
+
+    on_attach = pylsp_on_attach,
 
 }
 
