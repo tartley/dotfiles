@@ -364,14 +364,13 @@ bup() {
 ## Tool setup #################################################################
 
 ## FZF
+hash fzf 2>/dev/null && eval "$(fzf --bash)"
 # Solarized colors
 export FZF_DEFAULT_OPTS='
   --color bg+:#073642,bg:#002b36,spinner:#719e07,hl:#618e04
   --color fg:#839496,header:#586e75,info:#000000,pointer:#719e07
   --color marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e17
 '
-# Bash command line:
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash || :
 
 # Completion features
 if ! shopt -oq posix; then
