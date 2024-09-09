@@ -131,6 +131,10 @@ gmm() {
     git merge origin main
 }
 
+gp() {
+    git push --quiet
+}
+
 # list branches that have no remote
 gprunable() {
     gsm ; git fetch -qp ; git branch -v | fgrep ' [gone] ' | awk '{print $1}'
