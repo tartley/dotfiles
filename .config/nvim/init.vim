@@ -594,7 +594,7 @@ nnoremap ; :
 vnoremap <C-x> "+x
 vnoremap <C-c> "+y
 noremap <C-v> "+gP
-imap <C-v> <esc>"+gpi
+imap <C-v> <esc>"+gpa
 vmap <C-v> "-cx<Esc>\\paste\\"_x
 cnoremap <C-v> <C-r>+
 
