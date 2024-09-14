@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""Read a Python project's version from a pyproject.toml in $PWD or parent directories"""
+import os
+import re
+import sys
+from pathlib import Path
+
+class PyversionError(RuntimeError):
+    pass
+
+def find_file(filename):
+    """Search for filename in PWD and its parents"""
+    current = Path.cwd()
+    while True:
+        candidate = current / filename
+        if os.path.isfile(candidate):
+            return os.path.abspath(candidate)
+        if current == Path("/"):
+            raise PyversionError(f"File '{filename}' not found in '{Path.cwd()}' or parents")
+        current = current.parent
+
+def get_section(section, filename):
+    result = []
+    found = False
+    with open(filename) as stream:
+        for line in stream:
+            line = line.strip()
+            if line == f"[{section}]":
+                found = True
+            elif line.startswith('['):
+                found = False
+            if found:
+                result.append(line)
+        if not result:
+            raise PyversionError(f"No '[{section}]' found in '{filename}'")
+    return result
+
+def get_value(name, lines):
+    """Return the line that assigns a value to 'name'"""
+    for line in lines:
+        if match := re.match(f"{name} *= *(.+)", line):
+            if match[1]:
+                return match[1]
+    raise PyversionError(f"'{name} = {{value}}' not found in {lines}")
+
+def remove_quotes(value):
+    if value[0] == value[-1]:
+        if value[0] == '"' or value[0] == "'":
+            retvar = value[1:-1]
+        else:
+            retvar = value
+    if not retvar:
+        raise PyversionError(f"Value {value} has no content inside the quotes")
+    return retvar
+
+def main():
+    try:
+        print(
+            remove_quotes(
+                get_value(
+                    "version",
+                    get_section(
+                        "project",
+                        find_file("pyproject.toml")
+                    )
+                )
+            )
+        )
+    except PyversionError as exc:
+        print(f"Error: {exc}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+
+
