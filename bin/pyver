@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+# Validate cmdline args
+
+function usage {
+    echo "USAGE: pyver VERSION" >&2
+    echo "Where VERSION is a valid suffix to a python executable on the PATH. eg:" >&2
+    echo "  pyver 3.12" >&2
+    echo "would create a ~/.local/bin/python3 symlink to $$(which python3.12)" >&2
+    exit 1
+}
+
+if [[ $# -ne 1 ]]; then
+    echo "Error: one argument expected, got $#." >&2
+    usage
+fi
+
+version="$1"
+
+filename=$(which python$version || :)
+if [[ -z "$filename" ]]; then
+    echo "Error: python$version not on PATH"
+    usage
+fi
+
+# Cmdline is valid, do the thing
+
+(
+    echo $filename
+    cd ~/.local/bin
+    ln -sf $filename python3
+    hash python3
+    python3 -V
+)
+
