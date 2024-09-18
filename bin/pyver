@@ -11,7 +11,8 @@ function usage {
     echo "USAGE: pyver VERSION" >&2
     echo "Where VERSION is a valid suffix to a python executable on the PATH. eg:" >&2
     echo "  pyver 3.12" >&2
-    echo "would create a ~/.local/bin/python3 symlink to $$(which python3.12)" >&2
+    echo "would create a ~/.local/bin/python3 symlink to \$(which python3.12)" >&2
+    echo "This instantly affects what invoking 'python3' means in all running shells."
     exit 1
 }
 
