@@ -114,9 +114,10 @@ glog() {
 
     # Decide how to decorate commits with branch & tag names
     git_version=$(git --version | cut -d' ' -f3 | cut -d'.' -f1-2)
-    if (( $(bc <<< "$git_version >= 2.43") == 1 )); then
+    if (( $(bc <<< "$git_version >= 2.43") )); then
         decorate="%(decorate:prefix=,suffix=,separator= ,pointer=$(tput setaf 14)➡ ,tag=)"
     else
+        # fallback for older version of git
         decorate="%D"
     fi
 
