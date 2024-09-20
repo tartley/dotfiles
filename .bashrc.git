@@ -111,7 +111,17 @@ glog() {
             pager='--no-pager '
         fi
     done
-    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+
+    # Decide how to decorate commits with branch & tag names
+    git_version=$(git --version | cut -d' ' -f3 | cut -d'.' -f1-2)
+    if (( $(bc <<< "$git_version >= 2.43") == 1 )); then
+        decorate="%(decorate:prefix=,suffix=,separator= ,pointer=$(tput setaf 14)➡ ,tag=)"
+    else
+        decorate="%D"
+    fi
+
+    # Engage!
+    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(auto) ${decorate}%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
 }
 
 # git log : all branches, two lines per commit, with graph
