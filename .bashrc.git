@@ -143,7 +143,7 @@ gmm() {
 }
 
 gp() {
-    git push --quiet
+    git push --quiet "$@"
 }
 
 # list branches that have no remote
