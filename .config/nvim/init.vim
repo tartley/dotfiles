@@ -270,6 +270,8 @@ set breakindent
 " Implemented using 'let &...' in order to use \u escapes
 let &listchars="extends:\ubb,nbsp:\u2423,precedes:\uab,tab:\u25b8-,trail:\ub7"
 set list
+MapToggle <Leader>v list
+
 "
 " Preview (visible with 'set list')
 " nbsp  
@@ -355,6 +357,8 @@ set title
 
 set background=dark
 colorscheme solarized8
+highlight Whitespace guifg=#08242C " make visible whitespace less intrusive
+
 set termguicolors
 
 set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175
@@ -811,6 +815,9 @@ if has("autocmd") && !exists("autocommands_loaded")
 
     " Go
     autocmd! FileType go set noexpandtab | set nolist | set shiftwidth=4 | set tabstop=4
+
+    " html
+    autocmd! FileType html set noexpandtab | set list | set shiftwidth=2 | set tabstop=2
 
     " yaml
     autocmd! FileType yaml set expandtab | set list | set shiftwidth=2 | set tabstop=2
