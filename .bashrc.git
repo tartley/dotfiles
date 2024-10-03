@@ -111,7 +111,18 @@ glog() {
             pager='--no-pager '
         fi
     done
-    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(reset)%C(auto)%d%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+
+    # Decide how to decorate commits with branch & tag names
+    git_version=$(git --version | cut -d' ' -f3 | cut -d'.' -f1-2)
+    if (( $(bc <<< "$git_version >= 2.43") )); then
+        decorate="%(decorate:prefix=,suffix=,separator= ,pointer=$(tput setaf 14)➡ ,tag=)"
+    else
+        # fallback for older version of git
+        decorate="%D"
+    fi
+
+    # Engage!
+    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(auto) ${decorate}%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
 }
 
 # git log : all branches, two lines per commit, with graph
@@ -132,12 +143,12 @@ gmm() {
 }
 
 gp() {
-    git push --quiet
+    git push --quiet "$@"
 }
 
 # list branches that have no remote
 gprunable() {
-    gsm ; git fetch -qp ; git branch -v | fgrep ' [gone] ' | awk '{print $1}'
+    git fetch -qp ; git --no-pager branch --merged | grep -v '*'
 }
 # delete them
 gprune() {
@@ -145,10 +156,7 @@ gprune() {
     prunable=$(gprunable)
     echo "Branches tracking a deleted remote:"
     echo "$prunable" | colout . green regular
-    if read -q "_?Press y or Y to delete them: "; then
-        echo
-        echo "$prunable" | xargs git branch -D
-    fi
+    echo "$prunable" | xargs git branch -d
 }
 
 # git pull

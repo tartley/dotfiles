@@ -372,13 +372,21 @@ export FZF_DEFAULT_OPTS='
   --color marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e17
 '
 
-# Completion features
+# Bash Completion features
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+fi
+
+# stderred wraps stderr of processes in your terminal with a color
+stderred_dir="$HOME/.local/share/stderred"
+stderred_so="${stderred_dir}/libstderred.so"
+if [ -f ${stderred_so} ]; then
+    export LD_PRELOAD="${stderred_so}${LD_PRELOAD:+:$LD_PRELOAD}"
+    export STDERRED_ESC_CODE=$(tput bold;tput setaf 222)
 fi
 
 ## On exit ####################################################################
@@ -422,4 +430,5 @@ for fname in $(ls ~/.bashrc.*); do
     # echo "calling $fname"
     . $fname
 done
+
 
