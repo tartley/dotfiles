@@ -2,11 +2,23 @@
 ctags -R \
     --languages=python \
     --exclude=.bzr \
+    --exclude=.egg-info \
     --exclude=.eggs \
     --exclude=.env \
     --exclude=.git \
+    --exclude=.hg \
+    --exclude=.mypy_cache \
+    --exclude=.nox \
+    --exclude=.pytest_cache \
+    --exclude=.ruff_cache \
+    --exclude=.svn \
+    --exclude=.testrepository \
     --exclude=.tox \
     --exclude=.venv \
+    --exclude=__pycache__ \
+    --exclude=node_modules \
+    --exclude=build \
+    --exclude=dist \
     --exclude=env \
     "$@"
 

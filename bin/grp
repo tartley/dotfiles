@@ -9,6 +9,9 @@ grep \
   --exclude=.session.vim \
   --exclude=tags \
   --exclude-dir=\.bzr \
+  --exclude-dir=\.egg-info \
+  --exclude-dir=\.eggs \
+  --exclude-dir=\.env \
   --exclude-dir=\.git \
   --exclude-dir=\.hg \
   --exclude-dir=\.mypy_cache \
@@ -18,11 +21,10 @@ grep \
   --exclude-dir=\.svn \
   --exclude-dir=\.testrepository \
   --exclude-dir=\.tox \
-  --exclude-dir=*\.egg-info \
+  --exclude-dir=\.venv \
   --exclude-dir=__pycache__ \
   --exclude-dir=node_modules \
   --exclude-dir=build \
   --exclude-dir=dist \
   --exclude-dir=env \
-  --exclude-dir=.venv \
 
