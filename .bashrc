@@ -382,11 +382,10 @@ if ! shopt -oq posix; then
 fi
 
 # stderred wraps stderr of processes in your terminal with a color
-stderred_dir="$HOME/.local/share/stderred"
-stderred_so="${stderred_dir}/libstderred.so"
+stderred_so="$HOME/.local/share/stderred/libstderred.so"
 if [ -f ${stderred_so} ]; then
     export LD_PRELOAD="${stderred_so}${LD_PRELOAD:+:$LD_PRELOAD}"
-    export STDERRED_ESC_CODE=$(tput bold;tput setaf 222)
+    export STDERRED_ESC_CODE=$(tput setaf 222)
 fi
 
 ## On exit ####################################################################
