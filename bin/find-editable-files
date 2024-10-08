@@ -15,6 +15,7 @@ find . \
     -name \.eggs -o \
     -name \.git -o \
     -name \.mypy_cache -o \
+    -name \.nox -o \
     -name \.pytest_cache -o \
     -name \.ruff_cache -o \
     -name \.testrepository -o \

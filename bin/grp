@@ -12,6 +12,7 @@ grep \
   --exclude-dir=\.git \
   --exclude-dir=\.hg \
   --exclude-dir=\.mypy_cache \
+  --exclude-dir=\.nox \
   --exclude-dir=\.pytest_cache \
   --exclude-dir=\.ruff_cache \
   --exclude-dir=\.svn \

@@ -4,28 +4,5 @@
 # to exclude dir 'docs'
 
 # recursive search in text files
-grep \
-  -rI \
-  -E \
-  --color \
-  "$@" \
-  --exclude=.session.vim \
-  --exclude=tags \
-  --exclude-dir=\.bzr \
-  --exclude-dir=\.git \
-  --exclude-dir=\.hg \
-  --exclude-dir=\.mypy_cache \
-  --exclude-dir=\.pytest_cache \
-  --exclude-dir=\.ruff_cache \
-  --exclude-dir=\.svn \
-  --exclude-dir=\.testrepository \
-  --exclude-dir=\.tox \
-  --exclude-dir=*\.egg-info \
-  --exclude-dir=__pycache__ \
-  --exclude-dir=node_modules \
-  --exclude-dir=build \
-  --exclude-dir=dist \
-  --exclude-dir=docs \
-  --exclude-dir=env \
-  --exclude-dir=.venv \
+grp --exclude-dir=docs "$@"
 
