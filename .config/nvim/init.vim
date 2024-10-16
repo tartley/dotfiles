@@ -229,6 +229,16 @@ set formatoptions+=n
 " Make autoformat of numbered lists also handle bullets, using asterisks:
 set formatlistpat=^\\s*[0-9*]\\+[\\]:.)}\\t\ ]\\s*
 
+
+" Map key to toggle option and display its value
+function MapToggle(key, opt)
+  let cmd = ':set '.a:opt.'! \| set '.a:opt."?\<CR>"
+  exec 'nnoremap '.a:key.' '.cmd
+  " Why did I ever think the following was a good idea? Delete it soon...
+  " exec 'inoremap '.a:key." \<C-O>".cmd
+endfunction
+command -nargs=+ MapToggle call MapToggle(<f-args>)
+
 " -- long line wrapping ----
 
 set wrap
@@ -250,16 +260,6 @@ endfunction
 
 set linebreak
 silent call ToggleWrapWords()
-
-" Map key to toggle option and display its value
-function MapToggle(key, opt)
-  let cmd = ':set '.a:opt.'! \| set '.a:opt."?\<CR>"
-  exec 'nnoremap '.a:key.' '.cmd
-  " Why did I ever think the following was a good idea? Delete it soon...
-  " exec 'inoremap '.a:key." \<C-O>".cmd
-endfunction
-command -nargs=+ MapToggle call MapToggle(<f-args>)
-
 MapToggle <Leader>w wrap
 noremap <Leader>W :call ToggleWrapWords()<CR>
 
