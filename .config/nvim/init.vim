@@ -391,6 +391,9 @@ let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'window': 'enew' }
 let g:fzf_preview_window = 'up:50%'
 let g:fzf_preview = "bat --color=always --style=changes --line-range=:36 {}"
+" I don't like that fzf defines W as fuzzy find windows,
+" Define it to be what I actually mean when I accidentally type it.
+command W :w
 
 " Switch to open buffer
 noremap <Leader>b :Buffers<CR>
