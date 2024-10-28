@@ -25,6 +25,14 @@ shopt -s lithist
 shopt -s no_empty_cmd_completion
 
 
+## utility functions for this script
+
+error() (
+  IFS=' '
+  awk -v msg="$*" 'BEGIN { print "Error: " msg > "/dev/stderr" }'
+)
+
+
 ## Readline and key binds ####################################################
 
 if [[ ${SHELLOPTS} =~ (vi|emacs) ]]; then
@@ -152,33 +160,6 @@ beep() {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
 }
 
-# branch refactor
-br() {
-    if [ -z "$refactor" ]; then
-        echo "ERROR: env var 'refactor' not set" >&2
-        return 1
-    fi
-    git switch -q "$refactor"
-}
-
-# branch implementation
-bi() {
-    if [ -z "$implementation" ]; then
-        echo "ERROR: Env var 'implementation' not set." >&2
-        return 1
-    fi
-    git switch -q "$implementation"
-}
-
-brebase() {
-    if [ -z "$implementation" ] || [ -z "$refactor" ]; then
-        echo "ERROR: Both env vars 'implementation' (=$implementation) & 'refactor' (=$refactor) must be set." >&2
-        return 1
-    fi
-    bi
-    git rebase -q "$refactor"
-}
-
 # Generate n busyloops to keep n CPUs busy.
 # See also 'killalljobs'
 busyloop() {
@@ -198,7 +179,7 @@ busyloop() {
   # validate args
   re='^[0-9]+$'
   if ! [[ $number =~ $re ]] ; then
-     echo "error: Not a number" >&2
+     error "Not a number" >&2
      return 1
   fi
 
@@ -329,14 +310,14 @@ ve() {
         ls -1 "$ve_root"
         return 0
     elif [ "$#" -ne 1 ]; then
-        echo "ve: Error: more than one virtualenv name given." >&2
-        echo "USAGE: ve [virtualenv]" >&2
-        echo "Omit virtualenv to list existing content of ~/.virtualenvs." >&2
+        error "ve: Error: more than one virtualenv name given."
+        error "USAGE: ve [virtualenv]"
+        error "Omit virtualenv to list existing content of ~/.virtualenvs."
         return 1
     fi
     ve="$ve_root/$1"
     if [ -e "$ve" ]; then
-        echo "ve: Error: \"$ve\" exists." >&2
+        error "ve: Error: \"$ve\" exists."
         return 2
     fi
 
@@ -349,9 +330,9 @@ workon() {
         ls -1 "$ve_root"
         return 0
     elif [ "$#" -ne 1 ]; then
-        echo "workon: Error: more than one virtualenv name given." >&2
-        echo "USAGE: workon [virtualenv]" >&2
-        echo "Omit virtualenv to list existing content of ~/.virtualenvs." >&2
+        error "workon: Error: more than one virtualenv name given."
+        error "USAGE: workon [virtualenv]"
+        error "Omit virtualenv to list existing content of ~/.virtualenvs."
         return 1
     fi
 
@@ -427,20 +408,30 @@ historyc() {
     history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
 }
 
+bash_history_backups=~/docs/config/bash_history
+
 history_backup() {
     (
-        if [ -d ~/docs/config/bash_history ] ; then
-            # make a backup, overwriting other backups from today
-            (
-            cd ~/docs/config/bash_history/
+        if [ ! -d "$bash_history_backups" ] ; then
+            error "bash history save directory not found: '$bash_history_backups'"
+            # Normally we'd return 1 here but it doesn't help in this case,
+            # since we're executing on shell exit.
+        fi
+        # make a backup, overwriting other backups from today
+        (
+            cd "$bash_history_backups"
             \cp ~/.bash_history bash_history_$(date +%F)
             # rm backups older than N days
             ls -1 . | head -n -100 | xargs rm -f
-            )
-        fi
+        )
     )
 }
-trap history_backup EXIT
+
+if [ ! -d "$bash_history_backups" ]; then
+    error "bash history save directory not found: '$bash_history_backups'"
+else
+    trap history_backup EXIT
+fi
 
 dedupe_history() {
     # Now remove duplicate lines from history file
@@ -457,7 +448,6 @@ dedupe_history() {
 ## Source all ~/.bashrc.* files. ############################################
 
 for fname in $(ls ~/.bashrc.*); do
-    # echo "calling $fname"
     . $fname
 done
 
