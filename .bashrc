@@ -152,6 +152,33 @@ beep() {
     paplay /usr/share/sounds/sound-icons/xylofon.wav &
 }
 
+# branch refactor
+br() {
+    if [ -z "$refactor" ]; then
+        echo "ERROR: env var 'refactor' not set" >&2
+        return 1
+    fi
+    git switch -q "$refactor"
+}
+
+# branch implementation
+bi() {
+    if [ -z "$implementation" ]; then
+        echo "ERROR: Env var 'implementation' not set." >&2
+        return 1
+    fi
+    git switch -q "$implementation"
+}
+
+brebase() {
+    if [ -z "$implementation" ] || [ -z "$refactor" ]; then
+        echo "ERROR: Both env vars 'implementation' (=$implementation) & 'refactor' (=$refactor) must be set." >&2
+        return 1
+    fi
+    bi
+    git rebase -q "$refactor"
+}
+
 # Generate n busyloops to keep n CPUs busy.
 # See also 'killalljobs'
 busyloop() {
@@ -387,6 +414,10 @@ if [ -f ${stderred_so} ]; then
     export LD_PRELOAD="${stderred_so}${LD_PRELOAD:+:$LD_PRELOAD}"
     export STDERRED_ESC_CODE=$(tput setaf 222)
 fi
+
+# direnv (installed using apt) exports env vars from .envrc in PWD or above
+# I'm using it to define 'refactor' and 'impl', which are used above.
+eval "$(direnv hook bash)"
 
 ## On exit ####################################################################
 

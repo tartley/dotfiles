@@ -30,7 +30,11 @@ gff() {
 
 # git fetch main
 gfm() {
-    git fetch -q origin main
+    main=$(get_main_branch)
+    git fetch -q origin $main
+    git switch -q $main
+    git merge -q --ff-only origin/$main
+    git switch -q -
 }
 
 # git ignored : use git status to show ignored files in current dir
@@ -138,8 +142,9 @@ gm() {
 
 # git merge latest "main" into current branch
 gmm() {
-    git fetch origin main
-    git merge origin main
+    main=$(get_main_branch)
+    gfm
+    git merge -q origin $main
 }
 
 gp() {
@@ -217,13 +222,13 @@ get_main_branch() {
 
 # git switch main
 gsm() {
-    branch=$(get_main_branch)
-    if [ -z "$branch" ]; then
+    main=$(get_main_branch)
+    if [ -z "$main" ]; then
         return 1
     fi
-    git switch -q "$branch" && \
-        git fetch -q origin "$branch" && \
-        git merge --ff-only origin/"$branch"
+    git switch -q "$main" && \
+        git fetch -q origin "$main" && \
+        git merge --ff-only origin/"$main"
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
