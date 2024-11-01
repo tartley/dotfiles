@@ -233,7 +233,7 @@ gst() {
 
 # git stash list
 gsl() {
-    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8})?(.+)$' yellow,white,white,green,magenta,white normal
+    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8,10})?(.+)$' yellow,white,white,green,magenta,white normal
 }
 # git stash show
 gss() {
