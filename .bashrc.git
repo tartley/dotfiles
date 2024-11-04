@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Relies on 'error', a function defined in .bashrc
+
 . ~/.git-completion.bash
 
 # git functions (esp. see 'git'!)
@@ -10,9 +12,38 @@ gb() {
     git --no-pager branch -vv --color=always "$@"
 }
 
+# branch refactor
+gbr() {
+    if [ -z "$refactor" ]; then
+        error "env var 'refactor' not set"
+        return 1
+    fi
+    git switch -q "$refactor"
+}
+
+# branch implementation
+gbi() {
+    if [ -z "$implementation" ]; then
+        error "Env var 'implementation' not set."
+        return 1
+    fi
+    git switch -q "$implementation"
+}
+
 # git branch: Print bare current branch name
 gbranch() {
     git branch "$@" | grep '^*'| cut -d' ' -f2
+}
+
+gbrebase() {
+    if [ -z "$implementation" ] || [ -z "$refactor" ]; then
+        error "Both env vars 'implementation' (=$implementation) & 'refactor' (=$refactor) must be set."
+        return 1
+    fi
+    if ! gbi; then
+        return 1
+    fi
+    git rebase -q "$refactor"
 }
 
 # git commit
@@ -30,7 +61,11 @@ gff() {
 
 # git fetch main
 gfm() {
-    git fetch -q origin main
+    main=$(get_main_branch)
+    git fetch -q origin $main
+    git switch -q $main
+    git merge -q --ff-only origin/$main
+    git switch -q -
 }
 
 # git ignored : use git status to show ignored files in current dir
@@ -56,7 +91,8 @@ git() {
     done
     if [ "$is_push" = true ] && [ "$is_force" = true ]; then
         # Suggest alternative commands.
-        echo -e "    Consider '${white}git push --force-with-lease --force-if-includes${reset}' instead,\n    which is aliased to '${white}gpf${reset}'."
+        error "Consider '${white}git push --force-with-lease --force-if-includes${reset}'"
+        error "instead, which is aliased to '${white}gpf${reset}'."
         return 1
     fi
     # Run the given command, using the git executable instead of this function.
@@ -138,8 +174,9 @@ gm() {
 
 # git merge latest "main" into current branch
 gmm() {
-    git fetch origin main
-    git merge origin main
+    main=$(get_main_branch)
+    gfm
+    git merge -q origin $main
 }
 
 gp() {
@@ -196,7 +233,7 @@ gst() {
 
 # git stash list
 gsl() {
-    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8})?(.+)$' yellow,white,white,green,magenta,white normal
+    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8,10})?(.+)$' yellow,white,white,green,magenta,white normal
 }
 # git stash show
 gss() {
@@ -209,7 +246,7 @@ get_main_branch() {
     elif git switch -q master 2>/dev/null; then
         echo master
     else
-        echo "Error: No branch main|master found" >&2
+        error "Error: No branch main|master found"
         return 1
     fi
     git switch -q -
@@ -217,13 +254,13 @@ get_main_branch() {
 
 # git switch main
 gsm() {
-    branch=$(get_main_branch)
-    if [ -z "$branch" ]; then
+    main=$(get_main_branch)
+    if [ -z "$main" ]; then
         return 1
     fi
-    git switch -q "$branch" && \
-        git fetch -q origin "$branch" && \
-        git merge --ff-only origin/"$branch"
+    git switch -q "$main" && \
+        git fetch -q origin "$main" && \
+        git merge --ff-only origin/"$main"
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
