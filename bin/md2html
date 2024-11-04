@@ -48,5 +48,5 @@ else
 fi
 
 css="$HOME/.config/watch-markdown/style.css"
-pandoc --from markdown --to html --standalone -c "${css}" "${input}" -o "${output}"
+pandoc --from markdown --to html --self-contained -c "${css}" "${input}" -o "${output}"
 
