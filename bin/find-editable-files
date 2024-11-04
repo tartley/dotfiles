@@ -14,6 +14,7 @@ find . \
     -name \*\.egg-info -o \
     -name \.eggs -o \
     -name \.git -o \
+    -name \.godot -o \
     -name \.mypy_cache -o \
     -name \.nox -o \
     -name \.pytest_cache -o \

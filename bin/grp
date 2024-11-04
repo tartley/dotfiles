@@ -13,6 +13,7 @@ grep \
   --exclude-dir=\.eggs \
   --exclude-dir=\.env \
   --exclude-dir=\.git \
+  --exclude-dir=\.godot \
   --exclude-dir=\.hg \
   --exclude-dir=\.mypy_cache \
   --exclude-dir=\.nox \

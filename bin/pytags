@@ -6,6 +6,7 @@ ctags -R \
     --exclude=.eggs \
     --exclude=.env \
     --exclude=.git \
+    --exclude=.godot \
     --exclude=.hg \
     --exclude=.mypy_cache \
     --exclude=.nox \
