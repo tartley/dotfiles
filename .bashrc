@@ -232,6 +232,12 @@ nh() {
     nohup "$@" 1>/dev/null 2>&1 &
 }
 
+# Run nvim listening for Godot events
+# (e.g. Godot can open files in the Nvim session)
+ng() {
+    nw --listen /tmp/godothost "$@"
+}
+
 # Parent of given PID, or else of current shell
 ppid() {
     ps -p ${1:-$$} -o ppid=

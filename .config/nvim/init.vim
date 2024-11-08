@@ -42,6 +42,7 @@ inoremap <expr><C-n> pumvisible() ? "\<C-n>" :
     \ deoplete#mappings#manual_complete()
 
 Plug 'godlygeek/tabular'
+
 Plug 'preservim/vim-markdown'
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_no_default_key_mappings = 1
@@ -65,6 +66,9 @@ let g:vim_markdown_borderless_table = 1
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
+Plug 'habamax/vim-godot'
+" see ftplugin/gdscript.vim
 
 call plug#end()
 
@@ -723,9 +727,6 @@ noremap <Leader>u :call ToggleAutoformat()<CR>
 noremap <silent> <f1> <esc>
 map! <silent> <f1> <esc>
 
-" generate tags for all (Python) files in or below current dir
-" Mac & Linux
-noremap <f12> :silent !pytags<CR>
 " Windows
 " Commented out: because I hardly ever use it.
 " noremap <Leader>T :!start /min ctags -R --languages=python .<CR>:FufRenewCache<CR>

@@ -1,4 +1,9 @@
 *
 !/bin/
 !/bin/*
+!/.config/
+!/.config/nvim/
+!/.config/nvim/**
+!/.config/nvim/**
+/.config/nvim/.netrwhist
 
