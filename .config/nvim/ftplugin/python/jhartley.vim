@@ -1,3 +1,4 @@
+" Python
 
 " auto indent after block keywords:
 set smartindent cinwords=class,def,for,if,elif,else,try,except,finally,while
