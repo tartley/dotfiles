@@ -62,6 +62,7 @@ case $- in
   post='m\]'
 
   green="${pre}32${post}"
+  cyan="${pre}36${post}"
   magenta="${pre}95${post}"
   dim_cyan="${pre}96${post}"
   bright_yellow_inverse="${pre}93;1;7${post}"
@@ -79,8 +80,10 @@ case $- in
   user="${usercol}${USER}${reset}"
 
   host="${HOSTNAME%%.*}"
-  if [[ "$host" =~ ^(asus|gazelle|t460|x1)$ ]]; then
+  if [[ "$host" =~ ^(asus|gazelle|t460)$ ]]; then
     hostcol="${green}"
+  elif [[ "$host" =~ ^(A02152)$ ]]; then
+    hostcol="${cyan}"
   else
     hostcol="${magenta}"
   fi
@@ -130,9 +133,11 @@ alias histread='history -c; history -r'
 alias less='less -R' # display raw control characters for colors only
 
 alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
-command -v eza >/dev/null && \
-    alias ll='eza --long --git --no-quotes --color-scale=age' || \
+if command -v eza >/dev/null ; then
+    alias ll='eza --long --git --no-quotes --color-scale=age'
+else
     alias ll='ls -lGh'
+fi
 alias la='ll -A'
 
 alias mv='mv -i'
@@ -456,5 +461,4 @@ dedupe_history() {
 for fname in $(ls ~/.bashrc.*); do
     . $fname
 done
-
 
