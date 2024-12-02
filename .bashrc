@@ -383,8 +383,7 @@ bup() {
 ## Tool setup #################################################################
 
 ## FZF
-hash fzf 2>/dev/null && eval "$(fzf --bash)"
-# Solarized colors
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='
   --color bg+:#073642,bg:#002b36,spinner:#719e07,hl:#618e04
   --color fg:#839496,header:#586e75,info:#000000,pointer:#719e07
@@ -461,4 +460,5 @@ dedupe_history() {
 for fname in $(ls ~/.bashrc.*); do
     . $fname
 done
+
 
