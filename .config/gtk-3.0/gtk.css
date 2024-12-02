@@ -8,11 +8,30 @@ headerbar separator {
 }
 
 headerbar {
-    min-height: 24px;
+    min-height: 0px;
     padding-left: 2px; /* same as childrens vertical margins for nicer proportions */
     padding-right: 2px;
     margin: 0px; /* same as headerbar side padding for nicer proportions */
     padding: 0px;
+    border-radius: 2px;  /* reduce the rounded corners*/
+}
+
+/* shrink ssd titlebars */
+.default-decoration {
+    min-height: 0; /* let the entry and button drive the titlebar size */
+    padding: 0px;
+    background-color: #2d2d2d;
+}
+
+.default-decoration .titlebutton {
+    min-height: 0px; /* tweak these two props to reduce button size */
+    min-width: 0px;
+}
+
+window.ssd headerbar.titlebar {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    min-height: 0;
 }
 
 /** Don't know what this is **/
