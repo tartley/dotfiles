@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-cd ~/src/storage
-rm -rf env tmp
-make bootstrap
-make start-db
-
