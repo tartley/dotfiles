@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+# Assumes 'error' is defined, as in my .bashrc, prints error messages to stderr
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+## Dependencies
+
+install_deps() {
+    error "Installing text-to-speech dependencies..."
+    sudo apt-get install libttspico-utils
+}
+
+## Terminal utilities
+
+function usage {
+    stderror "Usage: $0 [ARGS]"
+    stderror "Text to speech wrapping 'festival'"
+    stderror ""
+    stderror "  -c, --clear-cache  Clear cached .wav files in /tmp/say/*."
+    stderror "  -f, --force        Force regeneration of .wav file, ignoring cache."
+    stderror "  -h, --help         Print this message & exit."
+    stderror "  -i, --install      Install dependencies."
+    stderror ""
+}
+
+stderror() (
+  # Prints to stderr. If we simply redirect the output, then libstderred.so
+  # fails to color the text, which offends my sensibilities, so we do this instead.
+  IFS=' '
+  awk -v msg="$*" 'BEGIN { print msg > "/dev/stderr" }'
+)
+
+error() (
+  # Prints error messages to stderr
+  stderror "Error: $*"
+)
+
+# create a tmp dir
+tmpdir=/tmp/say
+mkdir -p "$tmpdir"
+
+## Cmdline args
+
+declare -a text # what to say
+force=false
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -c|--clear-cache) rm -f "$tmpdir"/* ;;
+        -f|--force) force=true ;;
+        -h|--help) usage; exit ;;
+        -i|--install) install_deps ;;
+        -*) error "Unrecognized arg $1" >&2; exit 1 ;;
+        *) text+=($1);;
+    esac
+    shift
+done
+
+# Check deps are installed
+if ! type pico2wave &>/dev/null ; then
+    install_deps
+fi
+
+# send text-to-speech to a .wav file
+tmpfile="$tmpdir/${text[@]}.wav"
+if [ "$force" = true ] || ! [ -f "$tmpfile" ]; then
+    pico2wave -w "$tmpfile" "${text[*]}"
+fi
+
+# play the .wav file
+aplay -q "$tmpfile"
+
