@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+function usage {
+    echo "Usage: $0 [ARGS] FILENAME [FILENAME...]"
+    echo "Convert psd images to webp"
+    echo ""
+    echo "  -h, --help      Print this message."
+    echo "  -l, --lossy     Use lossy compression."
+    echo ""
+	echo "Lossless compression is used on the output by default."
+}
+
+# TODO use this if 'error' not defined
+function err {
+    echo "$@" 2>&1
+}
+
+# Arg defaults
+declare -a filenames=()
+lossy=false
+quality=75 # TODO unset
+# Process command line args
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit;;
+        -l|--lossy) lossy=true;;
+        -q|--quality)
+            shift
+            if ! [[ "${1-}" =~ ^[0-9]+$ ]]; then
+                echo "Error: --quality must be an integer, not '${1-}'" >&2
+                exit 1
+            fi
+            quality="$1"
+            ;;
+        -*|--*) echo "Error: Unrecognized arg $1" >&2; exit 1;;
+        *) filenames+=("$1")
+    esac
+    shift
+done
+
+# Error if no filenames given
+if [ ${#filenames[@]} -eq 0 ]; then
+    echo "Error: No filename(s) given" 2>&1
+    exit 1
+fi
+
+# Iterate through filenames and convert each one 
+for filename in "${filenames[@]}"; do
+
+    # Error if filename is not a file
+    if ! [ -f "$filename" ]; then
+        echo "Warning: '$filename' is not a readable file." 2>&1
+        continue
+    fi
+
+    # Do the conversion
+    if [ "$lossy" = 'true' ]; then
+        magick "${filename}[0]" \
+            -define webp:lossless=false \
+            -quality ${quality} \
+            "${filename%.psd}.lossy.q$(printf "%03d" ${quality}).webp"
+    else
+        magick "${filename}[0]" \
+            -define webp:lossless=true \
+            "${filename%.psd}.webp"
+            set +x
+    fi
+
+done
+
