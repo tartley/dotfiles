@@ -7,6 +7,7 @@ allowlist
 AMD
 AMD's
 anonymized
+Ansible
 Antimemetics
 API
 API's
@@ -17,6 +18,7 @@ ArcObjects
 ArcSDE
 arg
 args
+Artifactory
 ASD
 AutoCAD
 autoload
@@ -34,9 +36,11 @@ Bitcoin
 blog
 botnet
 BSON
+Buildkite
 builtin
 builtins
 Cardano
+CDN
 celiac
 CentOS
 CGI
@@ -97,6 +101,7 @@ droid
 dropdown
 DSP
 Dyson
+eg
 eGPU
 Elasticsearch
 env
@@ -242,6 +247,7 @@ Netbox
 .NET's
 NetXtra
 Newegg
+Nginx
 NIC
 NICs
 Node2D
@@ -250,6 +256,8 @@ NPC
 numpad
 Nvidia
 OCD
+OCI
+OCI's
 ols
 onboarding
 OpenGL
