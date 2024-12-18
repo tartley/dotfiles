@@ -2,13 +2,15 @@
 
 # recursive search in text files
 grep \
-  -rI \
-  -E \
   --color \
+  --extended-regexp \
+  -I \
+  --recursive \
   "$@" \
   --exclude=.session.vim \
   --exclude=tags \
   --exclude-dir=\.bzr \
+  --exclude-dir=\.cache \
   --exclude-dir=\.egg-info \
   --exclude-dir=\.eggs \
   --exclude-dir=\.env \
@@ -24,8 +26,11 @@ grep \
   --exclude-dir=\.tox \
   --exclude-dir=\.venv \
   --exclude-dir=__pycache__ \
-  --exclude-dir=node_modules \
+  --exclude-dir=build \
   --exclude-dir=build \
   --exclude-dir=dist \
   --exclude-dir=env \
+  --exclude-dir=logs \
+  --exclude-dir=node_modules \
+  --exclude-dir=venv \
 
