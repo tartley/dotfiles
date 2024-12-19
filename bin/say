@@ -24,32 +24,70 @@ function usage {
     stderror "Text to speech, wrapping 'piper-tts'"
     stderror ""
     stderror "  -h, --help         Print this message & exit."
+    stderror "  -i, --install      Download dependencies, voice, etc."
     stderror ""
 }
 
-# Constants
-cache="/home/jhartley/.cache/piper"
-mkdir -p "$cache"
+function install {
+    stderror "Installing text-to-speech dependencies..."
+    if ! type python3.10 &>/dev/null ; then
+        stderror "- Python3.10..."
+        sudo apt install -q python3.10
+    fi
+    if ! type piper &>/dev/null ; then
+        stderror "- piper-tts..."
+        pipx install -q --python=python3.10 piper-tts
+    fi
 
-# Install dependencies if required
-if ! type piper &>/dev/null ; then
-    stderr "Installing text-to-speech dependencies..."
-    pipx install --python=python3.10 piper-tts
-fi
+    uri="https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/$voicepath"
+    mkdir -p "$cache"
+    if [ ! -f "$cache/$voice" ]; then
+        stderror "Downloading a voice..."
+        wget -q --show-progress "$uri" -O "$cache/$voice"
+    fi
+    if [ ! -f "$cache/$voice.json" ]; then
+        wget -q --show-progress "$uri.json" -O "$cache/$voice.json"
+    fi
+}
+
+# Constants
+cache="$HOME/.cache/piper"
+voice="en_GB-cori-high.onnx"
+voicepath="en/en_GB/cori/high/$voice"
 
 # Variables
 declare -a text # what to say
+install=false
 
 ## Cmdline args
 while [ $# -gt 0 ]; do
     case "$1" in
         -h|--help) usage; exit ;;
+        -i|--install) install=true;;
         -*) error "Unrecognized arg $1" >&2; exit 1 ;;
         *) text+=($1);;
     esac
     shift
 done
 
+# Install dependencies if required
+if ! type piper &>/dev/null ; then
+    install
+fi
+
+if [ "$install" = true ]; then
+    install
+    if [[ -z "${text[@]}" ]]; then
+        text=("Installation complete.")
+    fi
+else
+    if [[ -z "${text[@]}" ]]; then
+        usage
+        exit 1
+    fi
+fi
+
 # Speak
-echo "${text[*]}" | piper --model="$cache/default.onnx" | aplay -q
+echo "${text[*]}" | piper --model="$cache/$voice" --sentence-silence=0 >"/tmp/piper.$$"
+aplay -q <"/tmp/piper.$$"
 
