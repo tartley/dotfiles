@@ -85,6 +85,9 @@
 [pull]
     ff = only
 
+[rebase]
+    updateRefs = true
+
 [url "git+ssh://tartley@git.launchpad.net/"]
     insteadof = lp:
 
