@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Assumes 'error' is defined, as in my .bashrc, prints error messages to stderr
-
 set -e # exit on error
 set -u # treat unset vars as errors
 # set -x # debugging output
