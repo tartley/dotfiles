@@ -7,12 +7,13 @@ set -o pipefail
 
 function usage {
     echo "Usage: $0 [ARGS] FILENAME [FILENAME...]"
-    echo "Convert psd images to webp"
+    echo "Convert image files to webp"
     echo ""
     echo "  -h, --help      Print this message."
-    echo "  -l, --lossy     Use lossy compression."
+    echo "  -l, --lossy     Use lossy compression, level 75%."
+    echo "  -q, --quality=Q Use lossy compression, level Q%."
     echo ""
-	echo "Lossless compression is used on the output by default."
+    echo "Lossless compression is used on the output by default."
 }
 
 # TODO use this if 'error' not defined
@@ -30,6 +31,7 @@ while [ $# -gt 0 ]; do
         -h|--help) usage; exit;;
         -l|--lossy) lossy=true;;
         -q|--quality)
+            lossy=true
             shift
             if ! [[ "${1-}" =~ ^[0-9]+$ ]]; then
                 echo "Error: --quality must be an integer, not '${1-}'" >&2
@@ -63,11 +65,11 @@ for filename in "${filenames[@]}"; do
         magick "${filename}[0]" \
             -define webp:lossless=false \
             -quality ${quality} \
-            "${filename%.psd}.lossy.q$(printf "%03d" ${quality}).webp"
+            "${filename%.*}.q$(printf "%03d" ${quality}).webp"
     else
         magick "${filename}[0]" \
             -define webp:lossless=true \
-            "${filename%.psd}.webp"
+            "${filename%.*}.webp"
             set +x
     fi
 
