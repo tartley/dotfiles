@@ -72,7 +72,7 @@ case $- in
   pwd="$dim_cyan\w$reset"
   prompt="$bright_yellow_inverse\$$reset"
 
-  if [[ "$USER" =~ ^(jhartley|jonathan)$ ]]; then
+  if [[ "$USER" =~ ^(jhartley|jonathan|tartley)$ ]]; then
     usercol="${green}"
   else
     usercol="${magenta}"
@@ -80,7 +80,7 @@ case $- in
   user="${usercol}${USER}${reset}"
 
   host="${HOSTNAME%%.*}"
-  if [[ "$host" =~ ^(asus|gazelle|t460)$ ]]; then
+  if [[ "$host" =~ ^(asus|gazelle|t460|boris)$ ]]; then
     hostcol="${green}"
   elif [[ "$host" =~ ^(A02152)$ ]]; then
     hostcol="${cyan}"
