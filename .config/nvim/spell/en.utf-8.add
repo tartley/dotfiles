@@ -70,6 +70,7 @@ cryptocurrencies
 cryptocurrency
 CTO
 ctrl
+datacenters
 dataclass
 datasheet
 datatypes
@@ -409,7 +410,9 @@ versioned
 videogame
 videogames
 virtualenv
+virtualization
 VM
+VMs
 VSIs
 Waneella
 waypoint
@@ -417,6 +420,7 @@ webdriver
 WebP
 wiki
 win32
+workflow
 WSGI
 www
 XP
