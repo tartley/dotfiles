@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# Assumes 'error' is defined, as in my .bashrc, prints error messages to stderr
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+stderror() (
+  # Prints to stderr. If we simply redirect the output, then libstderred.so
+  # fails to color the text, which offends my sensibilities, so we do this instead.
+  IFS=' '
+  awk -v msg="$*" 'BEGIN { print msg > "/dev/stderr" }'
+)
+
+error() (
+  # Prints error messages to stderr
+  stderror "Error: $*"
+)
+
+function usage {
+    stderror "Usage: $0 [ARGS]"
+    stderror "Text to speech, wrapping 'piper-tts'"
+    stderror ""
+    stderror "  -h, --help         Print this message & exit."
+    stderror ""
+}
+
+# Constants
+cache="/home/jhartley/.cache/piper"
+mkdir -p "$cache"
+
+# Install dependencies if required
+if ! type piper &>/dev/null ; then
+    stderr "Installing text-to-speech dependencies..."
+    pipx install --python=python3.10 piper-tts
+fi
+
+# Variables
+declare -a text # what to say
+
+## Cmdline args
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -h|--help) usage; exit ;;
+        -*) error "Unrecognized arg $1" >&2; exit 1 ;;
+        *) text+=($1);;
+    esac
+    shift
+done
+
+# Speak
+echo "${text[*]}" | piper --model="$cache/default.onnx" | aplay -q
+

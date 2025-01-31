@@ -12,13 +12,18 @@ fi
 find . \
   -type d \( \
     -name \*\.egg-info -o \
+    -name \.bzr -o \
+    -name \.cache -o \
     -name \.eggs -o \
+    -name \.env -o \
     -name \.git -o \
     -name \.godot -o \
+    -name \.hg -o \
     -name \.mypy_cache -o \
     -name \.nox -o \
     -name \.pytest_cache -o \
     -name \.ruff_cache -o \
+    -name \.svn -o \
     -name \.testrepository -o \
     -name \.tox -o \
     -name \.venv -o \

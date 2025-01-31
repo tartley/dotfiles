@@ -814,19 +814,13 @@ if has("autocmd") && !exists("autocommands_loaded")
     " Remove Bclose plugin mapping that clashes with my fzf "<leader>b"
     autocmd VimEnter * nunmap <Leader>bd
 
-    " Python
-    autocmd FileType python set expandtab | set list | set shiftwidth=4 | set tabstop=4
-
-    " Go
+    " Tab usage for different filetypes
+    autocmd! FileType python set expandtab | set list | set shiftwidth=4 | set tabstop=4
+    autocmd! FileType gdscript set expandtab | set list | set shiftwidth=4 | set tabstop=4
     autocmd! FileType go set noexpandtab | set nolist | set shiftwidth=4 | set tabstop=4
-
-    " html
     autocmd! FileType html set noexpandtab | set list | set shiftwidth=2 | set tabstop=2
-
-    " yaml
     autocmd! FileType yaml set expandtab | set list | set shiftwidth=2 | set tabstop=2
 
-    " gitcommit
     autocmd! FileType gitcommit setlocal spell
 
     " Undo changes if a filter command fails (e.g. Python Black)

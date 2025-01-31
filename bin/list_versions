@@ -1,6 +1,0 @@
-#!/bin/bash
-
-git pull
-git fetch --tags
-git tag -l | sort -V
-

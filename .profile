@@ -88,7 +88,10 @@ export LS_OPTIONS
 export MAILCHECK
 
 # If 'bat' is installed, use it as a man pager
-command -v bat >/dev/null && export MANPAGER="sh -c 'col -bx | bat -l man -p | less -R'"
+if command -v bat >/dev/null; then
+    export MANPAGER="sh -c 'col -bx | bat -l man -p | less -R'"
+    export MANROFFOPT="-c"
+fi
 
 export PG_COLOR=auto
 

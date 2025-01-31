@@ -8,6 +8,7 @@ set -o pipefail
 ctags \
     -R \
     --exclude=.bzr \
+    --exclude=.cache \
     --exclude=.egg-info \
     --exclude=.eggs \
     --exclude=.env \
@@ -23,9 +24,12 @@ ctags \
     --exclude=.tox \
     --exclude=.venv \
     --exclude=__pycache__ \
-    --exclude=node_modules \
+    --exclude=_build \
     --exclude=build \
     --exclude=dist \
     --exclude=env \
+    --exclude=logs \
+    --exclude=node_modules \
+    --exclude=venv \
     "$@"
 
