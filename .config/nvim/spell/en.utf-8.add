@@ -161,6 +161,7 @@ hardcoded
 hardpoint
 hardpoints
 hellscapes
+hostname
 howto
 howtos
 https
@@ -204,6 +205,7 @@ KVM
 kwarg
 kwargs
 Lakota
+libc
 linter
 Litecoin
 LLM
@@ -282,6 +284,8 @@ params
 parseable
 performant
 Peroral
+PID
+PIDs
 plaintext
 PlayStation
 plugin
@@ -376,6 +380,7 @@ symlinked
 symlinks
 SyntaxError
 System76
+tarball
 tartley
 TBH
 teardown
