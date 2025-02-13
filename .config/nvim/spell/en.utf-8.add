@@ -86,7 +86,9 @@ deconstructing
 DelanClip
 denylist
 deselection
+destructuring
 devops
+Dhalgren
 diátaxis
 Diátaxis
 dict
@@ -101,6 +103,7 @@ dojo
 droid
 dropdown
 DSP
+dysmetria
 Dyson
 eg
 eGPU
@@ -121,6 +124,7 @@ Excel's
 expressivity
 eXtreme
 FaceTrackNoIR
+falsey
 fandom
 FastBridge
 Feker
@@ -181,6 +185,8 @@ iptables
 IronPython
 isinstance
 iterable
+Javascript
+Javascript's
 jello
 Jira
 jpg
@@ -394,6 +400,7 @@ Trello
 Trialreach
 TrialReach
 trippy
+truthy
 Twisted's
 Ubuntu
 Ubuntu's
@@ -438,7 +445,3 @@ YouTube
 Zander
 Zander's
 ZeroDivisionError
-falsey
-truthy
-Dhalgren
-dysmetria
