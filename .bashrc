@@ -72,7 +72,7 @@ case $- in
   pwd="$dim_cyan\w$reset"
   prompt="$bright_yellow_inverse\$$reset"
 
-  if [[ "$USER" =~ ^(jhartley|jonathan|tartley)$ ]]; then
+  if [[ "$USER" =~ ^(jhartley)$ ]]; then
     usercol="${green}"
   else
     usercol="${magenta}"
