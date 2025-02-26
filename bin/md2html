@@ -15,38 +15,12 @@ function print_error {
 trap print_error ERR
 
 function usage {
-    echo "Usage: md2html [filename]"
-    echo "Converts markdown to HTML. Reads from 'filename', writing to filename.html,"
-    echo "or falls back to stdin, writing to stdout."
-    echo ""
-    echo "  -h, --help      Print this message."
-    echo ""
+    echo "Usage: md2html [args]"
+    echo "Forwards [args] to pandoc conversion of markdown to HTML."
 }
 
 # Command line args
 
-# defaults
-declare -a args=()
-
-while [ $# -gt 0 ]; do
-    case "$1" in
-        -h|--help) usage; exit;;
-        *) args+=("$1");;
-    esac
-    shift
-done
-
-if [ ${#args[@]} -eq 0 ]; then
-    input=/dev/stdin
-    output=/dev/stdout
-elif [ ${#args[@]} -eq 1 ]; then
-    input="${args[0]}"
-    output="${args[0]%.md}.html"
-else
-    echo "md2html: Error: Cannot accept more than one arg: ${args[@]}"
-    exit 1
-fi
-
 css="$HOME/.config/watch-markdown/style.css"
-pandoc --from markdown --to html --self-contained -c "${css}" "${input}" -o "${output}"
+pandoc --from markdown --to html --self-contained -c "${css}" "$@"
 

@@ -13,6 +13,9 @@ API
 API's
 APIs
 app
+apps
+Appserver
+appservers
 ArcMap
 ArcObjects
 ArcSDE
@@ -20,6 +23,8 @@ arg
 args
 Artifactory
 ASD
+ASGI
+async
 AutoCAD
 autoload
 Autoload
@@ -128,6 +133,7 @@ FaceTrackNoIR
 falsey
 fandom
 FastBridge
+Fastly
 Feker
 ffmpeg
 filesystem
@@ -149,15 +155,16 @@ GIS
 git
 Github
 Golang
-goodyear
+Goodyear
 GPU
 GPUs
 grep
 GUI's
+Gunicorn
 Gural
 Gural's
 hacky
-haproxy
+HAProxy
 hardcoded
 hardpoint
 hardpoints
@@ -165,7 +172,8 @@ hellscapes
 hostname
 howto
 howtos
-https
+httpd
+HTTPS
 hypervisor
 hypervisors
 IbisPaintX
@@ -198,7 +206,7 @@ JSON
 kata
 Keelback
 keycaps
-KQemu
+QEMU
 Krait
 Krait's
 Kubernetes
@@ -339,6 +347,7 @@ Roblox
 Rorschach's
 RTX
 Ryzen
+s
 SCA
 Schlumberger
 screenshot
@@ -346,6 +355,7 @@ screenshots
 sdist
 Sema
 Serverless
+SGI
 SICP
 SKU
 SLF
@@ -370,11 +380,13 @@ Stasi
 stderr
 stdin
 stdout
+subdomains
 sudo
 surveilled
 sutered
 Suze
 Suze's
+SVG
 SWE
 SWEs
 symlink
@@ -424,7 +436,9 @@ USCIS
 username
 usernames
 UTC
-utf8
+UTF8
+Uvicorn
+Uwsgi
 VBA
 Veidt
 Veidt's
@@ -441,6 +455,8 @@ Waneella
 waypoint
 webdriver
 WebP
+webserver
+webservers
 wiki
 win32
 workflow
