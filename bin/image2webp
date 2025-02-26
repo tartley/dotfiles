@@ -7,7 +7,7 @@ set -o pipefail
 
 function usage {
     echo "Usage: $0 [ARGS] FILENAME [FILENAME...]"
-    echo "Convert image files to webp"
+    echo "Calls ImageMagick to convert image files to webp"
     echo ""
     echo "  -h, --help      Print this message."
     echo "  -l, --lossy     Use lossy compression, level 75%."

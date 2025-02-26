@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+usage() {
+    echo "Usage: pydoc -h|--help|FQS"
+    echo "Where FQS is a fully-qualified Python symbol, e.g:"
+    echo "  pydoc random  # info about the package"
+    echo "  pydoc random.uniform  # info about the function within the package"
+    echo "Unlike the official pydoc3, this does find packages installed in the"
+    echo "current virtualenv. But it's a bit hacky so probably breaks often."
+    exit 0
+}
+
+stderr() {
+    # Print message on stderr
+    IFS=' ' awk -v msg="$*" 'BEGIN { print msg > "/dev/stderr" }'
+}
+
+err() {
+    # Print error message on stderr
+    stderr "Error: $*"
+}
+
+if [ $# = 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    usage
+fi
+
+if [ $# != 1 ]; then
+    err "More than one arg is not allowed"
+    exit 1
+fi
+
+python3 -c "import ${1/.*}; help($1)"
+
