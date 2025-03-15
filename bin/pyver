@@ -1,41 +1,70 @@
 #!/usr/bin/env bash
 
-set -e # exit on error
-set -u # treat unset vars as errors
-# set -x # debugging output
-set -o pipefail
+set -o errexit # Exit on error.
+set -o pipefail # Exit on error in a pipe of commands.
+set -o nounset # Treat unset vars as errors.
+# set -o xtrace # Print expanded commands before executing them.
+
+stderr() {
+    # Print message on stderr.
+    # Doing it this way instead of just redirecting makes stderred color errors.
+    python3 -c "import sys; print(\"$*\", file=sys.stderr)"
+}
+
+err() {
+    # Print error message on stderr
+    stderr "Error: $*"
+}
 
 # Validate cmdline args
 
 function usage {
-    echo "USAGE: pyver VERSION" >&2
-    echo "Where VERSION is a valid suffix to a python executable on the PATH. eg:" >&2
-    echo "  pyver 3.12" >&2
-    echo "would create a ~/.local/bin/python3 symlink to \$(which python3.12)" >&2
-    echo "This instantly affects what invoking 'python3' means in all running shells."
-    exit 1
+    stderr "USAGE: pyver VERSION"
+    stderr "Where VERSION is the version number of an installed Python. Eg:"
+    stderr "  pyver 3.12"
+    stderr "would create a ~/.local/bin/python3 symlink to python3.12,"
+    stderr "and similarly for pydoc3.12. This instantly affects what"
+    stderr "invoking 'python3' & 'pydoc' means in all running shells."
 }
 
 if [[ $# -ne 1 ]]; then
-    echo "Error: one argument expected, got $#." >&2
+    err "one argument expected, got $#."
     usage
+    exit 1
+fi
+
+if [[ "$1" = "-h" ]] || [[ "$1" = "--help" ]]; then
+    usage
+    exit 0
 fi
 
 version="$1"
 
-filename=$(which python$version || :)
-if [[ -z "$filename" ]]; then
-    echo "Error: python$version not on PATH"
-    usage
-fi
-
-# Cmdline is valid, do the thing
-
 (
-    echo $filename
     cd ~/.local/bin
-    ln -sf $filename python3
-    hash python3
-    python3 -V
+
+    filename=$(which "python$version" || :)
+    if [[ -z "$filename" ]]; then
+        err "python$version not on PATH"
+    else
+        echo $filename
+        ln -sf $filename python3
+        hash python3
+        ln -sf python3 python
+        hash python
+    fi
+
+    filename=$(which "pydoc$version" || :)
+    if [[ -z "$filename" ]]; then
+        err "pydoc$version not on PATH"
+    else
+        echo $filename
+        ln -sf $filename pydoc3
+        hash pydoc3
+        ln -sf pydoc3 pydoc
+        hash pydoc
+    fi
 )
+
+python3 -V
 
