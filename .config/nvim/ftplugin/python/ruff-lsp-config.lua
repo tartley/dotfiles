@@ -35,7 +35,7 @@ require('lspconfig').ruff.setup{
     init_options = {
         settings = {
             -- Config used for standalone files without a pyproject.toml, etc.
-            lineLength = 88,
+            lineLength = 80,
             -- lint = {
             --     select = {
             --         "ALL",
