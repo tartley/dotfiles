@@ -455,7 +455,7 @@ set number
 MapToggle <Leader>n number
 
 " set window size
-set textwidth=100
+set textwidth=80
 set colorcolumn=+1
 if !exists("g:numColumns")
     let g:numColumns=1

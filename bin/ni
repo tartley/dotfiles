@@ -2,8 +2,8 @@
 
 # Wrapper for nvim. If we aren't running in a terminal, launch one for nvim.
 #
-# May be invoked as `ni` (like 'vi' for nvim), which only creates a terminal if needed,
-# or as `nw`, which always creates a new terminal.
+# May be invoked as `ni` (like 'vi' for nvim), which only creates a terminal if
+# needed, or as `nw`, which always creates a new terminal.
 #
 # That means 'ni' can be called directly from the command-line, used as
 # EDITOR=ni, and invoked from contexts with no terminal, such as a desktop
@@ -12,8 +12,8 @@
 # Beware that if we do open a new terminal window, it runs asynchronously, so
 # don't use EDITOR=nw.
 #
-# Fallback to vim if nvim is not installed, so I can type the same thing in an lxc,
-# for example.
+# Fallback to vim if nvim is not installed, so I can type the same thing in an
+# lxc, for example.
 
 set -e # exit on error
 set -u # treat unset vars as errors
@@ -72,6 +72,7 @@ if ! type -P nvim >/dev/null; then
     editor=vim
 fi
 
+# run vim
 if [ "$newterm" = true ] ; then
     # open editor in a new terminal
     gnome-terminal "${terminal_args[@]}" -- $editor "${editor_args[@]}"
