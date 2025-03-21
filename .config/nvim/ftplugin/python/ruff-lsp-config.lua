@@ -25,6 +25,12 @@
 --      ,D  Menu which offers to organize imports
 --
 
+-- Vim's LSP should use the version of 'ruff' on our PATH, or if there is none,
+-- fallback to a ruff we have installed in neovim virtualenv.
+-- let $PATH = $PATH.':'.$HOME.'/.virtualenvs/neovim/bin/'
+vim.env.PATH = vim.env.PATH .. ':' .. vim.env.HOME .. '/.virtualenvs/neovim/bin/'
+
+
 -- Restore normal working of gqq to format text
 local pylsp_on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, "formatexpr", "")
@@ -34,8 +40,15 @@ require('lspconfig').ruff.setup{
 
     init_options = {
         settings = {
+
             -- Config used for standalone files without a pyproject.toml, etc.
-            lineLength = 88,
+            lineLength = 80,
+
+            -- Ruff's logging level
+            -- see logfile with :lua vim.print(vim.lsp.get_log_path())
+            -- logLevel = 'debug',
+
+            -- don't know if this works
             -- lint = {
             --     select = {
             --         "ALL",
@@ -47,7 +60,7 @@ require('lspconfig').ruff.setup{
     -- Server-specific settings. See `:help lspconfig-setup`
     settings = {
         args = {
-            -- Any extra CLI arguments for `ruff` go here. This works!
+            -- Any extra CLI arguments for `ruff` go here.
             -- "--line-length=80",
         },
     },
@@ -67,7 +80,7 @@ vim.keymap.set('n', '<leader>r', '<cmd>LspRestart<cr>lh')
 vim.cmd(
     'autocmd CursorHold,CursorHoldI *.py lua vim.diagnostic.open_float({focusable=false})'
 )
-vim.o.updatetime = 1000
+vim.o.updatetime = 500
 
 -- Format on file save
 -- Commented because sometimes I do not want to do this (e.g. when editing Rackit code at work)
@@ -100,8 +113,6 @@ vim.diagnostic.config({
             [vim.diagnostic.severity.WARN] = 'WarningMsg',
         },
     },
-    virtual_text = {
-        prefix = '● ',
-    },
+    virtual_text = false,
 })
 
