@@ -44,6 +44,7 @@ BSON
 Buildkite
 builtin
 builtins
+Calendly
 Cardano
 CDN
 celiac
@@ -206,7 +207,6 @@ JSON
 kata
 Keelback
 keycaps
-QEMU
 Krait
 Krait's
 Kubernetes
@@ -321,6 +321,7 @@ PyTest
 PyTest's
 PyWeek
 Qemu
+QEMU
 Rackit
 Radeon
 rando
