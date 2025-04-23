@@ -80,7 +80,7 @@ case $- in
   user="${usercol}${USER}${reset}"
 
   host="${HOSTNAME%%.*}"
-  if [[ "$host" =~ ^(asus|gazelle|t460|boris)$ ]]; then
+  if [[ "$host" =~ ^(ambrose|asus|boris|gazelle|t460)$ ]]; then
     hostcol="${green}"
   elif [[ "$host" =~ ^(A02152)$ ]]; then
     hostcol="${cyan}"
