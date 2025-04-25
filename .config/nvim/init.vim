@@ -406,6 +406,9 @@ noremap <Leader>t :Tags<CR>
 " fuzzy find tag under cursor
 noremap <Leader>T :call fzf#vim#tags(expand('<cword>'))<CR>
 
+" open current buffer
+noremap <Leader>o :silent !open %<CR>
+
 command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
 noremap ,m :MyMarks<CR>:normal '
 
