@@ -454,18 +454,17 @@ dedupe_history() {
     #     && mv -f /tmp/deduped ~/.bash_history
 }
 
+## Node version manager. :eyeroll:
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# # Ignore the error if nvm is not installed on this machine
+# :
+
 
 ## Source all ~/.bashrc.* files. ############################################
 
 for fname in $(ls ~/.bashrc.*); do
     . $fname
 done
-
-
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# Ignore the error if nvm is not installed on this machine
-:
 
