@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Filter stdin, converting:
+#   datetimes -> YYYY-MM-DD HH:mm:SS,mmm
+#   datetimes -> YYYYMMDDTHHmmSSZ
+#   address-like hex numbers -> 0x000000000000
+# The resulting stdout produces less noise in diffs.
+
+set -o errexit # Exit on error.
+set -o pipefail # Exit on error in a pipe of commands.
+set -o nounset # Treat unset vars as errors.
+# set -o xtrace # Print expanded commands before executing them.
+
+sed -E \
+    -e 's/20[0-9]{2}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]+?/YYYY-MM-DD HH:mm:SS,mmm/g' \
+    -e 's/0x[0-9a-f]{12}/0x000000000000/g' \
+    -e 's/20[0-9]{6}T[0-9]{6}Z/YYYYMMDDTHHmmSSZ/g' \
+
+
