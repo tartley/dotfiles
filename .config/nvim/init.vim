@@ -257,7 +257,7 @@ function ToggleWrapWords()
         " wrap at exactly window width
         setlocal nolinebreak
         setlocal list
-        let &showbreak="…"
+        let &showbreak=">"
     endif
     echo "wrap words" (&linebreak ? "on" : "off")
 endfunction
@@ -498,7 +498,11 @@ noremap D "_d
 " Format para
 noremap Q gq}
 " Format whole document (then restore cursor to same line number :-/)
-noremap <leader>Q mz1GgqG'z
+noremap <Leader>Q mz1GgqG'z
+
+" Add italics (asterisks) around the current word.
+" Can I do a remove asterisks too?
+noremap <Leader>i :set nohlsearch<CR>?\s<CR>a*<Esc>/\s<CR>i*<Esc>:set hlsearch<CR>:noh<CR>
 
 " search for visual selection if one exists, otherwise for word under cursor
 function! s:VSetSearch()
