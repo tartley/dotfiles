@@ -414,6 +414,10 @@ eval "$(direnv hook bash)"
 
 # Backup .bash_history
 
+## TODO: This generates a lot of half megabyte files, there must be a better way.
+## Also, the saved files have wildly inconsistent sizes, which seems like a clue
+# that something weird is going on.
+
 historyc() {
     history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
 }
@@ -454,13 +458,19 @@ dedupe_history() {
     #     && mv -f /tmp/deduped ~/.bash_history
 }
 
+## Things that drop junk on the end of your .bashrc #########################
+
+# direnv
+if command direnv version >/dev/null; then
+    eval "$(direnv hook bash)"
+fi
+
 ## Node version manager. :eyeroll:
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 # # Ignore the error if nvm is not installed on this machine
 # :
-
 
 ## Source all ~/.bashrc.* files. ############################################
 
