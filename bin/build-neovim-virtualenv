@@ -5,12 +5,15 @@ set -u # treat unset vars as errors
 set -x # debugging output
 set -o pipefail
 
-syspython="python3.13"
+# Python version to use
+version="3.13"
+
 ve="$HOME/.virtualenvs/neovim"
 pip="$ve/bin/pip"
+python="$ve/bin/python"
 
 rm -rf "$ve"
-"$syspython" -m venv "$ve"
-"$pip" install --quiet -U pip
-"$pip" install --quiet neovim ruff
+uv python install --preview $version
+uv venv --python python$version "$ve"
+uv pip install --python $python neovim ruff
 
