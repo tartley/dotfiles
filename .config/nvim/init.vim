@@ -257,7 +257,7 @@ function ToggleWrapWords()
         " wrap at exactly window width
         setlocal nolinebreak
         setlocal list
-        let &showbreak=">"
+        let &showbreak="»"
     endif
     echo "wrap words" (&linebreak ? "on" : "off")
 endfunction
