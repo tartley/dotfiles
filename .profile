@@ -17,8 +17,8 @@ addpath() {
     fi
 }
 
-addpath "$HOME/bin"
 addpath "$HOME/.local/bin"
+addpath "$HOME/bin"
 
 if [ $OSTYPE = darwin* ] ; then
     # this already in PATH, but we want it before /usr/bin so things like
