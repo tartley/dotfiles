@@ -20,9 +20,6 @@ Plug 'lifepillar/vim-solarized8'
 " Deleting a buffer without closing the window
 Plug 'rbgrouleff/bclose.vim'
 
-" Language Server Protocol config
-Plug 'neovim/nvim-lspconfig'
-
 " <Leader>l - toggle location window
 " <Leader>q - toggle quickfix window
 Plug 'milkypostman/vim-togglelist'
@@ -752,7 +749,13 @@ fun! TagJumpMatchCase()
 endfun
 nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
-" 4. Autocommands --------------------------------------------------------------
+" 4. LSP config ----------------------------------------------------------------
+
+lua << EOF
+vim.lsp.enable('ruff')
+EOF
+
+" 5. Autocommands --------------------------------------------------------------
 
 if has("autocmd") && !exists("autocommands_loaded")
 
