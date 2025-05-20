@@ -383,8 +383,8 @@ set undofile
 
 " 3. Key mappings -------------------------------------------------------------
 
-" Reload this config file on saving edits
-nmap <Leader>c :e ~/.config/nvim/init.vim<CR>
+" Edit nvim config file
+nmap <Leader>C :e ~/.config/nvim/init.vim<CR>
 
 " -- fzf plugin ----
 " see additional fzf config in .bashrc, setting env var FZF_DEFAULT_OPTS
@@ -752,7 +752,92 @@ nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 " 4. LSP config ----------------------------------------------------------------
 
 lua << EOF
-vim.lsp.enable('ruff')
+
+-- some built in keys:
+-- [-d : prev diagnostic
+-- ]-d : next diagnostic
+-- ,c  : toggle comment
+
+-- <leader>d : toggle virtual lines
+vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.config({virtual_lines=not vim.diagnostic.config().virtual_lines})<cr>')
+-- <leader>D : toggle virtual text
+vim.keymap.set('n', '<leader>D', '<cmd>lua vim.diagnostic.config({virtual_text=not vim.diagnostic.config().virtual_text})<cr>')
+-- <leader>. code action menu (e.g. to ignore or apply auto-fixes)
+vim.keymap.set('n', '<leader>.', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+
+-- format on save
+vim.cmd(
+    'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
+)
+
+-- use the lsp tools we install into our neovim virtualenv
+vim.env.PATH = vim.env.PATH .. ':' .. vim.env.HOME .. '/.virtualenvs/neovim/bin/'
+
+-- hovering text cursor opens diagnostic floating window
+vim.cmd(
+    'autocmd CursorHold *.py lua vim.diagnostic.open_float({focusable=false})'
+)
+vim.o.updatetime = 150
+
+vim.diagnostic.config({
+    signs = false,
+    float = {
+        header = '',
+        source = 'always',
+    },
+    update_in_insert = false,
+})
+
+-- Restore normal working of gqq to format text
+local on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, "formatexpr", "")
+end
+
+-- ruff LSP (lint, format) ----------
+
+py_root_files = {
+    'pyproject.toml',
+    'ruff.toml',
+    'setup.py',
+    'setup.cfg',
+    'Makefile',
+    'requirements.txt',
+    'Pipfile',
+    '.git',
+}
+vim.lsp.config['ruff'] = {
+    cmd = { 'ruff', 'server' },
+    filetypes = { 'python' },
+    root_markers = py_root_files,
+    init_options = {
+        settings = {
+            lineLength = 80,
+        },
+    },
+    on_attach = on_attach,
+}
+
+-- pyright (typecheck) -------
+
+vim.lsp.config['pyright'] = {
+    cmd = {'basedpyright-langserver', '--stdio'},
+    filetypes = {'python'},
+    root_markers = py_root_markers,
+    settings = {
+        basedpyright = {
+            analysis = {
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = 'openFilesOnly',
+            },
+        },
+    },
+}
+
+----
+
+vim.lsp.enable('ruff') -- 'pyright'
+
 EOF
 
 " 5. Autocommands --------------------------------------------------------------
