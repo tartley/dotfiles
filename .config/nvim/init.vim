@@ -751,6 +751,8 @@ nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. LSP config ----------------------------------------------------------------
 
+" assumes LSP executables are on the PATH. I've been installing them using pipx
+
 lua << EOF
 
 -- some built in keys:
@@ -758,17 +760,22 @@ lua << EOF
 -- ]-d : next diagnostic
 -- ,c  : toggle comment
 
--- <leader>d : toggle virtual lines
+-- toggle virtual lines
 vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.config({virtual_lines=not vim.diagnostic.config().virtual_lines})<cr>')
--- <leader>D : toggle virtual text
+-- toggle virtual text
 vim.keymap.set('n', '<leader>D', '<cmd>lua vim.diagnostic.config({virtual_text=not vim.diagnostic.config().virtual_text})<cr>')
--- <leader>. code action menu (e.g. to ignore or apply auto-fixes)
+-- code action menu (e.g. to ignore or apply auto-fixes)
 vim.keymap.set('n', '<leader>.', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+-- format buffer
+vim.keymap.set('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<cr>')
 
--- format on save
-vim.cmd(
-    'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
-)
+-- Format on save
+-- Commented because our settings (e.g. line length) differ from work repos,
+-- which are defined in .flake8, which isn't a config file that ruff reads.
+-- I'll figure out how to format work code later...
+-- vim.cmd(
+--     'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
+-- )
 
 -- hovering text cursor opens diagnostic floating window
 vim.cmd(
@@ -806,11 +813,6 @@ vim.lsp.config['ruff'] = {
     cmd = { 'ruff', 'server' },
     filetypes = { 'python' },
     root_markers = py_root_files,
-    init_options = {
-        settings = {
-            lineLength = 80,
-        },
-    },
     on_attach = on_attach,
 }
 
