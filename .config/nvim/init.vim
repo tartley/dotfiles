@@ -770,9 +770,6 @@ vim.cmd(
     'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
 )
 
--- use the lsp tools we install into our neovim virtualenv
-vim.env.PATH = vim.env.PATH .. ':' .. vim.env.HOME .. '/.virtualenvs/neovim/bin/'
-
 -- hovering text cursor opens diagnostic floating window
 vim.cmd(
     'autocmd CursorHold *.py lua vim.diagnostic.open_float({focusable=false})'
