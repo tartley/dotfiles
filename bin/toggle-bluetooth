@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 rfkill block bluetooth
-pw-cat -p /usr/share/sounds/sound-icons/pisk-down.wav
+pw-play /usr/share/sounds/sound-icons/pisk-down.wav
 
 sleep 1
 
 rfkill unblock bluetooth
-pw-cat -p /usr/share/sounds/sound-icons/pisk-up.wav
+pw-play ~/docs/audio/effects/stapler.wav
 
 sleep 1
 
