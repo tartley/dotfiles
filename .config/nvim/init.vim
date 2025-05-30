@@ -471,8 +471,8 @@ function! SetWindowWidth()
 endfunction
 
 noremap <Leader>8 :set textwidth=80<CR>:call SetWindowWidth()<CR>
-noremap <Leader>9 :set textwidth=90<CR>:call SetWindowWidth()<CR>
-noremap <Leader>0 :set textwidth=100<CR>:call SetWindowWidth()<CR>
+noremap <Leader>9 :set textwidth=100<CR>:call SetWindowWidth()<CR>
+noremap <Leader>0 :set textwidth=120<CR>:call SetWindowWidth()<CR>
 
 " single column
 noremap <silent> <Leader><f1> :only!<CR>:let g:numColumns=1<CR>:call SetWindowWidth()<CR>
