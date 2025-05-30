@@ -2,27 +2,29 @@
 
 # See 'usage' below.
 
-set -e # exit on error
-set -u # treat unset vars as errors
-# set -x # debugging output
-set -o pipefail
+set -o errexit # Exit on error.
+set -o pipefail # Exit on error in a pipe of commands.
+set -o nounset # Treat unset vars as errors.
+# set -o xtrace # Print expanded commands before executing them.
 
-function print_error {
-    read line file <<<$(caller)
-    echo "An error occurred in line $line of file $file:" >&2
-    sed "${line}q;d" "$file" >&2
+stderr() {
+    # Print message on stderr
+    # Done this long way instead of redirecting to make stderred add color.
+    python3 -c "import sys; print('$*', file=sys.stderr)"
 }
-trap print_error ERR
+
+err() {
+    # Print error message on stderr
+    stderr "Error: $*"
+}
 
 function usage {
-    echo "Usage: md2html [args]"
-    echo "Forwards [args] to pandoc conversion of markdown to HTML."
+    echo "Usage: md2html [args] [filenames]"
+    echo "Forwards [args] to pandoc conversion of each markdown filename to HTML."
 }
 
-# Command line args
-
 css="$HOME/.config/watch-markdown/style.css"
-pandoc --from markdown --to html --self-contained -c "${css}" "$@"
+pandoc --from markdown --to html --embed-resources --standalone -c "${css}" "$@"
 
 # TODO: To incorporate pikchr rendering:
 #   pikchr <INPUT.md | pandoc ...
@@ -35,3 +37,4 @@ pandoc --from markdown --to html --self-contained -c "${css}" "$@"
 # remove '$@' from end of pandoc invocation I think.
 # TODO: Can we render other diagram types? Does pandoc do it for us?
 # Does pandoc do pikchr for us?
+
