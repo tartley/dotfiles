@@ -276,6 +276,10 @@ repeat_until_key() {
     done
 }
 
+sd() {
+    sudo docker "$@"
+}
+
 # Set the terminal window name
 termname() {
     # Use window title specified by caller, with a fallback if they didn't specify.
