@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# A wrapper around mermaid-cli 'mmdc'.
+
+# Abandoning this: Lots of hacks required to make it work,
+# and the third straw is that subgraph titles don't render.
+# Feels like mermaid has become unusably unstable, to me.
+
+# Fixes SVG text being invisible in some viewers
+~/.local/bin/mmdc -c ~/.config/mmdc/config.json $@
+
+# I did initially use this as well, but now I can't remember why.
+# Maybe as a fix for mmdc noisily failing to launch chrome (?!?!?)
+# although why on earth it was attempting to do that, I cannot imagine.
+# --puppeteerConfigFile $HOME/.config/mmdc/puppeteer-config.json 
+
+

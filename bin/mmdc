@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-mmdc --puppeteerConfigFile $HOME/.config/mmdc/puppeteer-config.json $@
-
