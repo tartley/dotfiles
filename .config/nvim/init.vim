@@ -784,12 +784,13 @@ vim.cmd(
 vim.o.updatetime = 150
 
 vim.diagnostic.config({
-    signs = false,
     float = {
         header = '',
         source = 'always',
     },
+    signs = false,
     update_in_insert = false,
+    virtual_text = false,
 })
 
 -- Restore normal working of gqq to format text
@@ -835,6 +836,8 @@ vim.lsp.config['pyright'] = {
 
 ----
 
+-- Can I enable both of these, merging their outputs?
+-- Alternatively, should I create a toggle?
 vim.lsp.enable('ruff') -- 'pyright'
 
 EOF
