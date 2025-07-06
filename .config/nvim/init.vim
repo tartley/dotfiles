@@ -471,8 +471,8 @@ function! SetWindowWidth()
 endfunction
 
 noremap <Leader>8 :set textwidth=80<CR>:call SetWindowWidth()<CR>
-noremap <Leader>9 :set textwidth=90<CR>:call SetWindowWidth()<CR>
-noremap <Leader>0 :set textwidth=100<CR>:call SetWindowWidth()<CR>
+noremap <Leader>9 :set textwidth=100<CR>:call SetWindowWidth()<CR>
+noremap <Leader>0 :set textwidth=120<CR>:call SetWindowWidth()<CR>
 
 " single column
 noremap <silent> <Leader><f1> :only!<CR>:let g:numColumns=1<CR>:call SetWindowWidth()<CR>
@@ -751,6 +751,8 @@ nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. LSP config ----------------------------------------------------------------
 
+" assumes LSP executables are on the PATH. I've been installing them using pipx
+
 lua << EOF
 
 -- some built in keys:
@@ -758,20 +760,22 @@ lua << EOF
 -- ]-d : next diagnostic
 -- ,c  : toggle comment
 
--- <leader>d : toggle virtual lines
+-- toggle virtual lines
 vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.config({virtual_lines=not vim.diagnostic.config().virtual_lines})<cr>')
--- <leader>D : toggle virtual text
+-- toggle virtual text
 vim.keymap.set('n', '<leader>D', '<cmd>lua vim.diagnostic.config({virtual_text=not vim.diagnostic.config().virtual_text})<cr>')
--- <leader>. code action menu (e.g. to ignore or apply auto-fixes)
+-- code action menu (e.g. to ignore or apply auto-fixes)
 vim.keymap.set('n', '<leader>.', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+-- format buffer
+vim.keymap.set('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<cr>')
 
--- format on save
-vim.cmd(
-    'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
-)
-
--- use the lsp tools we install into our neovim virtualenv
-vim.env.PATH = vim.env.PATH .. ':' .. vim.env.HOME .. '/.virtualenvs/neovim/bin/'
+-- Format on save
+-- Commented because our settings (e.g. line length) differ from work repos,
+-- which are defined in .flake8, which isn't a config file that ruff reads.
+-- I'll figure out how to format work code later...
+-- vim.cmd(
+--     'autocmd BufWritePre *.py lua vim.lsp.buf.format({async=false})'
+-- )
 
 -- hovering text cursor opens diagnostic floating window
 vim.cmd(
@@ -780,12 +784,13 @@ vim.cmd(
 vim.o.updatetime = 150
 
 vim.diagnostic.config({
-    signs = false,
     float = {
         header = '',
         source = 'always',
     },
+    signs = false,
     update_in_insert = false,
+    virtual_text = false,
 })
 
 -- Restore normal working of gqq to format text
@@ -809,11 +814,6 @@ vim.lsp.config['ruff'] = {
     cmd = { 'ruff', 'server' },
     filetypes = { 'python' },
     root_markers = py_root_files,
-    init_options = {
-        settings = {
-            lineLength = 80,
-        },
-    },
     on_attach = on_attach,
 }
 
@@ -836,6 +836,8 @@ vim.lsp.config['pyright'] = {
 
 ----
 
+-- Can I enable both of these, merging their outputs?
+-- Alternatively, should I create a toggle?
 vim.lsp.enable('ruff') -- 'pyright'
 
 EOF

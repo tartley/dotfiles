@@ -30,6 +30,7 @@ grep \
   --exclude-dir=build \
   --exclude-dir=dist \
   --exclude-dir=env \
+  --exclude-dir=htmlcov \
   --exclude-dir=logs \
   --exclude-dir=node_modules \
   --exclude-dir=venv \

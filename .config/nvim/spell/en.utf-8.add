@@ -39,6 +39,7 @@ biome
 biomes
 Bitcoin
 blog
+BMX
 botnet
 BSON
 Buildkite
@@ -82,6 +83,7 @@ cryptocurrency
 CTO
 ctrl
 Danilo
+Danilo's
 datacenters
 dataclass
 datasheet
@@ -95,6 +97,7 @@ DelanClip
 denylist
 deselection
 destructuring
+dev
 devops
 Dhalgren
 diátaxis
@@ -111,6 +114,7 @@ dojo
 droid
 dropdown
 DSP
+DTO
 dysmetria
 Dyson
 eg
@@ -208,6 +212,7 @@ JSON
 kata
 Keelback
 keycaps
+Knightsbridge
 Krait
 Krait's
 Kubernetes
@@ -229,6 +234,7 @@ Mattermost
 maximalists
 MCA
 MCAs
+MDU
 meds
 megastructure
 meh
@@ -272,6 +278,7 @@ Nginx
 NIC
 NICs
 Node2D
+NoneType
 NoSQL
 NPC
 numpad
@@ -315,7 +322,10 @@ psd
 PSD
 Publius
 PvP
+py
 PyCon
+pydantic
+Pydantic
 Pyglet's
 PyLint
 PyPI
@@ -427,6 +437,7 @@ truthy
 Twisted's
 Ubuntu
 Ubuntu's
+UI
 unhandled
 unittest
 unittest's
@@ -441,6 +452,7 @@ username
 usernames
 UTC
 UTF8
+UUID
 Uvicorn
 Uwsgi
 VBA
@@ -459,6 +471,7 @@ VSCode
 VSIs
 Waneella
 waypoint
+webapp
 webdriver
 WebP
 webserver

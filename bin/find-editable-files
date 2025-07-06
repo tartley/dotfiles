@@ -32,6 +32,7 @@ find . \
     -name build -o \
     -name dist -o \
     -name env -o \
+    -name htmlcov -o \
     -name logs -o \
     -name node_modules -o \
     -name venv \

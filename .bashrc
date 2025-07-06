@@ -161,10 +161,6 @@ fi
 # TODO: maybe all these should only be defined if it is an interactive shell?
 # Maybe lots of things in this file are like that?
 
-beep() {
-    paplay /usr/share/sounds/sound-icons/xylofon.wav &
-}
-
 # Generate n busyloops to keep n CPUs busy.
 # See also 'killalljobs'
 busyloop() {
@@ -278,6 +274,10 @@ repeat_until_key() {
         $command
         read -s -n1 -t1 && break
     done
+}
+
+sd() {
+    sudo docker "$@"
 }
 
 # Set the terminal window name

@@ -15,5 +15,5 @@ python="$ve/bin/python"
 rm -rf "$ve"
 uv python install --preview $version
 uv venv --python python$version "$ve"
-uv pip install --python $python neovim ruff
+uv pip install --python $python neovim
 

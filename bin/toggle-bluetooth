@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+rfkill block bluetooth
+pw-play /usr/share/sounds/sound-icons/pisk-down.wav
+
+sleep 1
+
+rfkill unblock bluetooth
+pw-play ~/docs/audio/effects/stapler.wav
+
+sleep 1
+
