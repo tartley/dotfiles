@@ -842,7 +842,62 @@ vim.lsp.enable('ruff') -- 'pyright'
 
 EOF
 
-" 5. Autocommands --------------------------------------------------------------
+" 5 Highlight words
+"
+" Initial version from:
+" https://gist.github.com/emilyst/9243544#file-vimrc-L142
+"
+" This mini-plugin provides a few mappings for highlighting words temporarily.
+"
+" Use <leader>N where N is a number from 1-6 to highlight the current word.
+" <leader>` unsets all highlighting
+
+function! HiInterestingWord(n)
+    hi def HiInterestingWord1 guifg=#000000 ctermfg=16 guibg=#ffa724 ctermbg=214
+    hi def HiInterestingWord2 guifg=#000000 ctermfg=16 guibg=#aeee00 ctermbg=154
+    hi def HiInterestingWord3 guifg=#000000 ctermfg=16 guibg=#8cffba ctermbg=121
+    hi def HiInterestingWord4 guifg=#000000 ctermfg=16 guibg=#b88853 ctermbg=137
+    hi def HiInterestingWord5 guifg=#000000 ctermfg=16 guibg=#ff9eb8 ctermbg=211
+    hi def HiInterestingWord6 guifg=#000000 ctermfg=16 guibg=#ff2c4b ctermbg=195
+    " HiInterestingWord(0) clears all the matches, including the general
+    " search highlighting.
+    if a:n == 0
+        let i = 1
+        while i <= 6
+            let mid = 86750 + i
+            silent! call matchdelete(mid)
+            let i += 1
+        endwhile
+        set hlsearch!
+        return
+    endif
+    " Save our location.
+    normal! mz
+    " Yank the current word into the z register.
+    normal! "zyiw
+    " Calculate an arbitrary match ID.  Hopefully nothing else is using it.
+    let mid = 86750 + a:n
+    " Clear existing matches, but don't worry if they don't exist.
+    silent! call matchdelete(mid)
+    " Construct a literal pattern that has to match at boundaries.
+    let pat = '\V\<' . escape(@z, '\') . '\>'
+    " Actually match the words.
+    call matchadd('HiInterestingWord' . a:n, pat, 1, mid)
+    " Move back to our original location.
+    normal! `z
+endfunction
+
+" Default Highlights
+
+nmap <silent> <leader>` :call HiInterestingWord(0)<cr>
+nmap <silent> <leader>1 :call HiInterestingWord(1)<cr>
+nmap <silent> <leader>2 :call HiInterestingWord(2)<cr>
+nmap <silent> <leader>3 :call HiInterestingWord(3)<cr>
+nmap <silent> <leader>4 :call HiInterestingWord(4)<cr>
+nmap <silent> <leader>5 :call HiInterestingWord(5)<cr>
+nmap <silent> <leader>6 :call HiInterestingWord(6)<cr>
+
+" 6. Autocommands --------------------------------------------------------------
 
 if has("autocmd") && !exists("autocommands_loaded")
 

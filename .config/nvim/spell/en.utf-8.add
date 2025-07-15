@@ -25,6 +25,7 @@ Artifactory
 ASD
 ASGI
 async
+asyncio
 AutoCAD
 autoload
 Autoload
@@ -316,6 +317,7 @@ poor's
 Postgresql
 PostgreSQL
 PowerShell
+precarity
 PRs
 PS3
 psd
@@ -462,6 +464,7 @@ vendored
 versioned
 videogame
 videogames
+videogaming
 virtualenv
 virtualization
 VM
