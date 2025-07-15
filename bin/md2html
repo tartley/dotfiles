@@ -26,15 +26,7 @@ function usage {
 css="$HOME/.config/watch-markdown/style.css"
 pandoc --from markdown --to html --embed-resources --standalone -c "${css}" "$@"
 
-# TODO: To incorporate pikchr rendering:
-#   pikchr <INPUT.md | pandoc ...
-# but how to identify INPUT.md from $@ ? Perhaps:
-#
-#   md2html in.md --pandoc='pandoc args'
-#
-# Do I even need pandoc args? For now just limit this script to one arg,
-# the input filename, and don't allow passing pandoc args. Will need to
-# remove '$@' from end of pandoc invocation I think.
-# TODO: Can we render other diagram types? Does pandoc do it for us?
-# Does pandoc do pikchr for us?
+# TODO: Pre-processing to redner pikchr diagrams? Can that be generalized,
+# a notation to invoke arbitrary executables to render an image?
+# Can pandoc do it for us?
 
