@@ -260,7 +260,7 @@ pydirs() {
 }
 
 pytree() {
-    tree -AC -I '*.pyc|__pycache__' "$@"
+    tree -AC -I '*.pyc|__pycache__|htmlcov' "$@"
 }
 
 pywait() {
