@@ -62,6 +62,7 @@ case $- in
   post='m\]'
 
   green="${pre}32${post}"
+  yellow="${pre}33${post}"
   cyan="${pre}36${post}"
   magenta="${pre}95${post}"
   dim_cyan="${pre}96${post}"
@@ -80,9 +81,11 @@ case $- in
   user="${usercol}${USER}${reset}"
 
   host="${HOSTNAME%%.*}"
-  if [[ "$host" =~ ^(ambrose|asus|boris|gazelle|t460)$ ]]; then
+  if [[ "$host" =~ ^(delta)$ ]]; then
     hostcol="${green}"
-  elif [[ "$host" =~ ^(A02152)$ ]]; then
+  elif [[ "$host" =~ ^(asus|boris|gazelle|t460)$ ]]; then
+    hostcol="${yellow}"
+  elif [[ "$host" =~ ^(ambrose)$ ]]; then
     hostcol="${cyan}"
   else
     hostcol="${magenta}"
