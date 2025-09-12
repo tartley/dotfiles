@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -o errexit # Exit on error.
+set -o pipefail # Exit on error in a pipe of commands.
+set -o nounset # Treat unset vars as errors.
+# set -o xtrace # Print expanded commands before executing them.
+
+clock() {
+    # Should we use colons or spaces as separators?
+    # specify base 10, so that preceding zeroes don't generate octal numbers
+    if (( "$(date +"10#%N")" < 500000000 )); then
+        s=':'
+    else
+        s=' '
+    fi
+    date "+  %H$s%M$s%S"
+}
+
+export -f clock
+
+gnome-terminal --geometry=13x1 --profile=clock -- watch -txn0.5 -- bash -c clock
+
