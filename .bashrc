@@ -32,24 +32,6 @@ error() (
   awk -v msg="$*" 'BEGIN { print "Error: " msg > "/dev/stderr" }'
 )
 
-
-## Readline and key binds ####################################################
-
-if [[ ${SHELLOPTS} =~ (vi|emacs) ]]; then
-
-    # If there are multiple matches for completion,
-    # Tab should cycle through them
-    bind 'TAB':menu-complete
-
-    # Display a list of the matching files
-    bind "set show-all-if-ambiguous on"
-
-    # Perform partial completion on the first Tab press,
-    # only start cycling full results on the second Tab press
-    bind "set menu-complete-display-prefix on"
-
-fi
-
 ## Interactive shell tweaks ################################################
 
 case $- in
@@ -110,11 +92,19 @@ case $- in
   # for searching command line history forwards (opposite of ctrl-r)
   stty -ixon
 
-;;
+  # Readline and key binds
+  if [[ ${SHELLOPTS} =~ (vi|emacs) ]]; then
+    # If there are multiple matches for completion,
+    # Tab should cycle through them
+    bind 'TAB':menu-complete
+    # Display a list of the matching files
+    bind "set show-all-if-ambiguous on"
+    # Perform partial completion on the first Tab press,
+    # only start cycling full results on the second Tab press
+    bind "set menu-complete-display-prefix on"
+  fi
 
-# non-interactive shell
-*)
-;;
+  ;;
 
 esac
 
@@ -124,7 +114,7 @@ if [ "$TERM" != "dumb" ]; then
 fi
 
 
-## options to coreutils #####################################################
+## aliases to coreutils #####################################################
 
 # Requires latest gnu coreutils, maybe don't work with Mac's old built-in ones
 alias cd-='cd -'
@@ -147,11 +137,18 @@ alias mv='mv -i'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
-
-
-## Other aliases #########################################
-
 alias whence='type -a' # like where, but also describes aliases and functions
+
+# My installed tools
+# Prefer aliases here over ~/.local/bat symlinks since it forces scripts to use
+# the canonical name, rather than my idiosyncratic personal aliases. Also, some
+# programs behavior is influenced by the name they are invoked as, e.g.
+# cool-retro-term helpfully (but confusingly) generates a whole new config for
+# each name it is invoked under.
+alias bat=batcat
+alias crt=cool-retro-term
+alias python=python3
+alias py=python3
 
 # if colordiff is installed, use it
 if type colordiff &>/dev/null ; then
@@ -160,9 +157,6 @@ fi
 
 
 ## Functions ##############################################
-
-# TODO: maybe all these should only be defined if it is an interactive shell?
-# Maybe lots of things in this file are like that?
 
 # Generate n busyloops to keep n CPUs busy.
 # See also 'killalljobs'
