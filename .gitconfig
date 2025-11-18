@@ -93,7 +93,7 @@
 
 [user]
     name = Jonathan Hartley
-    email = tartley@tartley.com
+	email = jonathan.hartley@kraken.tech
 
 # Recommented by @glyph. TBH I don't understand why.
 [protocol "http"]
