@@ -41,3 +41,4 @@ Control-w: backward-kill-word
 # shift PageDown
 "\e[6~": history-search-forward
 
+# end
