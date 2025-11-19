@@ -67,7 +67,7 @@ case $- in
     hostcol="${green}"
   elif [[ "$host" =~ ^(asus|boris|gazelle|t460)$ ]]; then
     hostcol="${yellow}"
-  elif [[ "$host" =~ ^(ambrose)$ ]]; then
+  elif [[ "$host" =~ ^(k1)$ ]]; then
     hostcol="${cyan}"
   else
     hostcol="${magenta}"
