@@ -38,7 +38,7 @@ export PATH
 
 # Other env variables ######################
 
-export CDPATH=":$HOME/src/cosmos:$HOME/src:$HOME"
+export CDPATH="$HOME/src"
 
 # These completion tuning parameters change the default behavior of
 # bash_completion:
