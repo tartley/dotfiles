@@ -59,6 +59,7 @@ ChatGPT
 chia
 chipset
 CIDR
+CircleCI
 CLI
 Cloudflare
 CLR
@@ -120,8 +121,10 @@ DSP
 DTO
 dysmetria
 Dyson
+EC2
 eg
 eGPU
+Elasicsearch
 Elasticsearch
 emissive
 env
@@ -168,6 +171,8 @@ Golang
 Goodyear
 GPU
 GPUs
+Graphene
+GraphQL
 grep
 GUI's
 Gunicorn
@@ -220,6 +225,8 @@ keycaps
 Knightsbridge
 Krait
 Krait's
+Kraken
+Krakens
 Kubernetes
 KVM
 kwarg
@@ -243,6 +250,7 @@ MDU
 meds
 megastructure
 meh
+Memcached
 meme
 memes
 memetic
@@ -343,6 +351,7 @@ PyTest's
 PyWeek
 Qemu
 QEMU
+RabbitMQ
 Rackit
 Radeon
 rando
@@ -367,9 +376,11 @@ RHEL
 Ringworld
 Roblox
 Rorschach's
+RPC
 RTX
 Ryzen
 s
+S3
 SCA
 Schlumberger
 screenshot
@@ -426,6 +437,7 @@ teleportation
 tenkeyless
 terabyte
 Termcolor
+Terraform
 Teton
 textboxes
 Thargoid
