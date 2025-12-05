@@ -63,7 +63,10 @@ dvcs_function="
     if [ -n \"\$_git_dir\" ]; then
         # find current branch
         gitBranch=\$(git symbolic-ref HEAD 2> /dev/null)\ 
-        gitStatus=\$(git status)
+        # TODO Commented out because it takes 600ms in kraken-core
+        # This means we lose delta chars on changes,
+        # and counts of ahead/behind commits.
+        # gitStatus=\$(git status)
 
         # Figure out if we are rebasing
         if [[ -d \"\$_git_dir/.git/rebase-apply\" || -d \"\$_git_dir/.git/rebase-merge\" ]]; then
@@ -122,9 +125,8 @@ dvcs_function="
             prompt=\$prompt\"\\[\$COLOR_LIGHTBLUE\\]+\$num\"
         fi
 
-        # any conflicts? (sed madness is to remove line breaks)
+        # Any conflicts? (sed madness is to remove line breaks)
         files=\$(git ls-files -u | cut -f 2 | sort -u | sed '$(($MAX_CONFLICTED_FILES+1)),1000d' | sed -e :a -e '\$!N;s/\\\n/, /;ta' -e 'P;D')
-
         # Show conflicted files if any
         if [ -n \"\$files\" ]; then
             prompt=\$prompt\" \\[\$COLOR_RED\\](\\[\$COLOR_LIGHTYELLOW\\]\"
