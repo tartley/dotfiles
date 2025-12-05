@@ -53,7 +53,7 @@ case $- in
   reset="${pre}0${post}"
 
   pwd="$dim_cyan\w$reset"
-  prompt="$bright_yellow_inverse\$$reset"
+  prompt="$bright_yellow_inverse \$ $reset"
 
   if [[ "$USER" =~ ^(jhartley)$ ]]; then
     usercol="${green}"
@@ -83,7 +83,7 @@ case $- in
 
   # if exit value isn't zero, display it with red background, and a bell
   PROMPT_COMMAND='exitval=$?; '$PROMPT_COMMAND
-  get_exitval="\$(if [[ \$exitval != 0 ]]; then echo \"${red_inverse} \$exitval ${reset}\"; fi)"
+  get_exitval="\$(if [[ \$exitval != 0 ]]; then echo \"${red_inverse} \$exitval ${reset} \"; fi)"
   export PS1="$get_exitval\n${user}@${host} $pwd\$(${dvcs_function})\n$prompt "
 
   unset pre post green magenta dim_cyan bright_yellow_inverse reset pwd prompt
