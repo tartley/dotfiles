@@ -36,11 +36,6 @@ function _git_check {
     if [[ "$_git_dir" == "" ]]; then
         return 1
     else
-        _gsvn_check=`cd "$_git_dir"; ls .git/svn/.metadata 2> /dev/null`
-
-        if [[ ! -z "$_gsvn_check" ]]; then
-            _git_svn_dir=$_git_dir
-        fi
         return 0
     fi
 }
@@ -93,12 +88,6 @@ dvcs_function="
             fi
         fi
         gitBranch=\${gitBranch#refs/heads/}
-        #: git-svn
-        if [ -z \"\$bisect\" ]; then
-            if [ -n \"\$_git_svn_dir\" ]; then
-                gitBranch=\"\\[\$COLOR_LIGHTBLUE\\]git-svn\\[\$COLOR_LIGHTYELLOW\\] \$gitBranch \"
-            fi
-        fi
 
         if [ -z \"\$is_rebase\" ]; then
             # changed *tracked* files in local directory?
