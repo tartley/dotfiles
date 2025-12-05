@@ -124,13 +124,14 @@ dvcs_function="
 
         # any conflicts? (sed madness is to remove line breaks)
         files=\$(git ls-files -u | cut -f 2 | sort -u | sed '$(($MAX_CONFLICTED_FILES+1)),1000d' | sed -e :a -e '\$!N;s/\\\n/, /;ta' -e 'P;D')
-    fi
 
-    # Show conflicted files if any
-    if [ -n \"\$files\" ]; then
-        prompt=\$prompt\" \\[\$COLOR_RED\\](\\[\$COLOR_LIGHTYELLOW\\]\"
-        prompt=\$prompt\"\\[`tput sc`\\]  \\[`tput rc`\\]\\[\$COLOR_LIGHTRED\\]\\[\$CONFLICT_CHAR\\] \"
-        prompt=\$prompt\"\\[\$COLOR_RED\\] \${files})\"
+        # Show conflicted files if any
+        if [ -n \"\$files\" ]; then
+            prompt=\$prompt\" \\[\$COLOR_RED\\](\\[\$COLOR_LIGHTYELLOW\\]\"
+            prompt=\$prompt\"\\[`tput sc`\\]  \\[`tput rc`\\]\\[\$COLOR_LIGHTRED\\]\\[\$CONFLICT_CHAR\\] \"
+            prompt=\$prompt\"\\[\$COLOR_RED\\] \${files})\"
+        fi
+
     fi
 
     echo -e \$prompt"
