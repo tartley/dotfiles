@@ -460,9 +460,13 @@ if command direnv version >/dev/null; then
     eval "$(direnv hook bash)"
 fi
 
-## Source all ~/.bashrc.* files. ############################################
+## Source other ~/.bashrc.* files. ############################################
 
-for fname in $(ls ~/.bashrc.*); do
-    . $fname
-done
+source ~/.bashrc.git
+
+# Run this host's custom bashrc suffix file, if one exists
+hostrc="$HOME/.bashrc.$HOSTNAME"
+if [ -f "$hostrc" ]; then
+    source "$hostrc"
+fi
 
