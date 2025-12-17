@@ -1,11 +1,6 @@
 # Bashrc addendums for Kraken
 # vim: set ft=sh :
 
-# only run on kraken laptop 'k1'
-if [ "$(hostname)" != "k1" ]; then
-    return
-fi
-
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
 # It's too slow in kraken core.
 if command -v eza >/dev/null ; then
