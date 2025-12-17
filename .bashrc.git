@@ -12,43 +12,20 @@ gb() {
     git --no-pager branch -vv --color=always "$@"
 }
 
-# branch refactor
-gbr() {
-    if [ -z "$refactor" ]; then
-        error "env var 'refactor' not set"
-        return 1
-    fi
-    git switch -q "$refactor"
-}
-
-# branch implementation
-gbi() {
-    if [ -z "$implementation" ]; then
-        error "Env var 'implementation' not set."
-        return 1
-    fi
-    git switch -q "$implementation"
-}
-
 # git branch: Print bare current branch name
 gbranch() {
     git branch "$@" | grep '^*'| cut -d' ' -f2
 }
 
-gbrebase() {
-    if [ -z "$implementation" ] || [ -z "$refactor" ]; then
-        error "Both env vars 'implementation' (=$implementation) & 'refactor' (=$refactor) must be set."
-        return 1
-    fi
-    if ! gbi; then
-        return 1
-    fi
-    git rebase -q "$refactor"
-}
-
 # git commit
 gc() {
     git commit --verbose "$@"
+}
+
+# Short summary of files modified
+# (or use 'master...' for current branch)
+gdn() {
+    git diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }
 
 # git fast forward : merge without a merge commit. (see gm for opposite)
