@@ -409,6 +409,9 @@ noremap <Leader>o :silent !open %<CR>
 command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
 noremap ,m :MyMarks<CR>:normal '
 
+" Copy current buffer's filename
+:noremap <Leader>c :let @* = expand('%')<CR>
+
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
 
