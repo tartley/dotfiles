@@ -12,9 +12,6 @@ fi
 gs() {
     git status -uno -s"$@"
 }
-gst() {
-    git status -uno "$@"
-}
 
 
 ## auto activate virtualenvs ------------------
