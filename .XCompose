@@ -1,6 +1,8 @@
 # After editing, do:
 #
 #   ibus restart
+#
+# and restart applications to use this while typing into them.
 
 # GREEK CAPITAL LETTERS
 <Multi_key> <g> <A> : "Α"    U0391    # GREEK CAPITAL LETTER ALPHA
