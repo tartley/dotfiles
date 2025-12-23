@@ -1,6 +1,8 @@
 # After editing, do:
 #
 #   ibus restart
+#
+# and restart applications to use this while typing into them.
 
 # GREEK CAPITAL LETTERS
 <Multi_key> <g> <A> : "Α"    U0391    # GREEK CAPITAL LETTER ALPHA
@@ -25,10 +27,10 @@
 <Multi_key> <g> <O> : "Ω"    U03A9    # GREEK CAPITAL LETTER OMEGA
 
 # DOUBLES (additional stroke <Q>)
-<Multi_key> <G> <Q> <T> : "Θ"    U0398    # GREEK CAPITAL LETTER THETA
-<Multi_key> <G> <Q> <O> : "Ο"    U039F    # GREEK CAPITAL LETTER OMICRON
-<Multi_key> <G> <Q> <X> : "Ξ"    U039E    # GREEK CAPITAL LETTER XI
-<Multi_key> <G> <Q> <P> : "Ψ"    U03A8    # GREEK CAPITAL LETTER PSI
+<Multi_key> <g> <Q> <T> : "Θ"    U0398    # GREEK CAPITAL LETTER THETA
+<Multi_key> <g> <Q> <O> : "Ο"    U039F    # GREEK CAPITAL LETTER OMICRON
+<Multi_key> <g> <Q> <X> : "Ξ"    U039E    # GREEK CAPITAL LETTER XI
+<Multi_key> <g> <Q> <P> : "Ψ"    U03A8    # GREEK CAPITAL LETTER PSI
 
 # greek small letters
 <Multi_key> <g> <a> : "α"    U03B1    # GREEK SMALL LETTER ALPHA

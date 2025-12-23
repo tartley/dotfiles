@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Customized for Lambda Rackit
-# to exclude dir 'docs'
-
-# recursive search in text files
-grp --exclude-dir=docs "$@"
-
