@@ -309,11 +309,6 @@ set history=999
 
 set shell=/bin/bash
 
-" 'grep' command should use 'grp' bash function, a wrapper for system grep
-" which adds some common flags, like --exclude-dir=\.git.
-" We add '-n' into that mix, so that output is parsable by vim quickfix window.
-set grepprg=grpy\ -n\ $*\ /dev/null
-
 " allow use of mouse pretty much everywhere
 set mouse=a
 if !has('nvim')
@@ -516,39 +511,25 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " Silent grp and then show results in quickfix
 function! Grp(args)
-    " grp is my own Bash wrapper for system grep
-    set grepprg=grp\ -n\ $*
+    set grepprg=rg\ --vimgrep\ $*
     execute "silent! grep! " . a:args
     botright copen
 endfunction
 
-" Silent grrp and then show results in quickfix
-" Grp for Lambda.Rackit, excludes 'docs' dir.
-function! Grrp(args)
-    " grp is my own Bash wrapper for system grep
-    set grepprg=grrp\ -n\ $*
-    execute "silent! grep! " . a:args
-    botright copen
-endfunction
-
-" Grp across .py files only
-function! Grpy(args)
-    " grpy is my own Bash wrapper for system grep
-    set grepprg=grpy\ -n\ $*
-    execute "silent! grep! " . a:args
-    botright copen
-endfunction
+set grepprg=rg\ --vimgrep\ $*\ /dev/null
 
 command! -nargs=* -complete=file Grp call Grp(<q-args>)
 command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
 command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 
-" Grp all files for the word under the cursor (& case insensitive version)
+" Grp all files for the word under the cursor
 noremap <Leader>g :silent Grp -w '<C-r><C-w>' .<CR>
+" & case insensitive version
 noremap <Leader>G :silent Grp -wi '<C-r><C-w>' .<CR>
-" Grp .py files (and upper case to include tests)
-noremap <Leader>p :silent Grpy -w --exclude-dir=tests '<C-r><C-w>' .<CR>
-noremap <Leader>P :silent Grpy -w '<C-r><C-w>' .<CR>
+" Grp .py files, case insensitive
+noremap <Leader>p :silent Grp -t py -g '!*tests/' '<C-r><C-w>' .<CR>
+" & include tests
+noremap <Leader>P :silent Grp -t py '<C-r><C-w>' .<CR>
 
 " Arbitrary command in the quickfix
 function! Qf(args)
