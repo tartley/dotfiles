@@ -109,3 +109,7 @@
 
 [url "ssh://git@github.com/octoenergy/"]
     insteadof = https://github.com/octoenergy/
+[scalar]
+	repo = /home/jhartley/src/kraken-core
+[maintenance]
+	repo = /home/jhartley/src/kraken-core
