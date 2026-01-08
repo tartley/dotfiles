@@ -16,6 +16,8 @@ gs() {
 
 ## auto activate virtualenvs ------------------
 
+# This is cute, but with uv, do we really need it?
+
 # This could be direnv instead, with a .envrc file of '. .venv/bin/activate'
 
 # I suspect the implementation could just use $VIRTUAL_ENV throughout,
