@@ -236,6 +236,11 @@ ng() {
     nw --listen /tmp/godothost "$@"
 }
 
+# Run pre-commit on modified files
+pc() {
+    git status -uall --short | cut -c 4- | xargs pre-commit run --files
+}
+
 # Parent of given PID, or else of current shell
 ppid() {
     ps -p ${1:-$$} -o ppid=
@@ -358,23 +363,6 @@ workon() {
 # Allows use of 'watch' with aliases or functions
 watcha() {
     watch -ctn1 "bash -i -c \"$@\""
-}
-
-## bzr functions ####
-
-alias bs='bzr status && bzr show-pipeline'
-alias bt='bzr log -r-1' # tip
-
-bl() {
-    bzr log "$@" | less
-}
-
-blp() {
-    bzr log -v -p "$@" | colordiff | colout -- '^.{7}(-{5,})' cyan reverse | less
-}
-
-bup() {
-    bzr unshelve --preview "$@" | colordiff
 }
 
 ## Tool setup #################################################################
