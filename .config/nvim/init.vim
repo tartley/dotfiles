@@ -432,6 +432,17 @@ noremap <silent> <Leader>F :call fzf#run({
 \   '
 \})<CR>
 
+" Open files modified in this git branch
+noremap <silent> <Leader>g :call fzf#run({
+\   'source': 'gdn',
+\   'sink': 'e',
+\   'options': '
+\       --ansi
+\       --preview-window="up:50%"
+\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\   '
+\})<CR>
+
 " faster mouscwheel scrolling
 noremap <ScrollWheelUp> 10<C-y>
 noremap <ScrollWheelDown> 10<C-e>
@@ -523,9 +534,7 @@ command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
 command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 
 " Grp all files for the word under the cursor
-noremap <Leader>g :silent Grp -w '<C-r><C-w>' .<CR>
-" & case insensitive version
-noremap <Leader>G :silent Grp -wi '<C-r><C-w>' .<CR>
+noremap <Leader>* :silent Grp -w '<C-r><C-w>' .<CR>
 " Grp .py files, case insensitive
 noremap <Leader>p :silent Grp -t py -g '!*tests/' '<C-r><C-w>' .<CR>
 " & include tests
@@ -735,7 +744,7 @@ nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. LSP config ----------------------------------------------------------------
 
-" assumes LSP executables are on the PATH. I've been installing them using pipx
+" assumes LSP executables are on the PATH. I've been installing them using uv
 
 lua << EOF
 

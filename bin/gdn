@@ -1,0 +1,10 @@
+#! /usr/bin/env bash
+
+if [[ -z "$@" ]]; then
+    args=("master..")
+else
+    args="$@"
+fi
+
+git diff --name-status "$args" | colout '^(A.+)|(M.+)' green,yellow regular | cut -b1-6,9-
+
