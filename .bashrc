@@ -370,6 +370,7 @@ watcha() {
 ## FZF
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='
+  --ansi
   --color bg+:#073642,bg:#002b36,spinner:#719e07,hl:#618e04
   --color fg:#839496,header:#586e75,info:#000000,pointer:#719e07
   --color marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e17
