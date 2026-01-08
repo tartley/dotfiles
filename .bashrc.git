@@ -90,7 +90,7 @@ g1() {
     else
         args="$@"
     fi
-    git log --color=always --format=format:'%C(yellow)%h %C(green)%ai%x08%x08%x08%x08%x08%x08 %C(white)%C(dim)%s %C(brightyellow)%an' "$args"
+    git log --color=always --format=format:'%C(yellow)%h %C(green)%ah %C(white)%C(dim)%s %C(brightyellow)%an' "$args"
 }
 
 # fzf the output of g1
@@ -165,7 +165,7 @@ glog() {
     fi
 
     # Engage!
-    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ai%x08%x08%x08%x08%x08%x08%C(reset) %C(white)%an%C(auto) ${decorate}%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
+    git ${pager}log --graph --format=format:"%x09%C(yellow)%h%C(reset) %C(green)%ah%C(reset) %C(white)%an%C(auto) ${decorate}%C(reset)%n%x09%C(dim white)%s%C(reset)" --abbrev-commit "$@"
 }
 
 # git log : all branches, two lines per commit, with graph
