@@ -22,6 +22,11 @@ gc() {
     git commit --verbose "$@"
 }
 
+# Returns main or master
+gdbranch() {
+    git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4
+}
+
 # Short summary of files modified
 # (or use 'master...' for current branch)
 gdn() {
@@ -75,6 +80,31 @@ git() {
     # Run the given command, using the git executable instead of this function.
     $(which git) "$@"
 }
+
+# ----
+
+# Like gl, but 1 line per commit, suitable for piping to fzf to select a commit
+g1() {
+    if [[ -z "$@" ]]; then
+        args=(master..)
+    else
+        args="$@"
+    fi
+    git log --color=always --format=format:'%C(yellow)%h %C(green)%ai%x08%x08%x08%x08%x08%x08 %C(white)%C(dim)%s %C(brightyellow)%an' "$args"
+}
+
+# fzf the output of g1
+g1f() {
+    g1 "$@" | fzf --no-sort | cut -f1 -d' '
+}
+
+# "commit --fixup=amend" the commit selected by g1f (amend is content & message)
+fixup() {
+    git commit --fixup=amend:$(g1f "$@")
+}
+
+
+# ----
 
 # git log <N>: display N lines of git log as glog
 gl() {
@@ -170,7 +200,7 @@ gprune() {
     prunable=$(gprunable)
     echo "Branches tracking a deleted remote:"
     echo "$prunable" | colout . green regular
-    echo "$prunable" | xargs git branch -d
+    echo "$prunable" | xargs -n 1 git branch -d
 }
 
 # git pull
