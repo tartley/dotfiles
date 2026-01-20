@@ -2,17 +2,17 @@
 # vim: set ft=sh :
 
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
-# It's too slow in kraken core.
+# It's too slow in kraken core (1.5 secs).
 if command -v eza >/dev/null ; then
     alias ll='eza --long --no-git --no-quotes --color-scale=age'
 fi
 
-# Disable display of untracked files in 'gs' (git status).
-# It's too slow in Kraken core.
-gs() {
-    git status -uno -s"$@"
-}
-
+# Commented out because some git commands on kraken core repo have made this faster.
+# # Disable display of untracked files in 'gs' (git status).
+# # It's too slow in Kraken core.
+# gs() {
+#     git status -uno -s"$@"
+# }
 
 ## auto activate virtualenvs ------------------
 
@@ -79,5 +79,5 @@ _complete_invoke() {
 # * positional args: program names to complete for.
 complete -F _complete_invoke -o default invoke inv
 
-
+export SKIP=pytest
 
