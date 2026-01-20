@@ -237,6 +237,7 @@ ng() {
 }
 
 # Run pre-commit on modified files
+# Use `SKIP=pytest` (for kraken at least) to skip tests
 pc() {
     git status -uall --short | cut -c 4- | xargs pre-commit run --files
 }
