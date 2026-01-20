@@ -67,6 +67,10 @@ Plug 'tpope/vim-repeat'
 Plug 'habamax/vim-godot'
 " see ftplugin/gdscript.vim
 
+" Commands to get a link to the current file in Github/Gitlab
+" https://github.com/knsh14/vim-github-link
+Plug 'knsh14/vim-github-link'
+
 call plug#end()
 
 " 2. Neovim settings ----------------------------------------------------------
@@ -405,7 +409,11 @@ command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
 noremap ,m :MyMarks<CR>:normal '
 
 " Copy current buffer's filename
-:noremap <Leader>c :let @* = expand('%')<CR>
+:noremap <Leader>c :let @* = expand("%")<CR>
+" Copy current buffer's filename as a Python importable module name
+:noremap <Leader>i :let @* = expand("%:s?^src/??:s?\.py$??:gs?/?.?")<CR>
+" Copy link to file on github
+:noremap <Leader>h :silent GetCommitLink<CR>
 
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
@@ -443,15 +451,12 @@ noremap <silent> <Leader>g :call fzf#run({
 \   '
 \})<CR>
 
-" faster mouscwheel scrolling
+" faster mouse wheel scrolling
 noremap <ScrollWheelUp> 10<C-y>
 noremap <ScrollWheelDown> 10<C-e>
 
 " toggle highlight of search results
-MapToggle <Leader>h hlsearch
-
-" toggle visibility of invisible characters
-MapToggle <Leader>s list
+MapToggle <Leader>s hlsearch
 
 " strip trailing whitespace
 nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
@@ -508,7 +513,7 @@ noremap <Leader>Q mz1GgqG'z
 
 " Add italics (asterisks) around the current word.
 " Can I do a remove asterisks too?
-noremap <Leader>i :set nohlsearch<CR>?\s<CR>a*<Esc>/\s<CR>i*<Esc>:set hlsearch<CR>:noh<CR>
+noremap <Leader>I :set nohlsearch<CR>?\s<CR>a*<Esc>/\s<CR>i*<Esc>:set hlsearch<CR>:noh<CR>
 
 " search for visual selection if one exists, otherwise for word under cursor
 function! s:VSetSearch()
