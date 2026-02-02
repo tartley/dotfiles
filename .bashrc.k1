@@ -81,3 +81,8 @@ complete -F _complete_invoke -o default invoke inv
 
 export SKIP=pytest
 
+# Fixes datadog tracebacks at start of running django management commands
+export DD_TRACE_ENABLED=false
+export DD_DOGSTATSD_DISABLE=1
+export DD_APM_TRACING_ENABLED=false
+
