@@ -111,3 +111,17 @@ if [[ $- == *i* ]] && [[ -n "$BASH_VERSION" ]] && [[ -f "$HOME/.bashrc" ]] ; the
   source "$HOME/.bashrc"
 fi
 
+# Setup for Siphon development environment
+# Commented because I'm not modifying Siphon.
+# # >>> JVM installed by coursier >>>
+# export JAVA_HOME="/home/jhartley/.cache/coursier/arc/https/github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%252B7/OpenJDK21U-jdk_x64_linux_hotspot_21.0.10_7.tar.gz/jdk-21.0.10+7"
+# export PATH="$PATH:/home/jhartley/.cache/coursier/arc/https/github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.10%252B7/OpenJDK21U-jdk_x64_linux_hotspot_21.0.10_7.tar.gz/jdk-21.0.10+7/bin"
+# # <<< JVM installed by coursier <<<
+# 
+# # >>> coursier install directory >>>
+# export PATH="$PATH:/home/jhartley/.local/share/coursier/bin"
+# # <<< coursier install directory <<<
+# 
+# # Kafka command-line tools
+# export PATH="$PATH:/home/jhartley/.local/share/kafka_2.13-4.1.1/bin"
+
