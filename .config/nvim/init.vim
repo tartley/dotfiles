@@ -527,12 +527,12 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " Silent grp and then show results in quickfix
 function! Grp(args)
-    set grepprg=rg\ --vimgrep\ $*
+    set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
     execute "silent! grep! " . a:args
     botright copen
 endfunction
 
-set grepprg=rg\ --vimgrep\ $*\ /dev/null
+set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
 
 command! -nargs=* -complete=file Grp call Grp(<q-args>)
 command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
