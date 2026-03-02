@@ -1,5 +1,7 @@
 # Bashrc addendums for Kraken
-# vim: set ft=sh :
+# vim: set filetype=sh :
+
+PATH="$HOME/kraken/bin:$PATH"
 
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
 # It's too slow in kraken core (1.5 secs).
@@ -79,6 +81,7 @@ _complete_invoke() {
 # * positional args: program names to complete for.
 complete -F _complete_invoke -o default invoke inv
 
+# pre-commit: Skip running tests, I do that incessantly myself
 export SKIP=pytest
 
 # Fixes datadog tracebacks at start of running django management commands
