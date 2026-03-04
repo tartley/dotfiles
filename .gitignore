@@ -1,9 +1,16 @@
+# First, ignore everything by default.
 *
-!/bin/
-!/bin/*
+# List here all directories whose new contents I will usually want to track.
+# Unignore the directory itself before any specific files within it.
+!/.bazaar/
+!/.bazaar/**
 !/.config/
+!/.config/conky/
+!/.config/conky/**
 !/.config/nvim/
 !/.config/nvim/**
 !/.rgignore
 /.config/nvim/.netrwhist
+!/bin/
+!/bin/**
 
