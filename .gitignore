@@ -4,5 +4,6 @@
 !/.config/
 !/.config/nvim/
 !/.config/nvim/**
+!/.rgignore
 /.config/nvim/.netrwhist
 
