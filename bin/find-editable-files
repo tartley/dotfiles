@@ -1,45 +1,8 @@
 #!/usr/bin/env bash
 
-# USAGE: find-editable-files [EXT]
-# EXT is the extension of files to list, without a period. eg: py
-# With no EXT, we list all files that pass the default filters.
+# USAGE: find-editable-files [EXTRA]
+# DEPENDENCY: fd
+# Extra args are passed on to 'fd'
 
-if [ -n "$1" ]; then
-    # Need an array. A string with spaces cannot be quoted correctly.
-    extra=("-name" "*.$1")
-fi
-
-find . \
-  -type d \( \
-    -name \*\.egg-info -o \
-    -name \.bzr -o \
-    -name \.cache -o \
-    -name \.eggs -o \
-    -name \.env -o \
-    -name \.git -o \
-    -name \.godot -o \
-    -name \.hg -o \
-    -name \.mypy_cache -o \
-    -name \.nox -o \
-    -name \.pytest_cache -o \
-    -name \.ruff_cache -o \
-    -name \.svn -o \
-    -name \.testrepository -o \
-    -name \.tox -o \
-    -name \.venv -o \
-    -name __pycache__ -o \
-    -name _build -o \
-    -name build -o \
-    -name dist -o \
-    -name env -o \
-    -name htmlcov -o \
-    -name logs -o \
-    -name node_modules -o \
-    -name venv \
-  \) -prune -o \
-  -type f \
-  -not -name \*\.pyc \
-  "${extra[@]}" \
-  -print \
-  2>/dev/null
+fd --type f --hidden "$@"
 

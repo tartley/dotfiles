@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""
+Create the given Python file
+
+As well as any required directories or __init__.py files.
+"""
+import argparse
+import pathlib
+import sys
+
+def python_filename(arg) -> pathlib.Path:
+    if not arg.endswith(".py"):
+        raise ValueError(f"Not a python file: {arg}")
+    return pathlib.Path(arg)
+
+def parse_commandline(argv) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(prog="mkpy", description=__doc__)
+    parser.add_argument(
+        "pyfile", type=python_filename, help="A Python filename"
+    )
+    return parser.parse_args(argv[1:])
+
+def operate(pyfile: pathlib.Path) -> None:
+    # Create directory
+    pyfile.parent.mkdir(parents=True, exist_ok=True)
+
+    # Create __init__.py files
+    current = pyfile.parent
+    while True:
+        init = current / "__init__.py"
+        if init.exists():
+            break
+        if (
+            current.absolute() == pathlib.Path.cwd() or
+            current.parts[-1] == "src"
+        ):
+            break
+        init.touch()
+        current = current.parent
+
+    # Create the requested Python file
+    pyfile.touch()
+
+def main():
+    args = parse_commandline(sys.argv)
+    operate(args.pyfile)
+
+if __name__ == "__main__":
+    main()
+

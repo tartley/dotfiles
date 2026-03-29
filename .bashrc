@@ -236,6 +236,12 @@ ng() {
     nw --listen /tmp/godothost "$@"
 }
 
+# Run pre-commit on modified files
+# Use `SKIP=pytest` (for kraken at least) to skip tests
+pc() {
+    git status -uall --short | cut -c 4- | xargs pre-commit run --files
+}
+
 # Parent of given PID, or else of current shell
 ppid() {
     ps -p ${1:-$$} -o ppid=
@@ -360,28 +366,12 @@ watcha() {
     watch -ctn1 "bash -i -c \"$@\""
 }
 
-## bzr functions ####
-
-alias bs='bzr status && bzr show-pipeline'
-alias bt='bzr log -r-1' # tip
-
-bl() {
-    bzr log "$@" | less
-}
-
-blp() {
-    bzr log -v -p "$@" | colordiff | colout -- '^.{7}(-{5,})' cyan reverse | less
-}
-
-bup() {
-    bzr unshelve --preview "$@" | colordiff
-}
-
 ## Tool setup #################################################################
 
 ## FZF
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 export FZF_DEFAULT_OPTS='
+  --ansi
   --color bg+:#073642,bg:#002b36,spinner:#719e07,hl:#618e04
   --color fg:#839496,header:#586e75,info:#000000,pointer:#719e07
   --color marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e17

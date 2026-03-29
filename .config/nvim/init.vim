@@ -67,6 +67,10 @@ Plug 'tpope/vim-repeat'
 Plug 'habamax/vim-godot'
 " see ftplugin/gdscript.vim
 
+" Commands to get a link to the current file in Github/Gitlab
+" https://github.com/knsh14/vim-github-link
+Plug 'knsh14/vim-github-link'
+
 call plug#end()
 
 " 2. Neovim settings ----------------------------------------------------------
@@ -387,25 +391,13 @@ let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'window': 'enew' }
 let g:fzf_preview_window = 'up:50%'
 let g:fzf_preview = "bat --color=always --style=changes --line-range=:36 {}"
-" I don't like that fzf defines W as fuzzy find windows,
-" Define it to be what I actually mean when I accidentally type it.
-command W :w
 
-" Switch to open buffer
-noremap <Leader>b :Buffers<CR>
+" Switch to open buffer (!=fullscreen)
+noremap <Leader>b :Buffers!<CR>
 " Jump to tag
-noremap <Leader>t :Tags<CR>
-" fuzzy find tag under cursor
-noremap <Leader>T :call fzf#vim#tags(expand('<cword>'))<CR>
-
-" open current buffer
-noremap <Leader>o :silent !open %<CR>
-
-command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
-noremap ,m :MyMarks<CR>:normal '
-
-" Copy current buffer's filename
-:noremap <Leader>c :let @* = expand('%')<CR>
+noremap <Leader>t :Tags!<CR>
+" fuzzy find tag under cursor (1=fullscreen)
+noremap <Leader>T :call fzf#vim#tags(expand('<cword>'), 1)<CR>
 
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
@@ -424,7 +416,7 @@ noremap <silent> <Leader>f :call fzf#run({
 
 " Open any file
 noremap <silent> <Leader>F :call fzf#run({
-\   'source': 'find . -type f -print 2>/dev/null',
+\   'source': 'fd --type f 2>/dev/null',
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
@@ -432,15 +424,48 @@ noremap <silent> <Leader>F :call fzf#run({
 \   '
 \})<CR>
 
-" faster mouscwheel scrolling
+" Open any file
+noremap <silent> <Leader>F :call fzf#run({
+\   'source': 'find-editable-files',
+\   'sink': 'e',
+\   'options': '
+\       --preview-window="up:50%"
+\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\   '
+\})<CR>
+
+" Open files modified in this git branch
+noremap <silent> <Leader>g :call fzf#run({
+\   'source': 'gdn',
+\   'sink': 'e',
+\   'options': '
+\       --ansi
+\       --preview-window="up:50%"
+\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\   '
+\})<CR>
+
+" /fzf
+
+" open current buffer
+noremap <Leader>o :silent !open %<CR>
+
+command MyMarks :marks ABCDEFGHIJKLMNOPQRSTUVWXabcdefghijklmnopqrstuvwxyz
+noremap ,m :MyMarks<CR>:normal '
+
+" Copy current buffer's filename
+:noremap <Leader>c :let @* = expand("%")<CR>
+" Copy current buffer's filename as a Python importable module name
+:noremap <Leader>i :let @* = expand("%:s?^src/??:s?\.py$??:gs?/?.?")<CR>
+" Copy link to file on github
+:noremap <Leader>h :silent GetCommitLink<CR>
+
+" faster mouse wheel scrolling
 noremap <ScrollWheelUp> 10<C-y>
 noremap <ScrollWheelDown> 10<C-e>
 
 " toggle highlight of search results
-MapToggle <Leader>h hlsearch
-
-" toggle visibility of invisible characters
-MapToggle <Leader>s list
+MapToggle <Leader>s hlsearch
 
 " strip trailing whitespace
 nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
@@ -497,7 +522,7 @@ noremap <Leader>Q mz1GgqG'z
 
 " Add italics (asterisks) around the current word.
 " Can I do a remove asterisks too?
-noremap <Leader>i :set nohlsearch<CR>?\s<CR>a*<Esc>/\s<CR>i*<Esc>:set hlsearch<CR>:noh<CR>
+noremap <Leader>I :set nohlsearch<CR>?\s<CR>a*<Esc>/\s<CR>i*<Esc>:set hlsearch<CR>:noh<CR>
 
 " search for visual selection if one exists, otherwise for word under cursor
 function! s:VSetSearch()
@@ -511,21 +536,19 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " Silent grp and then show results in quickfix
 function! Grp(args)
-    set grepprg=rg\ --vimgrep\ $*
+    set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
     execute "silent! grep! " . a:args
     botright copen
 endfunction
 
-set grepprg=rg\ --vimgrep\ $*\ /dev/null
+set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
 
 command! -nargs=* -complete=file Grp call Grp(<q-args>)
 command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
 command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
 
 " Grp all files for the word under the cursor
-noremap <Leader>g :silent Grp -w '<C-r><C-w>' .<CR>
-" & case insensitive version
-noremap <Leader>G :silent Grp -wi '<C-r><C-w>' .<CR>
+noremap <Leader>* :silent Grp -w '<C-r><C-w>' .<CR>
 " Grp .py files, case insensitive
 noremap <Leader>p :silent Grp -t py -g '!*tests/' '<C-r><C-w>' .<CR>
 " & include tests
@@ -735,7 +758,7 @@ nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. LSP config ----------------------------------------------------------------
 
-" assumes LSP executables are on the PATH. I've been installing them using pipx
+" assumes LSP executables are on the PATH. I've been installing them using uv
 
 lua << EOF
 
