@@ -4,5 +4,5 @@
 # DEPENDENCY: fd
 # Extra args are passed on to 'fd'
 
-fd --type f --hidden "$@"
+fd --type f "$@"
 

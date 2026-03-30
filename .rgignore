@@ -1,5 +1,7 @@
 # Unignore everything. Without this, ripgrep within my home directory
 # produces no results without using --no-ignore. This is because my
 # home directory is a big git repo which mostly ignores '*'.
-!*
+
+# Commenting this because it makes rg in kraken-core slow (~10s)
+# !*
 
