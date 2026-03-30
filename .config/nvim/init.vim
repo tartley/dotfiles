@@ -379,6 +379,9 @@ endif
 " stored in ~/.local/share/nvim/undo/*
 set undofile
 
+" wait longer for multi-stroke keypresses (default=1000ms)
+set timeoutlen=3000
+
 
 " 3. Key mappings -------------------------------------------------------------
 
@@ -402,11 +405,11 @@ noremap <Leader>T :call fzf#vim#tags(expand('<cword>'), 1)<CR>
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
 
+noremap <Leader>f? :echo "ff:fzf editable files,  fh:include dotfiles (hidden),  fa:include gitignores (all),  fp:.py files,  fP:including tests,  fb:branch modified files"<CR>
+
 " Open commonly editable files (eg. not .pyc)
-" find-editable-files is in ~/bin
-" It defines what files to hide from the list
-noremap <silent> <Leader>f :call fzf#run({
-\   'source': 'find-editable-files',
+noremap <silent> <Leader>ff :call fzf#run({
+\   'source': 'fd --type=f',
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
@@ -414,9 +417,9 @@ noremap <silent> <Leader>f :call fzf#run({
 \   '
 \})<CR>
 
-" Open any file
-noremap <silent> <Leader>F :call fzf#run({
-\   'source': 'fd --type f 2>/dev/null',
+" Include hidden (dotfiles), but still omit git ignored files.
+noremap <silent> <Leader>fh :call fzf#run({
+\   'source': 'fd --type=f --hidden',
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
@@ -424,9 +427,29 @@ noremap <silent> <Leader>F :call fzf#run({
 \   '
 \})<CR>
 
-" Open any file
-noremap <silent> <Leader>F :call fzf#run({
-\   'source': 'find-editable-files',
+" Include ALL files
+noremap <silent> <Leader>fa :call fzf#run({
+\   'source': 'fd --type=f --unrestricted',
+\   'sink': 'e',
+\   'options': '
+\       --preview-window="up:50%"
+\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\   '
+\})<CR>
+
+" Open Python file, but not tests
+noremap <silent> <Leader>fp :call fzf#run({
+\   'source': 'fd --type=f --extension=py --exclude=test_*',
+\   'sink': 'e',
+\   'options': '
+\       --preview-window="up:50%"
+\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\   '
+\})<CR>
+
+" Open Python file including tests
+noremap <silent> <Leader>fP :call fzf#run({
+\   'source': 'fd --type=f --extension=py',
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
@@ -435,7 +458,7 @@ noremap <silent> <Leader>F :call fzf#run({
 \})<CR>
 
 " Open files modified in this git branch
-noremap <silent> <Leader>g :call fzf#run({
+noremap <silent> <Leader>fb :call fzf#run({
 \   'source': 'gdn',
 \   'sink': 'e',
 \   'options': '
@@ -535,7 +558,7 @@ vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR>
 vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR>
 
 " Silent grp and then show results in quickfix
-function! Grp(args)
+function! Rg(args)
     set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
     execute "silent! grep! " . a:args
     botright copen
@@ -543,16 +566,15 @@ endfunction
 
 set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
 
-command! -nargs=* -complete=file Grp call Grp(<q-args>)
-command! -nargs=* -complete=file Grrp call Grrp(<q-args>)
-command! -nargs=* -complete=file Grpy call Grpy(<q-args>)
+command! -nargs=* -complete=file Rg call Rg(<q-args>)
 
-" Grp all files for the word under the cursor
-noremap <Leader>* :silent Grp -w '<C-r><C-w>' .<CR>
-" Grp .py files, case insensitive
-noremap <Leader>p :silent Grp -t py -g '!*tests/' '<C-r><C-w>' .<CR>
-" & include tests
-noremap <Leader>P :silent Grp -t py '<C-r><C-w>' .<CR>
+noremap <Leader>g? :echo "gg:grep all files,  gp:grep .py files,  gP:exclude tests"<CR>
+" grep all files for the word under the cursor
+noremap <Leader>gg :silent Rg --word-regexp '<C-r><C-w>' .<CR>
+" grep .py files, case insensitive
+noremap <Leader>gp :silent Rg --word-regexp --type=py '<C-r><C-w>' .<CR>
+" excluding tests
+noremap <Leader>gP :silent Rg --word-regexp --type=py --glob='!**/tests/**' '<C-r><C-w>' .<CR>
 
 " Arbitrary command in the quickfix
 function! Qf(args)
@@ -773,8 +795,8 @@ vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.config({virtual_lines=
 vim.keymap.set('n', '<leader>D', '<cmd>lua vim.diagnostic.config({virtual_text=not vim.diagnostic.config().virtual_text})<cr>')
 -- code action menu (e.g. to ignore or apply auto-fixes)
 vim.keymap.set('n', '<leader>.', '<cmd>lua vim.lsp.buf.code_action()<cr>')
--- format buffer
-vim.keymap.set('n', '<leader>F', '<cmd>lua vim.lsp.buf.format()<cr>')
+-- format buffer (yes that's a TAB character)
+vim.keymap.set('n', '<leader>	', '<cmd>lua vim.lsp.buf.format()<cr>')
 
 -- Format on save
 -- Commented because our settings (e.g. line length) differ from work repos,

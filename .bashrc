@@ -213,6 +213,10 @@ etime() {
 
 # See 'git functions', below.
 
+historyc() {
+    history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
+}
+
 # This is good at cleaning up the results of 'busyloop'
 killalljobs() {
   # TODO: There is probably a simpler version of this using 'jobs -p' (output just the PID)
@@ -395,49 +399,22 @@ fi
 
 # direnv (installed using apt) exports env vars from .envrc in PWD or above
 # I'm using it to define 'refactor' and 'impl', which are used above.
-eval "$(direnv hook bash)"
+if command direnv version >/dev/null; then
+    eval "$(direnv hook bash)"
+fi
 
 ## On exit ####################################################################
 
-# Backup .bash_history
+# dedupe .bash_history
 
-## TODO: This generates a lot of half megabyte files, there must be a better way.
-## Also, the saved files have wildly inconsistent sizes, which seems like a clue
-# that something weird is going on.
-
-historyc() {
-    history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
-}
-
-bash_history_backups=~/docs/config/bash_history
-
-history_backup() {
-    (
-        if [ ! -d "$bash_history_backups" ] ; then
-            error "bash history save directory not found: '$bash_history_backups'"
-            # Normally we'd return 1 here but it doesn't help in this case,
-            # since we're executing on shell exit.
-        fi
-        # make a backup, overwriting other backups from today
-        (
-            cd "$bash_history_backups"
-            \cp ~/.bash_history bash_history_$(date +%F)
-            # rm backups older than N days
-            ls -1 . | head -n -100 | xargs rm -f
-        )
-    )
-}
-
-if [ ! -d "$bash_history_backups" ]; then
-    error "bash history save directory not found: '$bash_history_backups'"
-else
-    trap history_backup EXIT
-fi
+bashhistory="$HOME/.bash_history"
+bashhistorybackup="$HOME/docs/backups/bash_history"
 
 dedupe_history() {
-    # Now remove duplicate lines from history file
-    dedupe-bash-history >/tmp/bash_history
-    mv /tmp/bash_history ~/.bash_history
+    # remove duplicate lines from history file, and save a copy in 'docs'
+    # where it will get backed up.
+    dedupe-bash-history >"$bashhistorybackup"
+    cp --update=all "$bashhistorybackup" "$bashhistory"
     # (previous solutions, using 'tac', to keep the most recent duplicate,
     # then filtering using line-based tools like awk, don't work with
     # history files containing timestamps or multi-line commands)
@@ -445,16 +422,14 @@ dedupe_history() {
     #     && mv -f /tmp/deduped ~/.bash_history
 }
 
-# direnv
-if command direnv version >/dev/null; then
-    eval "$(direnv hook bash)"
+if [ -f "$bashhistory" ]; then
+    trap dedupe_history EXIT
 fi
 
-## Source other ~/.bashrc.* files. ############################################
+## Run host's custom ~/.bashrc.* file ############################################
 
 source ~/.bashrc.git
 
-# Run this host's custom bashrc suffix file, if one exists
 hostrc="$HOME/.bashrc.$HOSTNAME"
 if [ -f "$hostrc" ]; then
     source "$hostrc"
