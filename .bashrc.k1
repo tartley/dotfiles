@@ -83,6 +83,11 @@ complete -F _complete_invoke -o default invoke inv
 
 # pre-commit: Skip running tests, I do that incessantly myself
 export SKIP=pytest
+# Don't do garbage collection iterations looking for resource leaks
+# These are rare and will be caught in CI.
+export PYTEST_UNRAISABLE_GC_ITERATIONS=0
+# Our tricky home-cooked lazy imports save a few secs per test run.
+export PY_LAZY_LOADING=1
 
 # Fixes datadog tracebacks at start of running django management commands
 export DD_TRACE_ENABLED=false
