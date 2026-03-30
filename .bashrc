@@ -408,7 +408,7 @@ fi
 # dedupe .bash_history
 
 bashhistory="$HOME/.bash_history"
-bashhistorybackup="$HOME/docs/backups/bash_history"
+bashhistorybackup="$HOME/docs/backups/bash_history.$HOSTNAME"
 
 dedupe_history() {
     # remove duplicate lines from history file, and save a copy in 'docs'
