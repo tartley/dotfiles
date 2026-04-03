@@ -1,3 +1,9 @@
+# Readline configuration.
+#
+# Putting things here, rather than using .bashrc to tell Bash to configure
+# Readline, means that all programs which use Readline will see it, not
+# just Bash.
+#
 # See definitions and defaults at
 # https://www.gnu.org/software/bash/manual/html_node/Bindable-Readline-Commands.html
 

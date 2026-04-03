@@ -390,6 +390,11 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# jj completions
+if command -v jj >/dev/null 2>&1; then
+    source <(jj util completion bash)
+fi
+
 # stderred wraps stderr of processes in your terminal with a color
 stderred_so="$HOME/.local/share/stderred/libstderred.so"
 if [ -f ${stderred_so} ]; then
