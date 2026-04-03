@@ -81,8 +81,10 @@ _complete_invoke() {
 # * positional args: program names to complete for.
 complete -F _complete_invoke -o default invoke inv
 
-# pre-commit: Skip running tests, I do that incessantly myself
-export SKIP=pytest
+# pre-commit: Skip:
+# * running tests, I do that incessantly myself
+# * privacy validation: Rarely a problem, leave it to CI
+export SKIP=pytest,data-privacy-framework-validation
 # Don't do garbage collection iterations looking for resource leaks
 # These are rare and will be caught in CI.
 export PYTEST_UNRAISABLE_GC_ITERATIONS=0
