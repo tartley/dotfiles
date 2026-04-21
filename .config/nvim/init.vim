@@ -405,10 +405,10 @@ noremap <Leader>T :call fzf#vim#tags(expand('<cword>'), 1)<CR>
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
 
-noremap <Leader>f? :echo "ff:fzf editable files,  fh:include dotfiles (hidden),  fa:include gitignores (all),  fp:.py files,  fP:including tests,  fb:branch modified files"<CR>
+noremap <Leader><Leader>f :echo ",f: fzf editable files,\n,F: include dotfiles (hidden),\n,a: include gitignores (all),\n,p: .py files,\n,P: including tests,\n,b: branch modified files"<CR>
 
 " Open commonly editable files (eg. not .pyc)
-noremap <silent> <Leader>ff :call fzf#run({
+noremap <silent> <Leader>f :call fzf#run({
 \   'source': 'fd --type=f',
 \   'sink': 'e',
 \   'options': '
@@ -418,7 +418,7 @@ noremap <silent> <Leader>ff :call fzf#run({
 \})<CR>
 
 " Include hidden (dotfiles), but still omit git ignored files.
-noremap <silent> <Leader>fh :call fzf#run({
+noremap <silent> <Leader>F :call fzf#run({
 \   'source': 'fd --type=f --hidden',
 \   'sink': 'e',
 \   'options': '
@@ -428,9 +428,9 @@ noremap <silent> <Leader>fh :call fzf#run({
 \})<CR>
 
 " Include ALL files
-noremap <silent> <Leader>fa :call fzf#run({
+noremap <silent> <Leader>a :call fzf#run({
 \   'source': 'fd --type=f --unrestricted',
-\   'sink': 'e',
+    \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
 \       --preview="bat --color=always --style=changes --line-range=:36 {}"
@@ -438,7 +438,7 @@ noremap <silent> <Leader>fa :call fzf#run({
 \})<CR>
 
 " Open Python file, but not tests
-noremap <silent> <Leader>fp :call fzf#run({
+noremap <silent> <Leader>p :call fzf#run({
 \   'source': 'fd --type=f --extension=py --exclude=test_*',
 \   'sink': 'e',
 \   'options': '
@@ -448,7 +448,7 @@ noremap <silent> <Leader>fp :call fzf#run({
 \})<CR>
 
 " Open Python file including tests
-noremap <silent> <Leader>fP :call fzf#run({
+noremap <silent> <Leader>P :call fzf#run({
 \   'source': 'fd --type=f --extension=py',
 \   'sink': 'e',
 \   'options': '
@@ -458,7 +458,7 @@ noremap <silent> <Leader>fP :call fzf#run({
 \})<CR>
 
 " Open files modified in this git branch
-noremap <silent> <Leader>fb :call fzf#run({
+noremap <silent> <Leader>B :call fzf#run({
 \   'source': 'gdn',
 \   'sink': 'e',
 \   'options': '
@@ -487,11 +487,9 @@ noremap ,m :MyMarks<CR>:normal '
 noremap <ScrollWheelUp> 10<C-y>
 noremap <ScrollWheelDown> 10<C-e>
 
-" toggle highlight of search results
-MapToggle <Leader>s hlsearch
-
 " strip trailing whitespace
-nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
+" Commented because keystroke clashes
+" nmap <silent> <Leader>S ms:%s/\s\+$//<CR>`s
 
 " search for non-ascii characters
 nmap <Leader>N /[^\x00-\x7F]<CR>
@@ -530,7 +528,7 @@ noremap <silent> <Leader><f3> :only!<CR>:let g:numColumns=3<CR>:call SetWindowWi
 " set equalalways
 
 " toggle between last two buffers
-noremap <Leader><Leader> <C-^>
+noremap <Leader>. <C-^>
 
 " make Y yank to end of line (consistent with C and D)
 noremap Y y$
@@ -568,13 +566,13 @@ set grepprg=rg\ --vimgrep\ $*\ \\\|\ sort
 
 command! -nargs=* -complete=file Rg call Rg(<q-args>)
 
-noremap <Leader>g? :echo "gg:grep all files,  gp:grep .py files,  gP:exclude tests"<CR>
+noremap <Leader><Leader>g :echo ",g: grep all files,\n,s: grep .py source files,\n,S: exclude tests"<CR>
 " grep all files for the word under the cursor
-noremap <Leader>gg :silent Rg --word-regexp '<C-r><C-w>' .<CR>
+noremap <Leader>g :silent Rg --word-regexp '<C-r><C-w>' .<CR>
 " grep .py files, case insensitive
-noremap <Leader>gp :silent Rg --word-regexp --type=py '<C-r><C-w>' .<CR>
+noremap <Leader>s :silent Rg --word-regexp --type=py '<C-r><C-w>' .<CR>
 " excluding tests
-noremap <Leader>gP :silent Rg --word-regexp --type=py --glob='!**/tests/**' '<C-r><C-w>' .<CR>
+noremap <Leader>S :silent Rg --word-regexp --type=py --glob='!**/tests/**' '<C-r><C-w>' .<CR>
 
 " Arbitrary command in the quickfix
 function! Qf(args)
@@ -794,7 +792,7 @@ vim.keymap.set('n', '<leader>d', '<cmd>lua vim.diagnostic.config({virtual_lines=
 -- toggle virtual text
 vim.keymap.set('n', '<leader>D', '<cmd>lua vim.diagnostic.config({virtual_text=not vim.diagnostic.config().virtual_text})<cr>')
 -- code action menu (e.g. to ignore or apply auto-fixes)
-vim.keymap.set('n', '<leader>.', '<cmd>lua vim.lsp.buf.code_action()<cr>')
+vim.keymap.set('n', '<leader><CR>', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 -- format buffer (yes that's a TAB character)
 vim.keymap.set('n', '<leader>	', '<cmd>lua vim.lsp.buf.format()<cr>')
 

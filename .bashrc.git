@@ -22,8 +22,9 @@ gc() {
     git commit --verbose "$@"
 }
 
-# Returns main or master
-gdbranch() {
+## Returns main or master
+
+get_main_branch() {
     git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4
 }
 
@@ -86,7 +87,7 @@ git() {
 # Like gl, but 1 line per commit, suitable for piping to fzf to select a commit
 g1() {
     if [[ -z "$@" ]]; then
-        args=(master..)
+        args=(main..)
     else
         args="$@"
     fi
@@ -245,18 +246,6 @@ gsl() {
 # git stash show
 gss() {
     git stash show -p "$@"
-}
-
-get_main_branch() {
-    if git switch -q main 2>/dev/null; then
-        echo main
-    elif git switch -q master 2>/dev/null; then
-        echo master
-    else
-        error "Error: No branch main|master found"
-        return 1
-    fi
-    git switch -q -
 }
 
 # git switch main

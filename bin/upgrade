@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e # exit on error
+set -u # treat unset vars as errors
+# set -x # debugging output
+set -o pipefail
+
+function usage {
+    echo "Usage: upgrade"
+    echo ""
+    echo "Update installed apt packages and snaps."
+    echo ""
+    echo "May be invoked without root, and we will call our setuid script to"
+    echo "do the update with root privileges."
+    echo ""
+    echo "May be invoked from outside a terminal, in which case it will create a"
+    echo "new terminal to run in, which closes on exit. (If it needs debugging,"
+    echo "run it from in a terminal to examine the output.)"
+}
+
+# Command line args
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        *) echo "no args expected"; exit 1;;
+    esac
+    shift
+done
+
+# Should we create a new terminal to run in?
+if [ "$(tty)" = "not a tty" ]; then
+    newterm=true
+else
+    newterm=false
+fi
+
+command="sudo /home/jhartley/bin/setuid/upgrade"
+
+# do the upgrade
+if [ "$newterm" = true ] ; then
+    # run in a new terminal
+    gnome-terminal -- $command
+else
+    # run in this terminal
+    $command
+fi
+
