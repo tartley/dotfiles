@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+sudo apt -qy update
+sudo apt -qy upgrade
+sudo snap refresh
+
