@@ -283,6 +283,14 @@ repeat_until_key() {
     done
 }
 
+rgc() {
+    rg --color=always "$@"
+}
+
+rgv() {
+    rgc --vimgrep "$@"
+}
+
 sd() {
     sudo docker "$@"
 }
