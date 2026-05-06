@@ -7,6 +7,10 @@
 # git functions (esp. see 'git'!)
 # See also ~/bin for commands I use non-interactively, eg. "watch gd"
 
+g-() {
+    git switch -
+}
+
 # git branch: List branches with commitid, remotes, commit message
 gb() {
     git --no-pager branch -vv --color=always "$@"
