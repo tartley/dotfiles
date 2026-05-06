@@ -22,8 +22,7 @@ gc() {
     git commit --verbose "$@"
 }
 
-## Returns main or master
-
+# Return repo remote's main branch (eg. main or master)
 get_main_branch() {
     git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4
 }
@@ -45,10 +44,16 @@ gff() {
 # git fetch main
 gfm() {
     if [ "$(gbranch)" = "main" ]; then
-        git pull origin master
+        git pull --quiet origin $(get_main_branch)
     else
-        git fetch origin $(get_main_branch):main
+        git fetch --quiet origin $(get_main_branch):main
     fi
+}
+
+gfms() {
+    gfm
+    git switch main
+    gl
 }
 
 # git ignored : use git status to show ignored files in current dir
