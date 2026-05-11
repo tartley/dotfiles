@@ -13,10 +13,10 @@
 !/.config/conky/**
 !/.config/nvim/
 !/.config/nvim/**
+/.config/nvim/.netrwhist
 !/.config/pip/
 !/.config/pip/**
 !/.rgignore
-/.config/nvim/.netrwhist
 !/bin/
 !/bin/**
 
