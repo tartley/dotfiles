@@ -12,8 +12,9 @@ g-() {
 }
 
 # git branch: List branches with commitid, remotes, commit message
+# less to trim to terminal width
 gb() {
-    git --no-pager branch -vv --color=always "$@"
+    git --no-pager branch -vv --color=always "$@" | less -SEX
 }
 
 # git branch: Print bare current branch name
@@ -54,6 +55,7 @@ gfm() {
     fi
 }
 
+# git fetch main & switch
 gfms() {
     gfm
     git switch main
@@ -242,7 +244,7 @@ gre() {
 
 grm() {
     gfm
-    git rebase main
+    git rebase main "$@"
 }
 
 # git status
@@ -257,20 +259,17 @@ gst() {
 gsl() {
     git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8,10})?(.+)$' yellow,white,white,green,magenta,white normal
 }
-# git stash show
-gss() {
-    git stash show -p "$@"
-}
 
 # git switch main
 gsm() {
-    main=$(get_main_branch)
-    if [ -z "$main" ]; then
-        return 1
+    if ! git switch -q main; then
+        git switch -q "$(get_main_branch)"
     fi
-    git switch -q "$main" && \
-        git fetch -q origin "$main" && \
-        git merge --ff-only origin/"$main"
+}
+
+# git stash show
+gss() {
+    git stash show -p "$@"
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
