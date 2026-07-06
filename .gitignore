@@ -19,4 +19,6 @@
 !/.rgignore
 !/bin/
 !/bin/**
+!/zander/code/
+!/zander/code/**
 
