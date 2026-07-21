@@ -16,6 +16,7 @@ fi
 #     git status -uno -s"$@"
 # }
 
+
 ## auto activate virtualenvs ------------------
 
 # This is cute, but with uv, do we really need it?
@@ -34,14 +35,87 @@ function cd() {
         unset parentdir
     fi
 
-    # If there is a virtualenv, activate it
+    # If there is a virtualenv
     if [[ -d ".venv" && -f ".venv/bin/activate" ]]; then
+        # activate it
         source ".venv/bin/activate"
         parentdir="$(dirname $VIRTUAL_ENV)"
+
+        # set the terminal name
+        termname "$(basename $(dirname $VIRTUAL_ENV))"
     fi
 }
 
-## NVM ----------------------------------------
+
+## aliases
+
+# post-pull
+function pp() {
+  inv install-python-deps
+  inv localdev.migrate-all --client=championenergy
+  inv localdev.migrate-all --client=oeus
+}
+
+# pytest (one test only)
+# TODO: handle one or multi tests
+# TODO: handle args starting with '-', vs test names
+pt() {
+    if [ "$#" -ne 1 ]; then
+        error "Only 1 arg allowed"
+        return
+    fi
+    etime inv localdev.pytest "$1" -- --color=yes --no-header
+}
+
+# pytest branch (all test files changed in this branch)
+ptb() {
+    etime inv localdev.multi-pytest \
+    $(git diff --name-only main... | grep test_ | xargs -n1 echo "--path") \
+    -- "$@"
+}
+
+# pytest diffs (all test files changed in current diffs)
+ptd() {
+    etime inv localdev.multi-pytest \
+    $(git diff --name-only | grep test_ | xargs -n1 echo "--path") \
+    -- "$@"
+}
+
+# pytest all (tests changed in branch or diffs)
+pta() {
+    etime inv localdev.multi-pytest $( \
+        ( git diff --name-only main... ; git diff --name-only ) \
+        | sort -u | grep test_ | xargs -n1 echo "--path" \
+    ) \
+    -- "$@"
+}
+
+# typecheck (40 seconds)
+# Correcly handles one or more target files or directories.
+# Shadows executable 'tc'.
+tc() {
+    etime inv run-python-type-checker --territories=usa $(echo $@ | xargs -n1 echo -n ' --target')
+}
+
+# typecheck daemon (7 mins, then 4s)
+tcd() {
+    inv run-python-type-checker-daemon -s
+}
+
+lint() {
+    inv run-python-ruff-linter --fix "$@"
+}
+
+format() {
+    inv run-python-formatter "$@"
+}
+
+lf() {
+    lint; format
+}
+
+
+## NVM
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -49,10 +123,10 @@ export NVM_DIR="$HOME/.nvm"
 # Ignore the error if nvm is not installed on this machine
 :
 
-## invoke -------------------------------------
 
-# Invoke tab-completion script to be sourced with Bash shell.
-# Known to work on Bash 3.x, untested on 4.x.
+## invoke tab-completion
+
+# to be sourced with Bash shell. Known to work on Bash 3.x, untested on 4.x.
 
 _complete_invoke() {
     local candidates
@@ -81,6 +155,9 @@ _complete_invoke() {
 # * positional args: program names to complete for.
 complete -F _complete_invoke -o default invoke inv
 
+
+## env vars
+
 # pre-commit: Skip:
 # * running tests, I do that incessantly myself
 # * privacy validation: Rarely a problem, leave it to CI
@@ -90,6 +167,8 @@ export SKIP=pytest,data-privacy-framework-validation
 export PYTEST_UNRAISABLE_GC_ITERATIONS=0
 # Our tricky home-cooked lazy imports save a few secs per test run.
 export PY_LAZY_LOADING=1
+# Set mypy cach to ramdisk
+MYPY_CACHE_DIR=/home/jhartley/.ram/kraken-core-mypy
 
 # Fixes datadog tracebacks at start of running django management commands
 export DD_TRACE_ENABLED=false
