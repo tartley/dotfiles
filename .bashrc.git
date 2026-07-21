@@ -35,6 +35,9 @@ get_main_branch() {
 # Short summary of files modified
 # (or use 'master...' for current branch)
 gdn() {
+    git diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+}
+gdns() {
     git diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }
 
@@ -49,9 +52,9 @@ gff() {
 # git fetch main
 gfm() {
     if [ "$(gbranch)" = "main" ]; then
-        git pull --quiet origin $(get_main_branch)
+        git pull origin $(get_main_branch) 2>&1 | grep 'Updating\|WARNING'
     else
-        git fetch --quiet origin $(get_main_branch):main
+        git fetch origin $(get_main_branch):main 2>&1 | grep 'main'
     fi
 }
 
@@ -59,7 +62,6 @@ gfm() {
 gfms() {
     gfm
     git switch main
-    gl
 }
 
 # git ignored : use git status to show ignored files in current dir
@@ -235,11 +237,6 @@ gpf() {
 # git remote : list remotes
 gr() {
     git remote -v | sed 's/git+ssh:\/\/tartley@git\.launchpad\.net\//lp:/g' | colout '(^\S+)\s+(lp:)?\S+\s+\((fetch)?|(push)?\)$' cyan,yellow,blue,green normal
-}
-
-# encourage use of 'git restore', over legacy checkout, etc.
-gre() {
-    git restore "$@"
 }
 
 grm() {

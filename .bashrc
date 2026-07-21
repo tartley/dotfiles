@@ -145,7 +145,15 @@ alias whence='type -a' # like where, but also describes aliases and functions
 # programs behavior is influenced by the name they are invoked as, e.g.
 # cool-retro-term helpfully (but confusingly) generates a whole new config for
 # each name it is invoked under.
-alias bat=batcat
+bat() {
+    for arg in "$@"; do
+        if [ -d "$arg" ]; then
+            ll "$arg"
+        elif [ -f "$arg" ]; then
+            batcat "$arg"
+        fi
+    done
+}
 alias crt=cool-retro-term
 alias python=python3
 alias py=python3
@@ -202,6 +210,10 @@ colout_traceroute() {
     colout '(^ ?\d+)|(\([\d\.]+\))|([\d\.]+ ms)|(!\S+)' white,cyan,yellow,magenta bold,normal,normal,reverse
 }
 
+commas() {
+    xargs -- printf "%'d\n"
+}
+
 # docker ps
 dps() {
     docker container ls --format 'table {{.Names}}\t{{.Image}}\t{{.ID}}\t{{.Status}}' "$@" | colout '(^NAMES .+$)|(.+Up .+)|(.+Exited .+)' white,green,red bold,normal
@@ -211,7 +223,23 @@ etime() {
     /usr/bin/time -f"%E" "$@"
 }
 
-# See 'git functions', below.
+# 'git functions' are split into their own file. I don't know why, really.
+
+grc() {
+    grep --color=always "$@"
+}
+
+gri() {
+    grep --ignore-case "$@"
+}
+
+gre() {
+    grep --extended-regexp "$@"
+}
+
+grx() {
+    grc --color=always --ignore-case --extended-regexp "$@"
+}
 
 historyc() {
     history "$@" | colout '^ *(\d+) +([0-9-]+ [0-9:]+)' white,cyan bold,normal
@@ -245,6 +273,12 @@ ng() {
 pc() {
     git status -uall --short | cut -c 4- | xargs pre-commit run --files
 }
+
+# pre-commit on all branch modified files
+pcb() {
+    pre-commit run --files $(git diff --name-only main...)
+}
+
 
 # Parent of given PID, or else of current shell
 ppid() {
@@ -304,7 +338,9 @@ termname() {
         name="$USER@$(hostname)"
     fi
     printf "\e]0;${name}\a"
+    unset name
 }
+alias tn=termname
 
 # Set our terminal window name, but only for interactive sessions.
 # Printing to stdout in non-interactive sessions breaks scp copies to this host.

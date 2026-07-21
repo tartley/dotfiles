@@ -667,7 +667,12 @@ noremap <leader>' :silent hide bn<CR>
 
 " close buffer
 noremap <leader><backspace> :Bclose<CR>
+" even an unsaved one
 noremap <leader><delete> :Bclose!<CR>
+" close ALL buffers
+noremap <lt><backspace> :bufdo Bclose<CR>:helpclose<CR>
+" even all UNSAVED ones
+noremap <lt><S-delete> :bufdo Bclose!<CR>:helpclose<CR>
 
 " navigating between windows
 noremap <C-left> <C-w>h
