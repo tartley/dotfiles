@@ -167,8 +167,6 @@ export SKIP=pytest,data-privacy-framework-validation
 export PYTEST_UNRAISABLE_GC_ITERATIONS=0
 # Our tricky home-cooked lazy imports save a few secs per test run.
 export PY_LAZY_LOADING=1
-# Set mypy cach to ramdisk
-MYPY_CACHE_DIR=/home/jhartley/.ram/kraken-core-mypy
 
 # Fixes datadog tracebacks at start of running django management commands
 export DD_TRACE_ENABLED=false
