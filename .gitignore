@@ -7,6 +7,8 @@
 !/.bazaar/**
 !/.config/
 /.config/**
+!/.config/albert/
+!/.config/albert/**
 !/.config/bat/
 !/.config/bat/**
 !/.config/conky/
