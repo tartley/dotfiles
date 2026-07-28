@@ -55,15 +55,12 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-# Should we create a new terminal to run nvim in?
-if [ "$(tty)" = "not a tty" ]; then
+# If we're not in a terminal, or the user explicitly requested a new terminal
+if [ "$(tty)" = "not a tty" ] || [[ "$0" = */nw ]]; then
+    # Let's open a new terminal to run in
     newterm=true
 else
-    if [[ "$0" = */nw ]] ; then
-        newterm=true
-    else
-        newterm=false
-    fi
+    newterm=false
 fi
 
 # Prefer nvim, fallback to vim
