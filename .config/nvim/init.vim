@@ -388,24 +388,37 @@ set timeoutlen=3000
 " Edit nvim config file
 nmap <Leader>C :e ~/.config/nvim/init.vim<CR>
 
-" -- fzf plugin ----
+" -- fzf ----
 " see additional fzf config in .bashrc, setting env var FZF_DEFAULT_OPTS
+
+" Jump to existing window if possioble
 let g:fzf_buffers_jump = 1
+" Determine size and position of fzf window
 let g:fzf_layout = { 'window': 'enew' }
+" Preview window
 let g:fzf_preview_window = 'up:50%'
+" Previews
 let g:fzf_preview = "bat --color=always --style=changes --line-range=:36 {}"
+
+" fzf-vim
+let g:fzf_vim = {}
+"
+" Command to update tags file
+let g:fzf_vim.tags_command = 'pytags'
 
 " Switch to open buffer (!=fullscreen)
 noremap <Leader>b :Buffers!<CR>
 " Jump to tag
 noremap <Leader>t :Tags!<CR>
-" fuzzy find tag under cursor (1=fullscreen)
-noremap <Leader>T :call fzf#vim#tags(expand('<cword>'), 1)<CR>
+
+" Go to defn of tag under the cursor.
+" If more than one definition, show a menu instead of jumping directly.
+nnoremap <silent> <C-]> :call fzf#vim#tags(expand('<cword>'), fzf#vim#with_preview({"placeholder": "--tag {2}:{-1}:{3..}", "options": "--exact --select-1 --exit-0 --with-nth=1,2,5 --ellipsis=…"}), !0)<CR>
 
 " Custom fzf commands that don't seem to respect the above settings,
 " so we have to duplicate things like the preview command.
 
-noremap <Leader><Leader>f :echo ",f: fzf editable files,\n,F: include dotfiles (hidden),\n,a: include gitignores (all),\n,p: .py files,\n,P: including tests,\n,b: branch modified files"<CR>
+noremap <Leader>? :echo ",f: fzf editable files,\n,F: include dotfiles (hidden),\n,a: include gitignores (all),\n,p: .py files,\n,P: including tests,\n,b: branch modified files"<CR>
 
 " Open commonly editable files (eg. not .pyc)
 noremap <silent> <Leader>f :call fzf#run({
@@ -416,6 +429,7 @@ noremap <silent> <Leader>f :call fzf#run({
 \       --preview="bat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
+
 
 " Include hidden (dotfiles), but still omit git ignored files.
 noremap <silent> <Leader>F :call fzf#run({
@@ -762,24 +776,6 @@ noremap <Leader>u :call ToggleAutoformat()<CR>
 " disable annoying help on f1
 noremap <silent> <f1> <esc>
 map! <silent> <f1> <esc>
-
-" Windows
-" Commented out: because I hardly ever use it.
-" noremap <Leader>T :!start /min ctags -R --languages=python .<CR>:FufRenewCache<CR>
-
-" Go to defn of tag under the cursor.
-" If more than one definition, show a menu instead of jumping directly.
-" Turn off case-insensitive matches while we do this.
-fun! TagJumpMatchCase()
-  let ic = &ic
-  set noic
-  try
-    exe 'tjump ' . expand('<cword>')
-  finally
-    let &ic = ic
-  endtry
-endfun
-nnoremap <silent> <C-]> :call TagJumpMatchCase()<CR>
 
 " 4. LSP config ----------------------------------------------------------------
 
