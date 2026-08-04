@@ -92,14 +92,9 @@ pta() {
 
 # typecheck (40 seconds)
 # Correcly handles one or more target files or directories.
-# Shadows executable 'tc'.
+# Shadows unrelated executable 'tc'.
 tc() {
     etime inv run-python-type-checker --territories=usa $(echo $@ | xargs -n1 echo -n ' --target')
-}
-
-# typecheck daemon (7 mins, then 4s)
-tcd() {
-    inv run-python-type-checker-daemon -s
 }
 
 lint() {
