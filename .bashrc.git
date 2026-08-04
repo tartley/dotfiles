@@ -33,7 +33,7 @@ get_main_branch() {
 }
 
 # Short summary of files modified
-# (or use 'master...' for current branch)
+# (or use 'main...' for current branch)
 gdn() {
     git diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }

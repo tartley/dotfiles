@@ -125,19 +125,27 @@ alias du='du -h'
 alias histread='history -c; history -r'
 alias less='less -R' # display raw control characters for colors only
 
-alias ls='LC_COLLATE="C" ls $LS_OPTIONS'
-if command -v eza >/dev/null ; then
-    alias ll='eza --long --git --no-quotes --color-scale=age'
-else
-    alias ll='ls -lGh'
-fi
-alias la='ll -A'
-
 alias mv='mv -i'
 alias rm='rm -i'
 alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
 alias whence='type -a' # like where, but also describes aliases and functions
+
+ls() {
+    LC_COLLATE="C" ls "$LS_OPTIONS" "$@"
+}
+if command -v eza >/dev/null ; then
+    ll() {
+        eza --long --git --no-quotes --color-scale=age "$@"
+    }
+else
+    ll() {
+        ls -lGh "$@"
+    }
+fi
+la() {
+    ll -A "$@"
+}
 
 # My installed tools
 # Prefer aliases here over ~/.local/bat symlinks since it forces scripts to use
