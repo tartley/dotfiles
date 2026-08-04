@@ -6,7 +6,9 @@ PATH="$HOME/kraken/bin:$PATH"
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
 # It's too slow in kraken core (1.5 secs).
 if command -v eza >/dev/null ; then
-    alias ll='eza --long --no-git --no-quotes --color-scale=age'
+    ll() {
+        eza --long --no-git --no-quotes --color-scale=age "$@"
+    }
 fi
 
 # Commented out because some git commands on kraken core repo have made this faster.
