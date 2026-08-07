@@ -33,24 +33,26 @@ get_main_branch() {
 }
 
 # List files with diffs
-gld() {
+gfd() {
     git --no-pager diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }
+# List files modified in current branch
+gfb() {
+    gfd main...
+}
+
 # List *test* files with diffs
 gtd() {
-    gld -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
-}
-# List files modified in current branch
-glb() {
-    gld main...
+    gfd -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
 }
 # List *test* files modified in current branch
 gtb() {
-    glb -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
+    gfb -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
 }
-# Status files with diffs
+
+# Status of files with diffs
 gsd() {
-    git diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+    git --no-pager diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }
 # status of all files modified in current branch
 gsb() {
