@@ -58,38 +58,68 @@ function pp() {
   inv localdev.migrate-all --client=oeus
 }
 
-# pytest (one test only)
-# TODO: handle one or multi tests
-# TODO: handle args starting with '-', vs test names
+# pytest: Delegate to 'inv localdev.multi-pytest'
+# Args which start with '-' are placed after a final '--'
+# Hence args with values must be one word, i.e. '--arg=value' not '--arg value'.
+# Other params (without an initial '-') are added as a '--path'
 pt() {
-    if [ "$#" -ne 1 ]; then
-        error "Only 1 arg allowed"
+    # process args
+    paths=""
+    extras="--color=yes --no-header "
+    errors=false
+    for i in "$@"; do
+        case "$i" in
+            --) ;;
+            -*)
+                extras="$extras$i "
+                ;;
+            *)
+                if [[ $i == *"tests"* ]]; then
+                    paths="$paths$i "
+                else
+                    error "Arg does not look like a test: $i" >&2
+                    errors=true
+                fi
+                ;;
+        esac
+    done
+
+    # handle errors
+    if [ "$paths" = "" ]; then
+        error "No test paths given"
         return
     fi
-    etime inv localdev.pytest "$1" -- --color=yes --no-header
+    if [ $errors = "true" ]; then
+        return
+    fi
+
+    # construct command
+    cmd="invoke localdev.multi-pytest$(echo $paths | xargs -n1 echo -n \ --path)"
+    if [ "$extras" != "" ]; then
+        cmd="$cmd -- $extras"
+    fi
+
+    # print command so user can clipboard it
+    echo -e "$(tput bold)$cmd$(tput sgr0)"
+
+    # execute command
+    eval etime "$cmd"
+
+    # cleanup
+    unset errors extras paths
 }
 
-# pytest branch (all test files changed in this branch)
-ptb() {
-    etime inv localdev.multi-pytest \
-    $(git diff --name-only main... | grep test_ | xargs -n1 echo "--path") \
-    -- "$@"
-}
-
-# pytest diffs (all test files changed in current diffs)
+# pytest worktree diffs
 ptd() {
-    etime inv localdev.multi-pytest \
-    $(git diff --name-only | grep test_ | xargs -n1 echo "--path") \
-    -- "$@"
+    pt $(gtd) -- "$@"
 }
-
+# pytest whole branch
+ptb() {
+    pt $(gtb) -- "$@"
+}
 # pytest all (tests changed in branch or diffs)
 pta() {
-    etime inv localdev.multi-pytest $( \
-        ( git diff --name-only main... ; git diff --name-only ) \
-        | sort -u | grep test_ | xargs -n1 echo "--path" \
-    ) \
-    -- "$@"
+    pt $(gtd ; gtb) -- "$@"
 }
 
 # typecheck (40 seconds)
