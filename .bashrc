@@ -27,10 +27,17 @@ shopt -s no_empty_cmd_completion
 
 ## utility functions for this script
 
-error() (
+# Just redirecting to stderr does not, for some annoying reason, activate the
+# shared library I have loaded to highlight stderr in color. But this does,
+# so I use it to print to stderr from my other functions.
+stderr() {
   IFS=' '
-  awk -v msg="$*" 'BEGIN { print "Error: " msg > "/dev/stderr" }'
-)
+  awk -v msg="$*" 'BEGIN { print msg > "/dev/stderr" }'
+}
+
+error() {
+    stderr "Error: $@"
+}
 
 ## Interactive shell tweaks ################################################
 

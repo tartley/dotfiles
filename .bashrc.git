@@ -32,13 +32,29 @@ get_main_branch() {
     git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4
 }
 
-# Short summary of files modified
-# (or use 'main...' for current branch)
-gdn() {
-    git diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+# List files with diffs
+gld() {
+    git --no-pager diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
 }
-gdns() {
+# List *test* files with diffs
+gtd() {
+    gld -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
+}
+# List files modified in current branch
+glb() {
+    gld main...
+}
+# List *test* files modified in current branch
+gtb() {
+    glb -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
+}
+# Status files with diffs
+gsd() {
     git diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+}
+# status of all files modified in current branch
+gsb() {
+    gsd main...
 }
 
 # git fast forward : merge without a merge commit. (see gm for opposite)
@@ -141,13 +157,6 @@ gla() {
 }
 glla() {
     gll "$@" --all
-}
-# git log branches (local branches, not all)
-glb() {
-    gl "$@" --branches
-}
-gllb() {
-    gll "$@" --branches
 }
 
 # git log merge : show the commits that are ancestors of a given merge
