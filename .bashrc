@@ -138,9 +138,10 @@ alias ssh='TERM=xterm-color ssh'
 alias timee='/usr/bin/time -f %E'
 alias whence='type -a' # like where, but also describes aliases and functions
 
-ls() {
+l() {
     LC_COLLATE="C" ls "$LS_OPTIONS" "$@"
 }
+
 if command -v eza >/dev/null ; then
     ll() {
         eza --long --git --no-quotes --color-scale=age "$@"
@@ -212,8 +213,6 @@ busyloop() {
     done &
   done
 }
-
-# See 'bzr functions', below.
 
 # cd into a directory, resolving any symlinks to give the full actual directory name
 cdr() {
@@ -490,10 +489,12 @@ if [ -f "$bashhistory" ]; then
     trap dedupe_history EXIT
 fi
 
-## Run host's custom ~/.bashrc.* file ############################################
+## Run other ~/.bashrc.* files ############################################
 
+# one for all my git functions
 source ~/.bashrc.git
 
+# one to customize this particular host
 hostrc="$HOME/.bashrc.$HOSTNAME"
 if [ -f "$hostrc" ]; then
     source "$hostrc"
