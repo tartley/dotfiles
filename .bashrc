@@ -477,7 +477,7 @@ dedupe_history() {
     # remove duplicate lines from history file, and save a copy in 'docs'
     # where it will get backed up.
     dedupe-bash-history >"$bashhistorybackup"
-    cp --update=all "$bashhistorybackup" "$bashhistory"
+    \cp --update=all "$bashhistorybackup" "$bashhistory"
     # (previous solutions, using 'tac', to keep the most recent duplicate,
     # then filtering using line-based tools like awk, don't work with
     # history files containing timestamps or multi-line commands)
