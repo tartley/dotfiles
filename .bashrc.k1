@@ -54,14 +54,16 @@ function cd() {
 # post-pull
 function pp() {
   inv install-python-deps
-  inv localdev.migrate-all --client=championenergy
-  inv localdev.migrate-all --client=oeus
+  # inv localdev.migrate-all --client=championenergy
+  # inv localdev.migrate-all --client=oeus
+  inv localdev.migrate-all --client=PortlandGeneral
 }
 
-# pytest: Delegate to 'inv localdev.multi-pytest'
-# Args which start with '-' are placed after a final '--'
+# Wrapper around 'inv multi-pytest' which allows args of the form
+#   pt --OPT1 --OPT2 TEST1 TEST2...
+# i.e. Args which start with '-' are passed to multi-pytest after a final '--'
 # Hence args with values must be one word, i.e. '--arg=value' not '--arg value'.
-# Other params (without an initial '-') are added as a '--path'
+# Other args (without an initial '-') are passed as a '--path ARG'
 pt() {
     # process args
     paths=""
@@ -137,8 +139,8 @@ format() {
     inv run-python-formatter "$@"
 }
 
-lf() {
-    lint; format
+fl() {
+    format; lint
 }
 
 
@@ -188,7 +190,9 @@ complete -F _complete_invoke -o default invoke inv
 # pre-commit: Skip:
 # * running tests, I do that incessantly myself
 # * privacy validation: Rarely a problem, leave it to CI
-export SKIP=pytest,data-privacy-framework-validation
+# * semgrep: turned off temporarily(?) because it crashes a lot today
+export SKIP=pytest,data-privacy-framework-validation,semgrep
+
 # Don't do garbage collection iterations looking for resource leaks
 # These are rare and will be caught in CI.
 export PYTEST_UNRAISABLE_GC_ITERATIONS=0
