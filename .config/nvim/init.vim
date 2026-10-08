@@ -398,7 +398,7 @@ let g:fzf_layout = { 'window': 'enew' }
 " Preview window
 let g:fzf_preview_window = 'up:50%'
 " Previews
-let g:fzf_preview = "bat --color=always --style=changes --line-range=:36 {}"
+let g:fzf_preview = "batcat --color=always --style=changes --line-range=:36 {}"
 
 " fzf-vim
 let g:fzf_vim = {}
@@ -426,7 +426,7 @@ noremap <silent> <Leader>f :call fzf#run({
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 
@@ -437,7 +437,7 @@ noremap <silent> <Leader>F :call fzf#run({
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 
@@ -447,7 +447,7 @@ noremap <silent> <Leader>a :call fzf#run({
     \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 
@@ -457,7 +457,7 @@ noremap <silent> <Leader>p :call fzf#run({
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 
@@ -467,7 +467,7 @@ noremap <silent> <Leader>P :call fzf#run({
 \   'sink': 'e',
 \   'options': '
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 
@@ -478,7 +478,7 @@ noremap <silent> <Leader>B :call fzf#run({
 \   'options': '
 \       --ansi
 \       --preview-window="up:50%"
-\       --preview="bat --color=always --style=changes --line-range=:36 {}"
+\       --preview="batcat --color=always --style=changes --line-range=:36 {}"
 \   '
 \})<CR>
 

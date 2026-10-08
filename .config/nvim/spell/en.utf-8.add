@@ -22,6 +22,7 @@ ArcSDE
 arg
 args
 Artifactory
+Asana
 ASD
 ASGI
 async
@@ -48,6 +49,7 @@ builtin
 builtins
 Calendly
 Cardano
+CBCI
 CDN
 celiac
 CentOS
@@ -61,6 +63,7 @@ chipset
 CIDR
 CircleCI
 CLI
+Cloudfarer
 Cloudflare
 CLR
 CMD
@@ -88,6 +91,7 @@ Danilo
 Danilo's
 datacenters
 dataclass
+Datadog
 datasheet
 datatypes
 datetime
@@ -187,6 +191,7 @@ hardcoded
 hardpoint
 hardpoints
 hellscapes
+hoodie
 hostname
 howto
 howtos
@@ -304,6 +309,7 @@ Nvidia
 OCD
 OCI
 OCI's
+OEUS
 ols
 onboarding
 OpenGL
@@ -321,6 +327,7 @@ params
 parseable
 performant
 Peroral
+PGE
 PID
 PIDs
 plaintext
@@ -408,6 +415,7 @@ SoftLayer's
 something's
 specced
 spreadsheets
+SPSD
 SQL
 SSD
 SSH's
@@ -508,6 +516,7 @@ workflow
 WSGI
 www
 XP
+xterms
 Yay
 YouTube
 Zac
@@ -516,5 +525,3 @@ Zander's
 ZeroDivisionError
 Zima
 ZimaOS
-Datadog
-OEUS

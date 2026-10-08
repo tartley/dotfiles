@@ -32,32 +32,49 @@ get_main_branch() {
     git symbolic-ref refs/remotes/origin/HEAD | cut -d/ -f4
 }
 
-# List files with diffs
+
+## List files ####
+
+# Files with diffs (including untracked)
 gfd() {
-    git --no-pager diff --name-only "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+    # git outputs 3 chars of status characters then filename
+    # cut omits the initial characters, to just output the filename.
+    # Better than git diff --names-only because it includes untracked.
+    gs "$@" | cut -c4-
 }
+
 # List files modified in current branch
 gfb() {
-    gfd main...
+    git --no-pager diff --name-only main...
 }
 
-# List *test* files with diffs
+# Files from diffs AND branch
+gfa() {
+    { gfd ; gfb; } | sort -u
+}
+
+
+## List tests ####
+
+_grep_tests() {
+    cat | grep -w tests | grep -E '\/test_[a-z_]+\.py$'
+}
+
+# Test files with diffs
 gtd() {
-    gfd -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
-}
-# List *test* files modified in current branch
-gtb() {
-    gfb -- "$@" | grep -w tests | grep -vE 'conftest\.py|/helpers/'
+    gfd -- "$@" | _grep_tests
 }
 
-# Status of files with diffs
-gsd() {
-    git --no-pager diff --name-status "$@" | colout '^(A.+)|(M.+)' green,yellow regular
+# Test files modified in current branch
+gtb() {
+    gfb -- "$@" | _grep_tests
 }
-# status of all files modified in current branch
-gsb() {
-    gsd main...
+
+# Test files from diffs AND branch
+gta() {
+    gfa | _grep_tests
 }
+
 
 # git fast forward : merge without a merge commit. (see gm for opposite)
 # Arg: branch to merge into current (just like regular 'git merge')
@@ -136,7 +153,7 @@ fixup() {
 }
 
 
-# ----
+## git log ####
 
 # git log <N>: display N lines of git log as glog
 gl() {
@@ -183,7 +200,7 @@ glog() {
     # Decide how to decorate commits with branch & tag names
     git_version=$(git --version | cut -d' ' -f3 | cut -d'.' -f1-2)
     if (( $(bc <<< "$git_version >= 2.43") )); then
-        decorate="%(decorate:prefix=,suffix=,separator= ,pointer=$(tput setaf 14)⟶,tag=)"
+        decorate="%(decorate:prefix=,suffix=,separator= ,pointer=$(tput setaf 14)→ ,tag=)"
     else
         # fallback for older version of git
         decorate="%D"
@@ -197,6 +214,8 @@ glog() {
 gloga() {
     glog --all "$@"
 }
+
+
 
 # git merge, always creating a merge commit. (see gff for opposite)
 # Arg1: branch to merge into current (like regular merge)
@@ -255,18 +274,41 @@ grm() {
     git rebase main "$@"
 }
 
-# git status
+
+## Git status ####
+
+# Short status
 gs() {
-    git status -s "$@"
+    git status --short "$@"
 }
+
+# Short status of all files modified in current branch.
+# Produces weird results on moved files.
+gsb() {
+    git --no-pager diff --name-status main... "$@" \
+        | colout '^(A.+)|(M.+)|(D.+)|R[0-9]{3}\t([^\t]+)\t(.+)' green,226,red,red,green regular
+}
+
+# Regular status
 gst() {
     git status "$@"
 }
 
+
+## Stash ####
+
 # git stash list
 gsl() {
-    git stash list | colout '^([^:]+): (?:(On)|(WIP on)) ([^:]+): ([0-9a-f]{8,10})?(.+)$' yellow,white,white,green,magenta,white normal
+    git stash list | colout '^([^:]+):\s(?:(On)|(WIP on))\s([^:]+):\s([0-9a-f]{8,10})?(.+)$' yellow,white,white,green,magenta,white normal
 }
+
+# git stash show
+gss() {
+    git stash show -p "$@"
+}
+
+
+## Switch ####
 
 # git switch main
 gsm() {
@@ -275,17 +317,26 @@ gsm() {
     fi
 }
 
-# git stash show
-gss() {
-    git stash show -p "$@"
+# Choose a branch using fzf
+fzf-branch() {
+    git branch -vv --color=always | grep -v '/HEAD\s' | \
+        fzf --height 40% --ansi --tac | \
+        sed 's/^..//' | awk '{print $1}' | sed 's#^remotes/[^/]*/##'
 }
 
 # encourage use of 'git switch', over legacy checkout, etc.
 gsw() {
-    git switch "$@"
+    if [ $# -eq 0 ]; then
+        git switch $(fzf-branch)
+    else
+        git switch "$@"
+    fi
 }
 
-# git tags : use 'git log' to display tags at the current commit
+
+## Tags ####
+
+# Show tags at the current commit
 gtags() {
     git log -n1 --pretty=format:%C\(auto\)%d | sed 's/, /\n/g' | grep tag | sed 's/tag: \|)//g'
 }
