@@ -402,7 +402,7 @@ let g:fzf_preview = "batcat --color=always --style=changes --line-range=:36 {}"
 
 " fzf-vim
 let g:fzf_vim = {}
-"
+
 " Command to update tags file
 let g:fzf_vim.tags_command = 'pytags'
 
