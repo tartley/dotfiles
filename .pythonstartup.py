@@ -3,6 +3,11 @@ startenv = set(globals())
 import atexit
 import os
 import sys
+try:
+    from dataclasses import replace
+    from _colorize import ANSIColors, default_theme, set_theme
+except ImportError:
+    pass
 
 COLORTERMS = [
     'xterm', 'xterm-color', 'xterm-256color', 'vt100',
@@ -32,15 +37,16 @@ def set_ps1():
         # Tell terminal which chars are non-visible,
         # so it can keep accurate track of line lengths.
         # This doesn't seem to work on OSX.
-        nonvis = '\001'
-        vis = '\002'
+        nonvis = "\001"
+        vis = "\002"
 
-        prefix = '\x1b['
-        bold_yellow = prefix + '1;33m'
-        reset = prefix + '0m'
+        prefix = "\x1b["
+        bg = prefix + "103m" # bright yellow
+        fg = prefix + "1;30m" # bold black
+        reset = prefix + "0m"
 
-        sys.ps1 = nonvis + bold_yellow + vis + '>>> ' + nonvis + reset + vis
-        sys.ps2 = nonvis + bold_yellow + vis + '... ' + nonvis + reset + vis
+        sys.ps1 = nonvis + bg + fg + vis + ">>>" + nonvis + reset + vis + " "
+        sys.ps2 = nonvis + bg + fg + vis + "..." + nonvis + reset + vis + " "
 
 
 def enable_tab_completion():
@@ -59,13 +65,55 @@ def read_history_file(histfile):
     try:
         readline.read_history_file(histfile)
         msg(f"Read history file '{histfile}'")
-    except IOError as exc:
+    except OSError as exc:
         msg(f"ERROR: Failed to read history file '{histfile}' ({exc})")
 
 
 def write_history_file_atexit(histfile):
     atexit.register(readline.write_history_file, histfile)
-    msg(f"Will write to history file atexit")
+    msg("Will write to history file atexit")
+
+
+def set_repl_colors():
+    # See options with:
+    #
+    #   from _colorize import default_theme
+    #   from pprint import pprint
+    #   pprint(default_theme, indent=2, expand=True)
+    #
+    # See colors with:
+    #
+    #   from _colorize import ANSIColors
+    #   from pprint import pprint
+    #   pprint(vars(ANSIColors), indent=2, expand=True)
+    #
+    theme = default_theme.copy_with(
+        syntax=replace(
+            default_theme.syntax,
+            prompt=ANSIColors.INTENSE_BACKGROUND_YELLOW + ANSIColors.BOLD_BLACK, # Doesn't work
+            keyword=ANSIColors.BOLD_WHITE,
+            soft_keyword=ANSIColors.INTENSE_WHITE,
+            keyword_constant=ANSIColors.INTENSE_WHITE,
+            string=ANSIColors.INTENSE_CYAN,
+            number=ANSIColors.INTENSE_CYAN,
+            comment=ANSIColors.GREY,
+            builtin=ANSIColors.INTENSE_WHITE,
+            op=ANSIColors.WHITE,
+            definition=ANSIColors.GREEN,
+        ),
+        traceback=replace(
+            default_theme.traceback,
+            type=ANSIColors.INTENSE_RED,
+            message=ANSIColors.WHITE,
+            note=ANSIColors.INTENSE_BLUE,
+            filename=ANSIColors.INTENSE_GREEN,
+            line_no=ANSIColors.INTENSE_GREEN,
+            frame=ANSIColors.INTENSE_GREEN,
+            error_highlight=ANSIColors.INTENSE_RED,
+            error_range=ANSIColors.INTENSE_RED,
+        ),
+    )
+    set_theme(theme)
 
 
 def delete_new_globals(startenv):
@@ -82,6 +130,7 @@ def main():
             histfile = get_history_filename()
             read_history_file(histfile)
             write_history_file_atexit(histfile)
+    set_repl_colors()
     delete_new_globals(startenv)
 
 

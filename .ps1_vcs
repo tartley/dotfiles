@@ -68,6 +68,10 @@ dvcs_function="
     if [ -n \"\$_git_dir\" ]; then
         # find current branch
         gitBranch=\$(git symbolic-ref HEAD 2> /dev/null)\ 
+
+        # Consider commenting out because this is slow. i.e. 600ms in
+        # kraken-core. That means we lose delta chars on changes, and counts
+        # of ahead/behind commits.
         gitStatus=\$(git status)
 
         # Figure out if we are rebasing
