@@ -1,8 +1,6 @@
 # Bashrc addendums for Kraken
 # vim: set filetype=sh :
 
-PATH="$HOME/kraken/bin:$PATH"
-
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
 # It's too slow in kraken core (1.5 secs).
 if command -v eza >/dev/null ; then
@@ -50,6 +48,11 @@ function cd() {
 
 
 ## aliases
+
+# Git rebase passing master
+grpm() {
+    git rebase $(inv circleci.get-latest-passing-master)
+}
 
 # post-pull
 function pp() {
