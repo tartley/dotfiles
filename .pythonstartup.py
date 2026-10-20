@@ -87,6 +87,8 @@ def set_repl_colors():
     #   from pprint import pprint
     #   pprint(vars(ANSIColors), indent=2, expand=True)
     #
+    if 'default_theme' not in globals():
+        return
     theme = default_theme.copy_with(
         syntax=replace(
             default_theme.syntax,
@@ -105,7 +107,7 @@ def set_repl_colors():
             default_theme.traceback,
             type=ANSIColors.INTENSE_RED,
             message=ANSIColors.WHITE,
-            note=ANSIColors.INTENSE_BLUE,
+            # note=ANSIColors.INTENSE_BLUE,
             filename=ANSIColors.INTENSE_GREEN,
             line_no=ANSIColors.INTENSE_GREEN,
             frame=ANSIColors.INTENSE_GREEN,
