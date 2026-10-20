@@ -87,11 +87,13 @@ gff() {
 # git fetch main
 gfm() {
     if [ "$(gbranch)" = "main" ]; then
-        git pull origin $(get_main_branch) 2>&1 | grep 'Updating\|WARNING'
+        git pull origin $(get_main_branch) |& rg -v '^From github.com:|^ \* branch |^Fast-forward'
     else
         git fetch origin $(get_main_branch):main 2>&1 | grep 'main'
     fi
 }
+
+
 
 # git fetch main & switch
 gfms() {
@@ -270,7 +272,6 @@ gr() {
 }
 
 grm() {
-    gfm
     git rebase main "$@"
 }
 
