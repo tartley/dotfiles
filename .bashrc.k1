@@ -67,6 +67,9 @@ function pp() {
 # i.e. Args which start with '-' are passed to multi-pytest after a final '--'
 # Hence args with values must be one word, i.e. '--arg=value' not '--arg value'.
 # Other args (without an initial '-') are passed as a '--path ARG'
+# 
+# TODO: Get this to recognize args for 'localdev.multi-pytest'
+#
 pt() {
     # process args
     paths=""
