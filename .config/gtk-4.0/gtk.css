@@ -1,0 +1,19 @@
+/* shrink headerbars */
+
+windowhandle box {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.titlebar {
+    min-height: 0px;
+    padding: 0;
+}
+
+/* No line below the title bar */
+
+.ssd .titlebar {
+    border-width: 0;
+    box-shadow: none;
+}
+
