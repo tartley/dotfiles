@@ -1,0 +1,54 @@
+/* Shrink window bars */
+
+headerbar {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.header-bar.default-decoration .button.titlebutton {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+/* No line below the title bar */
+
+.ssd .titlebar {
+    border-width: 0;
+    box-shadow: none;
+}
+
+/* Shrink Gnome-terminal window bar */
+
+headerbar entry,
+headerbar spinbutton,
+headerbar button,
+headerbar separator {
+    margin-top: 0px; /* same as headerbar side padding for nicer proportions */
+    margin-bottom: 0px;
+}
+
+headerbar {
+    min-height: 24px;
+    padding-left: 2px; /* same as childrens vertical margins for nicer proportions */
+    padding-right: 2px;
+    margin: 0px; /* same as headerbar side padding for nicer proportions */
+    padding: 0px;
+}
+
+/* Shrink Gnome-terminal tab bar */
+
+terminal-window notebook > header.top button {
+  padding: 0 0 0 0;
+  background-image: none;
+  border: 0;
+  margin-right: 10px;
+}
+terminal-window notebook > header.top > tabs > tab {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+terminal-window notebook > header.top > tabs > tab label {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+
