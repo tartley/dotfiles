@@ -49,10 +49,22 @@ function cd() {
 
 ## aliases
 
+# Get latest passing master
+glpm() {
+    stderr $(gfm)
+    inv circleci.get-latest-passing-master
+}
+
+# Git switch passing master. From which to create a new branch.
+gspm() {
+    git switch --detach $(glpm)
+}
+
 # Git rebase passing master
 grpm() {
-    git rebase $(inv circleci.get-latest-passing-master)
+    git rebase $(glpm)
 }
+
 
 # post-pull
 function pp() {
