@@ -500,10 +500,9 @@ if [ -f "$hostrc" ]; then
     source "$hostrc"
 fi
 
-# SDKMAN required for Siphon devlopment environment
-# Commented because I'm not modifying Siphon.
-# #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+## Installed things that want to append to .bashrc
 
-source '/home/jhartley/.bash_completions/kraken.sh'
+# Deno is a Javascript runtime, used by yt-dlp
+. "/home/jhartley/.deno/env"
+source /home/jhartley/.local/share/bash-completion/completions/deno.bash
+

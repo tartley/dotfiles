@@ -1,6 +1,12 @@
 # Bashrc addendums for Kraken
 # vim: set filetype=sh :
 
+## 1. company-wide stuff
+
+source '/home/jhartley/.bash_completions/kraken.sh'
+
+## 2. Personal stuff
+
 # Disable git info in 'll' (eza as a replacement for 'ls -l').
 # It's too slow in kraken core (1.5 secs).
 if command -v eza >/dev/null ; then
@@ -16,31 +22,23 @@ fi
 #     git status -uno -s"$@"
 # }
 
-
-## auto activate virtualenvs ------------------
-
+# Auto activate virtualenvs
 # This is cute, but with uv, do we really need it?
-
 # This could be direnv instead, with a .envrc file of '. .venv/bin/activate'
-
 # I suspect the implementation could just use $VIRTUAL_ENV throughout,
 # without needing the $parentdir variable at all.
-
 function cd() {
     builtin cd "$@"
-
     # If we move out of a previous parentdir, deactivate the previous venv
     if [[ -n "$parentdir" && "$PWD"/ != "$parentdir"/* ]]; then
         deactivate
         unset parentdir
     fi
-
     # If there is a virtualenv
     if [[ -d ".venv" && -f ".venv/bin/activate" ]]; then
         # activate it
         source ".venv/bin/activate"
         parentdir="$(dirname $VIRTUAL_ENV)"
-
         # set the terminal name
         termname "$(basename $(dirname $VIRTUAL_ENV))"
     fi
@@ -162,48 +160,7 @@ fl() {
 }
 
 
-## NVM
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# Ignore the error if nvm is not installed on this machine
-:
-
-
-## invoke tab-completion
-
-# to be sourced with Bash shell. Known to work on Bash 3.x, untested on 4.x.
-
-_complete_invoke() {
-    local candidates
-
-    # COMP_WORDS contains the entire command string up til now (including
-    # program name).
-    # We hand it to Invoke so it can figure out the current context: spit back
-    # core options, task names, the current task's options, or some combo.
-    candidates=`invoke --complete -- ${COMP_WORDS[*]}`
-
-    # `compgen -W` takes list of valid options & a partial word & spits back
-    # possible matches. Necessary for any partial word completions (vs
-    # completions performed when no partial words are present).
-    #
-    # $2 is the current word or token being tabbed on, either empty string or a
-    # partial word, and thus wants to be compgen'd to arrive at some subset of
-    # our candidate list which actually matches.
-    #
-    # COMPREPLY is the list of valid completions handed back to `complete`.
-    COMPREPLY=( $(compgen -W "${candidates}" -- $2) )
-}
-
-# Tell shell builtin to use the above for completing our invocations.
-# * -F: use given function name to generate completions.
-# * -o default: when function generates no results, use filenames.
-# * positional args: program names to complete for.
-complete -F _complete_invoke -o default invoke inv
-
-
-## env vars
+## 3. Env vars
 
 # pre-commit: Skip:
 # * running tests, I do that incessantly myself
@@ -221,4 +178,41 @@ export PY_LAZY_LOADING=1
 export DD_TRACE_ENABLED=false
 export DD_DOGSTATSD_DISABLE=1
 export DD_APM_TRACING_ENABLED=false
+
+
+### 4. Installed things that want to append to .bashrc
+
+## NVM
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Ignore the error if nvm is not installed on this machine
+:
+
+## invoke tab-completion
+# to be sourced with Bash shell. Known to work on Bash 3.x, untested on 4.x.
+_complete_invoke() {
+    local candidates
+    # COMP_WORDS contains the entire command string up til now (including
+    # program name).
+    # We hand it to Invoke so it can figure out the current context: spit back
+    # core options, task names, the current task's options, or some combo.
+    candidates=`invoke --complete -- ${COMP_WORDS[*]}`
+    # `compgen -W` takes list of valid options & a partial word & spits back
+    # possible matches. Necessary for any partial word completions (vs
+    # completions performed when no partial words are present).
+    #
+    # $2 is the current word or token being tabbed on, either empty string or a
+    # partial word, and thus wants to be compgen'd to arrive at some subset of
+    # our candidate list which actually matches.
+    #
+    # COMPREPLY is the list of valid completions handed back to `complete`.
+    COMPREPLY=( $(compgen -W "${candidates}" -- $2) )
+}
+
+# Tell shell builtin to use the above for completing our invocations.
+# * -F: use given function name to generate completions.
+# * -o default: when function generates no results, use filenames.
+# * positional args: program names to complete for.
+complete -F _complete_invoke -o default invoke inv
 
