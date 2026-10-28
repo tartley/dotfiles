@@ -500,3 +500,5 @@ if [ -f "$hostrc" ]; then
     source "$hostrc"
 fi
 
+. "/home/jhartley/.deno/env"
+source /home/jhartley/.local/share/bash-completion/completions/deno.bash

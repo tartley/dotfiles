@@ -109,3 +109,4 @@ if [[ $- == *i* ]] && [[ -n "$BASH_VERSION" ]] && [[ -f "$HOME/.bashrc" ]] ; the
   source "$HOME/.bashrc"
 fi
 
+. "/home/jhartley/.deno/env"
