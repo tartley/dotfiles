@@ -1,0 +1,10 @@
+[Nemo Action]
+Active=true
+Name=Touch selected files
+Comment=Touch selected files, to bump their updated timestamp
+Exec=find %F -type f -exec touch {} +
+Quote=double
+Icon-Name=folder
+Selection=any
+Extensions=any;
+Terminal=true
