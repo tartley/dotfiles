@@ -91,7 +91,11 @@ gfm() {
     else
         extra=""
     fi
-    git fetch origin $(get_main_branch):main $extra "$@" 2>&1 | rg -v '^remote: |^Receiving objects: |^Resolving deltas: |^From github.com:' || echo "Already up-to-date"
+    (
+        git fetch origin $(get_main_branch):main $extra "$@" 2>&1 \
+        | rg -v '^remote: |^Receiving objects: |^Resolving deltas: |^From github.com:' \
+        || echo "Already up-to-date"
+    ) | colout '(main)|(master)' cyan,blue
 
 }
 
