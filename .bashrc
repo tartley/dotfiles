@@ -503,6 +503,9 @@ fi
 ## Installed things that want to append to .bashrc
 
 # Deno is a Javascript runtime, used by yt-dlp
-. "/home/jhartley/.deno/env"
-source /home/jhartley/.local/share/bash-completion/completions/deno.bash
+deno_env=/home/jhartley/.deno/env
+if [ -f "$deno_env"  ]; then
+    source "$deno_env"
+    source /home/jhartley/.local/share/bash-completion/completions/deno.bash
+fi
 
