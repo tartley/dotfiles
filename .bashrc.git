@@ -87,12 +87,16 @@ gff() {
 # git fetch main
 gfm() {
     if [ "$(gbranch)" = "main" ]; then
-        extra='--update-head-ok '
+        git pull --ff-only origin $(get_main_branch) 2>&1 \
+            | grep -vE '^From github.com:|^ \* branch |^Fast-forward' \
+            | colout '(main)|(master)' cyan,blue
     else
-        extra=""
+        (
+            git fetch origin $(get_main_branch):main --update-head-ok "$@" 2>&1 \
+                | grep -vE '^remote: |^Receiving objects: |^Resolving deltas: |^From github.com:' \
+                || echo "Already up-to-date."
+        ) | colout '(main)|(master)' cyan,blue
     fi
-    git fetch origin $(get_main_branch):main $extra "$@" 2>&1 | rg -v '^remote: |^Receiving objects: |^Resolving deltas: |^From github.com:' || echo "Already up-to-date"
-
 }
 
 # git fetch main & switch

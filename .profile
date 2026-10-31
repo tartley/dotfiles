@@ -109,4 +109,9 @@ if [[ $- == *i* ]] && [[ -n "$BASH_VERSION" ]] && [[ -f "$HOME/.bashrc" ]] ; the
   source "$HOME/.bashrc"
 fi
 
-. "/home/jhartley/.deno/env"
+# Deno is a Javascript runtime, used by yt-dlp
+deno_env=/home/jhartley/.deno/env
+if [ -f "$deno_env"  ]; then
+    source "$deno_env"
+fi
+
