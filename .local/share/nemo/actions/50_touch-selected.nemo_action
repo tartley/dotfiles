@@ -5,6 +5,5 @@ Comment=Touch selected files, to bump their updated timestamp
 Exec=find %F -type f -exec touch {} +
 Quote=double
 Icon-Name=folder
-Selection=any
+Selection=notnone
 Extensions=any;
-Terminal=true
