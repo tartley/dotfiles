@@ -38,6 +38,7 @@
     pager = less -FRS
     trustctime = false
     attributesfile = /home/jhartley/.gitattributes
+    excludesFile = /home/jhartley/.gitignore.global
 
 [diff]
     tool = meld
