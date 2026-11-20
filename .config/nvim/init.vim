@@ -89,7 +89,7 @@ let g:python3_host_prog="$HOME/.virtualenvs/neovim/bin/python3"
 " Yank/delete should populate the '*' register, ie. the X 'primary' selection
 " (pasted in NVim using 'p' or 'P')
 " (pasted elsewhere using Shift-Insert or middle-mouse button)
-set clipboard=unnamed
+" set clipboard=unnamedplus
 
 " Allow backgrounding buffers without writing them
 " and remember marks/undo for backgrounded buffers
