@@ -6,6 +6,9 @@ telemetry=true
 [applications]
 enabled=true
 fuzzy=false
+ignore_show_in_keys=false
+terminal=org.gnome.Terminal
+use_exec=false
 
 [bluetooth]
 enabled=true
@@ -19,7 +22,7 @@ persistent=true
 
 [commandline]
 enabled=true
-trigger=""
+trigger=
 
 [docs]
 enabled=true
