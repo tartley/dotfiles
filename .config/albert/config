@@ -19,12 +19,12 @@ persistent=true
 
 [commandline]
 enabled=true
-trigger=" "
+trigger=""
 
 [docs]
 enabled=true
 global_handler_enabled=true
-trigger="py "
+trigger="doc "
 
 [path]
 enabled=true
